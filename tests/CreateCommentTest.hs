@@ -15,20 +15,17 @@ createCommentSpecs =
             statusIs 201
 
         yit "creates a comment in the database" $ do
+            runDB $ deleteWhere ([] :: [Filter Comment])
+
             postBody (ThreadCommentsR thread) (commentJSON "The body")
 
             ((Entity _ c):_) <- runDB $ selectList [] []
-
             assertEqual' "The body" (commentBody c)
 
 thread :: Thread
 thread = "abc123"
 
+-- TODO: The default JSON instances do not include a root key, which we
+-- may or may not want.
 commentJSON :: ByteString -> ByteString
-commentJSON body = BS.concat
-    [ "{"
-    , "  \"comment\": {"
-    , "    \"body\": \"" `BS.append` body `BS.append` "\""
-    , "  }"
-    , "}"
-    ]
+commentJSON body = "{\"body\":\"" `BS.append` body `BS.append` "\"}"
