@@ -19,7 +19,6 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
-                     Handler.Home
                      Handler.ThreadComments
 
     if flag(dev) || flag(library-only)

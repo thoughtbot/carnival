@@ -4,6 +4,4 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET POST
-
 /threads/#Thread/comments ThreadCommentsR POST

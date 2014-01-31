@@ -10,7 +10,6 @@ import Yesod.Test
 import Test.Hspec (hspec)
 import Application (makeFoundation)
 
-import HomeTest
 import CreateCommentTest
 
 main :: IO ()
@@ -18,7 +17,6 @@ main = do
     foundation <- makeFoundation =<< testConfig
 
     hspec $ yesodSpec foundation $ do
-        homeSpecs
         createCommentSpecs
 
 testConfig :: IO (AppConfig DefaultEnv Extra)
