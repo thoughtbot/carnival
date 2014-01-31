@@ -9,6 +9,7 @@ module TestImport
     , runDB
     , Spec
     , Example
+    , assertEqual'
     ) where
 
 import Yesod.Test
@@ -28,3 +29,17 @@ runDB :: SqlPersistM a -> Example a
 runDB query = do
     pool <- fmap connPool getTestYesod
     liftIO $ runSqlPersistMPool query pool
+
+-- | Like @assertEqual@ but no message argument.
+--
+--   > assertEqual' expected actual
+--
+assertEqual' :: (Eq a, Show a) => a -> a -> YesodExample site ()
+assertEqual' expected actual = assertEqual msg expected actual
+
+    where
+        msg :: String
+        msg = concat
+            [ "Expected: " ++ show expected
+            , "  Actual: " ++ show actual
+            ]
