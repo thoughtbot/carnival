@@ -15,6 +15,14 @@ import           Settings             as Import
 import           Settings.Development as Import
 import           Settings.StaticFiles as Import
 
+import Network.HTTP.Types as Import
+    ( status200
+    , status201
+    , status400
+    , status403
+    , status404
+    )
+
 #if __GLASGOW_HASKELL__ >= 704
 import           Data.Monoid          as Import
                                                  (Monoid (mappend, mempty, mconcat),

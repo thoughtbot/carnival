@@ -5,3 +5,5 @@
 /robots.txt RobotsR GET
 
 / HomeR GET POST
+
+/threads/#Thread/comments ThreadCommentsR POST

@@ -20,6 +20,7 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      Handler.Home
+                     Handler.ThreadComments
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -70,6 +71,7 @@ library
                  , monad-logger                  >= 0.3        && < 0.4
                  , fast-logger                   >= 2.1.4      && < 2.2
                  , wai-logger                    >= 2.1        && < 2.2
+                 , http-types
 
 executable         carnival
     if flag(library-only)
@@ -101,3 +103,7 @@ test-suite test
                  , transformers
                  , hspec
                  , text
+                 , bytestring
+                 , shakespeare-text
+                 , containers
+                 , case-insensitive
