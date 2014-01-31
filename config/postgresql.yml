@@ -1,0 +1,24 @@
+Default: &defaults
+  user: carnival
+  password: carnival
+  host: localhost
+  port: 5432
+  database: carnival
+  poolsize: 10
+
+Development:
+  <<: *defaults
+
+Testing:
+  database: carnival_test
+  <<: *defaults
+
+Staging:
+  database: carnival_staging
+  poolsize: 100
+  <<: *defaults
+
+Production:
+  database: carnival_production
+  poolsize: 100
+  <<: *defaults
