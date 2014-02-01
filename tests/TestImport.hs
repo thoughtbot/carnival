@@ -4,6 +4,7 @@ module TestImport
     , module Model
     , module Foundation
     , module Database.Persist
+    , module Data.Aeson
     , module Data.ByteString.Lazy
     , module Data.Text
     , runDB
@@ -16,6 +17,8 @@ import Yesod.Test
 import Database.Persist hiding (get)
 import Database.Persist.Sql (SqlPersistM, runSqlPersistMPool)
 import Control.Monad.IO.Class (liftIO)
+
+import Data.Aeson
 import Data.ByteString.Lazy (ByteString)
 import Data.Text (Text)
 
