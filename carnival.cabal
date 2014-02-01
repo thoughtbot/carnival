@@ -19,7 +19,7 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
-                     Handler.ThreadComments
+                     Handler.Comments
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

@@ -1,3 +1,4 @@
 Comment json
+    thread Text
     body Text
     deriving Show

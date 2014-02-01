@@ -9,17 +9,17 @@ createCommentSpecs :: Spec
 createCommentSpecs =
     ydescribe "POST /api/v1/threads/:thread_id/comments" $ do
         yit "responds with 201 created" $ do
-            postBody (ThreadCommentsR thread) (encode $ Comment "")
+            postBody CommentsR (encode $ Comment "" "")
 
             statusIs 201
 
         yit "creates a comment in the database" $ do
+            let theThread = "A thread"
+            let theBody = "A body"
             runDB $ deleteWhere ([] :: [Filter Comment])
 
-            postBody (ThreadCommentsR thread) (encode $ Comment "The body")
+            postBody CommentsR (encode $ Comment theThread theBody)
 
             ((Entity _ c):_) <- runDB $ selectList [] []
-            assertEqual' "The body" (commentBody c)
-
-thread :: Thread
-thread = "abc123"
+            assertEqual' theThread $ commentThread c
+            assertEqual' theBody $ commentBody c
