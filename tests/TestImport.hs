@@ -39,7 +39,8 @@ assertEqual' expected actual = assertEqual msg expected actual
 
     where
         msg :: String
-        msg = concat
-            [ "Expected: " ++ show expected
-            , "  Actual: " ++ show actual
+        msg = unlines
+            [ "Values were not equal."
+            , "  Expected: " ++ show expected
+            , "    Actual: " ++ show actual
             ]
