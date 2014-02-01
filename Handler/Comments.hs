@@ -8,3 +8,16 @@ postCommentsR = do
     _       <- runDB $ insert comment
 
     sendResponseStatus status201 ("created" :: Text)
+
+getCommentsR :: Handler Value
+getCommentsR = do
+    mthread <- lookupGetParam "thread"
+
+    let filters =
+            case mthread of
+            Just thread -> [CommentThread ==. thread]
+            _           -> []
+
+    comments <- runDB $ selectList filters []
+
+    return . toJSON $ map entityVal comments

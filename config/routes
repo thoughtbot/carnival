@@ -3,4 +3,4 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/comments CommentsR POST
+/comments CommentsR GET POST

@@ -10,9 +10,14 @@ module TestImport
     , runDB
     , Spec
     , Example
+    , getWithParams
     , assertEqual'
+    , bodyEquals'
+    , insertComments
+    , clearComments
     ) where
 
+import Yesod (RedirectUrl, Yesod)
 import Yesod.Test
 import Database.Persist hiding (get)
 import Database.Persist.Sql (SqlPersistM, runSqlPersistMPool)
@@ -21,6 +26,8 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Aeson
 import Data.ByteString.Lazy (ByteString)
 import Data.Text (Text)
+
+import qualified Data.ByteString.Lazy.Char8 as BS
 
 import Foundation
 import Model
@@ -32,6 +39,13 @@ runDB :: SqlPersistM a -> Example a
 runDB query = do
     pool <- fmap connPool getTestYesod
     liftIO $ runSqlPersistMPool query pool
+
+getWithParams :: (RedirectUrl site url, Yesod site)
+              => url -> [(Text, Text)] -> YesodExample site ()
+getWithParams url params = request $ do
+    setMethod  "GET"
+    mapM (\(k, v) -> addGetParam k v) params
+    setUrl url
 
 -- | Like @assertEqual@ but no message argument.
 --
@@ -47,3 +61,19 @@ assertEqual' expected actual = assertEqual msg expected actual
             , "  Expected: " ++ show expected
             , "    Actual: " ++ show actual
             ]
+
+-- | Like @bodyEquals@ but taking a ByteString argument
+bodyEquals' :: ByteString -> YesodExample site ()
+bodyEquals' = bodyEquals . BS.unpack
+
+-- | Clear the comments database and add the given comments. Pass the
+--   empty list to just clear.
+insertComments :: [Comment] -> Example ()
+insertComments comments = runDB $ do
+    deleteWhere ([] :: [Filter Comment])
+    mapM_ insert comments
+
+-- | Clears the comments table.
+clearComments :: Example ()
+clearComments = insertComments []
+
