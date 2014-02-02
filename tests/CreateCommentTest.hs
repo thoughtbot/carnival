@@ -20,5 +20,5 @@ createCommentSpecs =
             postBody CommentsR (encode $ Comment thread body)
 
             ((Entity _ c):_) <- runDB $ selectList [] []
-            assertEqual' thread $ commentThread c
-            assertEqual' body $ commentBody c
+            assertEqual' (commentThread c) thread
+            assertEqual' (commentBody c) body

@@ -47,12 +47,12 @@ getWithParams url params = request $ do
     mapM_ (\(k, v) -> addGetParam k v) params
     setUrl url
 
--- | Like @assertEqual@ but no message argument.
+-- | Like @'assertEqual'@ but no message argument.
 --
---   > assertEqual' expected actual
+--   > assertEqual' actual expected
 --
 assertEqual' :: (Eq a, Show a) => a -> a -> YesodExample site ()
-assertEqual' expected actual = assertEqual msg expected actual
+assertEqual' actual expected = assertEqual msg actual expected
 
     where
         msg :: String
