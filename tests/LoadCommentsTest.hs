@@ -6,21 +6,24 @@ module LoadCommentsTest
 import TestImport
 
 loadCommentsSpecs :: Spec
-loadCommentsSpecs =
+loadCommentsSpecs = do
     ydescribe "GET /api/v1/comments" $ do
         yit "returns a list of all comments in the system" $ do
-            let comment = Comment "" ""
-            insertComments [comment]
+            let (thread, body) = ("thread", "body")
+            let comment = Comment thread body
+            [commentId] <- insertComments [comment]
 
             get CommentsR
 
-            bodyEquals' $ encode [comment]
+            bodyEquals' $ encode $ object
+                ["comments" .= [(Entity commentId comment)]]
 
         yit "can be limited by thread" $ do
             let thread = "A thread"
             let comment = Comment thread ""
-            insertComments [comment, Comment "x" "", Comment "y" ""]
+            (commentId:_) <- insertComments [comment, Comment "x" "", Comment "y" ""]
 
             getWithParams CommentsR [("thread", thread)]
 
-            bodyEquals' $ encode [comment]
+            bodyEquals' $ encode $ object
+                ["comments" .= [(Entity commentId comment)]]

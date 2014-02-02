@@ -71,12 +71,11 @@ bodyEquals' bs = do
 
 -- | Clear the comments database and add the given comments. Pass the
 --   empty list to just clear.
-insertComments :: [Comment] -> Example ()
+insertComments :: [Comment] -> Example [CommentId]
 insertComments comments = runDB $ do
     deleteWhere ([] :: [Filter Comment])
-    mapM_ insert comments
+    mapM insert comments
 
 -- | Clears the comments table.
 clearComments :: Example ()
-clearComments = insertComments []
-
+clearComments = insertComments [] >> return ()

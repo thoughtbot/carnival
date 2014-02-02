@@ -24,4 +24,4 @@ createCommentSpecs =
             assertEqual' (commentBody c) body
 
 commentJSON :: Text -> Text -> ByteString
-commentJSON thread body = encode $ Comment thread body
+commentJSON thread body = encode $ object ["thread" .= thread, "body" .= body]

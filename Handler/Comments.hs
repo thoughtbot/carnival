@@ -20,4 +20,4 @@ getCommentsR = do
 
     comments <- runDB $ selectList filters []
 
-    return . toJSON $ map entityVal comments
+    return $ object ["comments" .= comments]

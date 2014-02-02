@@ -1,4 +1,4 @@
-Comment json
+Comment
     thread Text
     body Text
     deriving Show
