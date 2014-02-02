@@ -1,6 +1,7 @@
 module Handler.Comments where
 
 import Import
+import Data.Maybe
 
 postCommentsR :: Handler ()
 postCommentsR = do
@@ -11,13 +12,11 @@ postCommentsR = do
 
 getCommentsR :: Handler Value
 getCommentsR = do
-    mthread <- lookupGetParam "thread"
-
-    let filters =
-            case mthread of
-            Just thread -> [CommentThread ==. thread]
-            _           -> []
-
+    filters <- fmap toThreadFilter $ lookupGetParam "thread"
     comments <- runDB $ selectList filters []
 
     return $ object ["comments" .= comments]
+
+    where
+        toThreadFilter :: Maybe Text -> [Filter Comment]
+        toThreadFilter = maybeToList . fmap (CommentThread ==.)
