@@ -23,5 +23,10 @@ createCommentSpecs =
             assertEqual' (commentThread c) thread
             assertEqual' (commentBody c) body
 
+        yit "responds with a 400 for invalid requests" $ do
+            postBody CommentsR $ encode $ object []
+
+            statusIs 400
+
 commentJSON :: Text -> Text -> ByteString
 commentJSON thread body = encode $ object ["thread" .= thread, "body" .= body]
