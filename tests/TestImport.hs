@@ -62,9 +62,12 @@ assertEqual' actual expected = assertEqual msg actual expected
             , "    Actual: " ++ show actual
             ]
 
--- | Like @bodyEquals@ but taking a ByteString argument
+-- | Like @bodyEquals@ but taking a @'ByteString'@ argument (as is
+--   returned by @'Data.Aeson.encode'@.
 bodyEquals' :: ByteString -> YesodExample site ()
-bodyEquals' = bodyEquals . BS.unpack
+bodyEquals' bs = do
+    printBody -- N.B. only shown if failure
+    bodyEquals $ BS.unpack bs
 
 -- | Clear the comments database and add the given comments. Pass the
 --   empty list to just clear.
