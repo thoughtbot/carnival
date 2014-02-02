@@ -44,7 +44,7 @@ getWithParams :: (RedirectUrl site url, Yesod site)
               => url -> [(Text, Text)] -> YesodExample site ()
 getWithParams url params = request $ do
     setMethod  "GET"
-    mapM (\(k, v) -> addGetParam k v) params
+    mapM_ (\(k, v) -> addGetParam k v) params
     setUrl url
 
 -- | Like @assertEqual@ but no message argument.
