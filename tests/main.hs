@@ -12,6 +12,7 @@ import Application (makeFoundation)
 
 import CreateCommentTest
 import EditCommentTest
+import DeleteCommentTest
 import LoadCommentsTest
 
 main :: IO ()
@@ -21,6 +22,7 @@ main = do
     hspec $ yesodSpec foundation $ do
         createCommentSpecs
         editCommentSpecs
+        deleteCommentSpecs
         loadCommentsSpecs
 
 testConfig :: IO (AppConfig DefaultEnv Extra)

@@ -109,3 +109,4 @@ test-suite test
                  , containers
                  , case-insensitive
                  , aeson
+                 , HUnit

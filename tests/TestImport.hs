@@ -16,6 +16,7 @@ module TestImport
     , insertComments
     , clearComments
     , putBody
+    , assertBool
     ) where
 
 import Yesod (RedirectUrl, Yesod)
@@ -29,6 +30,7 @@ import Data.ByteString.Lazy (ByteString)
 import Data.Text (Text)
 
 import qualified Data.ByteString.Lazy.Char8 as BS
+import qualified Test.HUnit as HUnit
 
 import Foundation
 import Model
@@ -87,3 +89,6 @@ putBody url body = request $ do
     setMethod "PUT"
     setUrl url
     setRequestBody body
+
+assertBool :: String -> Bool -> YesodExample site ()
+assertBool msg = liftIO . HUnit.assertBool msg
