@@ -10,7 +10,7 @@ deleteCommentSpecs =
     ydescribe "DELETE /api/v1/comment/:comment_id" $ do
         yit "deletes the given comment and responds 200" $ do
             clearComments
-            commentId <- runDB $ insert $ Comment "" ""
+            [commentId] <- insertComments [Comment "" ""]
 
             request $ do
                 setMethod "DELETE"

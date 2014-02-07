@@ -3,22 +3,23 @@ module EditCommentTest
     ( editCommentSpecs
     ) where
 
-import TestImport
+import TestImport hiding (get)
+import Database.Persist (get)
 
 editCommentSpecs :: Spec
 editCommentSpecs =
     ydescribe "PUT /api/v1/comment/:comment_id" $ do
         yit "updates the given comment and responds 200" $ do
             clearComments
-            let (thread, body) = ("A thread", "A body")
+            let (thread, body, newBody) = ("A thread", "A body", "A new body")
                 comment = Comment thread body
 
-            cId <- runDB $ insert comment
+            [commentId] <- insertComments [comment]
 
-            putBody (CommentR cId) $ encode $ object
+            putBody (CommentR commentId) $ encode $ object
                 [ "thread" .= thread
-                , "body"   .= ("A new body" :: Text)
+                , "body"   .= newBody
                 ]
 
-            ((Entity _ c):_) <- runDB $ selectList [] []
-            assertEqual' (commentBody c) "A new body"
+            Just c <- runDB $ get commentId
+            assertEqual' (commentBody c) newBody
