@@ -11,6 +11,7 @@ import Test.Hspec (hspec)
 import Application (makeFoundation)
 
 import CreateCommentTest
+import EditCommentTest
 import LoadCommentsTest
 
 main :: IO ()
@@ -19,6 +20,7 @@ main = do
 
     hspec $ yesodSpec foundation $ do
         createCommentSpecs
+        editCommentSpecs
         loadCommentsSpecs
 
 testConfig :: IO (AppConfig DefaultEnv Extra)

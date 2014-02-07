@@ -20,6 +20,7 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      Handler.Comments
+                     Handler.Comment
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

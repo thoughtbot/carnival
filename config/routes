@@ -4,3 +4,4 @@
 /robots.txt RobotsR GET
 
 /comments CommentsR GET POST
+/comments/#CommentId CommentR PUT DELETE

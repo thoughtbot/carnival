@@ -23,3 +23,9 @@ instance FromJSON Comment where
         <*> v .: "body"
 
     parseJSON _ = mzero
+
+toUpdates :: Comment -> [Update Comment]
+toUpdates c =
+    [ CommentThread =. (commentThread c)
+    , CommentBody   =. (commentBody c)
+    ]

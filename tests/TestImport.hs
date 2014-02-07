@@ -15,6 +15,7 @@ module TestImport
     , bodyEquals'
     , insertComments
     , clearComments
+    , putBody
     ) where
 
 import Yesod (RedirectUrl, Yesod)
@@ -65,9 +66,7 @@ assertEqual' actual expected = assertEqual msg actual expected
 -- | Like @bodyEquals@ but taking a @'ByteString'@ argument (as is
 --   returned by @'Data.Aeson.encode'@.
 bodyEquals' :: ByteString -> YesodExample site ()
-bodyEquals' bs = do
-    printBody -- N.B. only shown if failure
-    bodyEquals $ BS.unpack bs
+bodyEquals' = bodyEquals . BS.unpack
 
 -- | Clear the comments database and add the given comments. Pass the
 --   empty list to just clear.
@@ -79,3 +78,12 @@ insertComments comments = runDB $ do
 -- | Clears the comments table.
 clearComments :: Example ()
 clearComments = insertComments [] >> return ()
+
+putBody :: (Yesod site, RedirectUrl site url)
+        => url
+        -> ByteString
+        -> YesodExample site ()
+putBody url body = request $ do
+    setMethod "PUT"
+    setUrl url
+    setRequestBody body

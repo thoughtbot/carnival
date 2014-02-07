@@ -8,7 +8,7 @@ postCommentsR = do
     comment <- parseJsonBody_ :: Handler Comment
     _       <- runDB $ insert comment
 
-    sendResponseStatus status201 ("created" :: Text)
+    sendResponseStatus status201 ("CREATED" :: Text)
 
 getCommentsR :: Handler Value
 getCommentsR = do
