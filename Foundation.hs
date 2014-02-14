@@ -4,7 +4,7 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
-import Yesod.Auth.OAuth2 hiding (insert)
+import Yesod.Auth.OAuth2
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
@@ -18,8 +18,7 @@ import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
-import Data.Default (def)
-import Data.ByteString (ByteString)
+import Data.Text (Text)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -119,9 +118,10 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    --loginDest _ = HomeR
+    loginDest _ = undefined
+
     -- Where to send a user after logout
-    --logoutDest _ = HomeR
+    logoutDest _ = undefined
 
     getAuthId creds = runDB $ do
         x <- getBy $ UniqueUser $ credsIdent creds
@@ -131,13 +131,15 @@ instance YesodAuth App where
                 fmap Just $ insert $ User (credsIdent creds)
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authOAuth2 "carnival" (authLearn consumerKey consumerSecret) getCreds]
+    authPlugins _ = [authOAuth2 "carnival" (authLearn consumerKey consumerSecret)]
 
     authHttpManager = httpManager
 
+consumerKey :: Text
 consumerKey = "aa02cb577894ae12346b2cf7804514fefd4735d40896d51638f341da0782ba9a"
+
+consumerSecret :: Text
 consumerSecret = "74061353de336c0befd9ef20dc2902ddc80c6101e30f4e913cb2f258566ea8a0"
-getCreds = undefined
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
