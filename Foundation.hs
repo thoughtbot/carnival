@@ -118,17 +118,17 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = undefined
+    loginDest _ = HomeR
 
     -- Where to send a user after logout
-    logoutDest _ = undefined
+    logoutDest _ = HomeR
 
     getAuthId creds = runDB $ do
         x <- getBy $ UniqueUser $ credsIdent creds
         case x of
             Just (Entity uid _) -> return $ Just uid
             Nothing -> do
-                fmap Just $ insert $ User (credsIdent creds)
+                fmap Just $ insert $ buildUser creds
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins _ = [authOAuth2 "carnival" (authLearn consumerKey consumerSecret)]
@@ -140,6 +140,21 @@ consumerKey = "aa02cb577894ae12346b2cf7804514fefd4735d40896d51638f341da0782ba9a"
 
 consumerSecret :: Text
 consumerSecret = "74061353de336c0befd9ef20dc2902ddc80c6101e30f4e913cb2f258566ea8a0"
+
+buildUser :: Creds m -> User
+buildUser (Creds _ csId csExtra) = User
+    { userFirstName = lookup' "first_name" csExtra
+    , userLastName  = lookup' "last_name" csExtra
+    , userEmail     = lookup' "email" csExtra
+    , userIdent     = csId
+    }
+
+    where
+        lookup' :: Text -> [(Text, Text)] -> Text
+        lookup' k vals =
+            case lookup k vals of
+                Just v  -> v
+                Nothing -> ""
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.

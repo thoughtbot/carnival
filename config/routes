@@ -6,3 +6,5 @@
 
 /comments CommentsR GET POST
 /comments/#CommentId CommentR PUT DELETE
+
+/home HomeR GET

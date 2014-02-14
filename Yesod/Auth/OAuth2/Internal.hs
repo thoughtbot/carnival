@@ -5,6 +5,7 @@ module Yesod.Auth.OAuth2.Internal
     , authorizationUrl
     , AccessToken(..)
     , postAccessToken
+    , getWithToken
     ) where
 
 import Prelude
@@ -88,7 +89,33 @@ postAccessToken' oa code grant_type = do
                           , ("client_secret", Just $ oauthClientSecret oa)
                           , ("code", Just code)
                           , ("redirect_uri", oauthCallback oa)
-                          , ("grant_type", grant_type) ]
+                          , ("grant_type", grant_type)
+                          ]
+
+getWithToken :: (FromJSON a)
+             => AccessToken
+             -> BS.ByteString
+             -> IO (Maybe a)
+getWithToken token url = do
+    rsp <- request $ asJSON $ authorizeRequest token req
+    let code = (HT.statusCode . responseStatus) rsp
+
+    if code == 200
+        then return $ decode $ responseBody rsp
+        else throwIO . OAuthException $ "getWithToken failed: " ++ show code ++ BSL.unpack (responseBody rsp)
+
+      where
+        req = fromJust $ parseUrl $ BS.unpack url
+
+asJSON :: Request -> Request
+asJSON r = r { requestHeaders = acceptJSON : requestHeaders r }
+    where
+        acceptJSON = ("Accept", "application/json")
+
+authorizeRequest :: AccessToken -> Request -> Request
+authorizeRequest (AccessToken token) req = req { requestHeaders = auth : requestHeaders req }
+  where
+          auth = ("Authorization", BS.concat ["Bearer ", token])
 
 request :: Request -> IO (Response BSL.ByteString)
 request req =

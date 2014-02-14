@@ -1,8 +1,8 @@
-module Yesod.Auth.OAuth2
-    ( authOAuth2
-    , authLearn
-    , oauth2Google
-    ) where
+module Yesod.Auth.OAuth2 where
+    -- ( authOAuth2
+    -- , authLearn
+    -- , oauth2Google
+    -- ) where
 
 import Prelude
 import Control.Monad.IO.Class
@@ -15,6 +15,11 @@ import Yesod.Core
 import Yesod.Form
 
 import Yesod.Auth.OAuth2.Internal
+
+import Control.Applicative ((<$>), (<*>))
+import Control.Monad (mzero)
+
+import qualified Data.Text as T
 
 oauth2Url :: Text -> AuthRoute
 oauth2Url name = PluginR name ["forward"]
@@ -36,11 +41,16 @@ authOAuth2 name oauth = AuthPlugin name dispatch login
                 redirect $ bsToText $ authorizationUrl oauth'
 
         dispatch "GET" ["callback"] = do
+            tm <- getRouteToParent
+            render <- lift $ getUrlRender
             code <- lift $ runInputGet $ ireq textField "code"
-            mtoken <- liftIO $ postAccessToken oauth (encodeUtf8 code) (Just "authorization_code")
+            let oauth' = oauth { oauthCallback = Just $ encodeUtf8 $ render $ tm url }
+            mtoken <- liftIO $ postAccessToken oauth' (encodeUtf8 code) (Just "authorization_code")
             case mtoken of
                 Nothing    -> permissionDenied "Couldn't get token"
-                Just token -> getCreds token
+                Just token -> do
+                    creds <- liftIO $ mkCreds token
+                    lift $ setCreds True creds
 
         dispatch _ _ = notFound
 
@@ -49,8 +59,46 @@ authOAuth2 name oauth = AuthPlugin name dispatch login
             let oaUrl = render $ tm $ oauth2Url name
             [whamlet| <a href=#{oaUrl}>Login via #{name} |]
 
--- TODO Parse identifier out of OAuth2 response
-getCreds = undefined
+data ProfileResponse = ProfileResponse
+    { prId :: Int
+    , prFirstName :: Text
+    , prLastName :: Text
+    , prEmail :: Text
+    } deriving Show
+
+instance FromJSON ProfileResponse where
+    parseJSON (Object o) = ProfileResponse
+                         <$> o .: "id"
+                         <*> o .: "first_name"
+                         <*> o .: "last_name"
+                         <*> o .: "email"
+
+    parseJSON _          = mzero
+
+data NestedProfileResponse = NestedProfileResponse
+    { nprUser :: ProfileResponse
+    } deriving Show
+
+instance FromJSON NestedProfileResponse where
+    parseJSON (Object o) = NestedProfileResponse <$> o .: "user"
+    parseJSON _          = mzero
+
+mkCreds token = do
+    Just resp <- getWithToken token "http://learn.thoughtbot.com/api/v1/me.json"
+
+    let pResp = nprUser resp
+
+    -- use access token to request profile info
+    return $ Creds "learn" (T.pack $ show $ prId pResp)
+           [ ("first_name", prFirstName pResp)
+           , ("last_name" , prLastName pResp)
+           , ("email"     , prEmail pResp)
+           ]
+
+-- -- TODO Parse identifier out of OAuth2 response
+-- --getCreds :: AccessToken -> IO (Creds m)
+-- getCreds :: AccessToken -> Creds m
+-- getCreds (AccessToken bs) = Creds "carnival" (bsToText bs) []
 
 authLearn :: Text -> Text -> OAuth2
 authLearn clientId clientSecret = newOAuth2

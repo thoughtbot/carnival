@@ -4,6 +4,9 @@ Comment
     deriving Show
 
 User
+    firstName Text
+    lastName Text
+    email Text
     ident Text
     UniqueUser ident
     deriving Typeable

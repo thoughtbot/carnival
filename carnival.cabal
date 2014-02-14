@@ -21,6 +21,7 @@ library
                      Settings.Development
                      Handler.Comments
                      Handler.Comment
+                     Handler.Home
 
     other-modules: Yesod.Auth.OAuth2
                    Yesod.Auth.OAuth2.Internal
