@@ -55,11 +55,14 @@ install_dependencies() {
 }
 
 check_sandbox_path() {
-  if [ "$(which yesod)" != "./.cabal-sandbox/bin/yesod" ]; then
-    printf "Error: couldn't find sandboxed yesod from PATH\n" >&2
-    printf "Add ./.cabal-sandbox/bin to your PATH and run ./bin/setup again\n" >&2
-    exit 1
-  fi
+  case "$(which yesod)" in
+    *cabal-sandbox*) : ;;
+    *)
+      printf "Error: couldn't find sandboxed yesod from PATH\n" >&2
+      printf "Add ./.cabal-sandbox/bin to your PATH and run ./bin/setup again\n" >&2
+      exit 1
+      ;;
+  esac
 }
 
 test_connection() {
