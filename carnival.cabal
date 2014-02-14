@@ -22,6 +22,9 @@ library
                      Handler.Comments
                      Handler.Comment
 
+    other-modules: Yesod.Auth.OAuth2
+                   Yesod.Auth.OAuth2.Internal
+
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
         ghc-options:   -Wall -O0
@@ -73,6 +76,7 @@ library
                  , fast-logger                   >= 2.1.4      && < 2.2
                  , wai-logger                    >= 2.1        && < 2.2
                  , http-types
+                 , transformers
 
 executable         carnival
     if flag(library-only)

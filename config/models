@@ -2,3 +2,8 @@ Comment
     thread Text
     body Text
     deriving Show
+
+User
+    ident Text
+    UniqueUser ident
+    deriving Typeable

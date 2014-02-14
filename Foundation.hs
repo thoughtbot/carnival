@@ -3,6 +3,8 @@ module Foundation where
 import Prelude
 import Yesod
 import Yesod.Static
+import Yesod.Auth
+import Yesod.Auth.OAuth2 hiding (insert)
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
@@ -12,10 +14,12 @@ import qualified Database.Persist
 import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
 import Settings (widgetFile, Extra (..))
+import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
-import Model
+import Data.Default (def)
+import Data.ByteString (ByteString)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -79,6 +83,9 @@ instance Yesod App where
         Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
     urlRenderOverride _ _ = Nothing
 
+    -- The page to be redirected to when authentication is required.
+    authRoute _ = Just $ AuthR LoginR
+
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
@@ -107,6 +114,30 @@ instance YesodPersist App where
     runDB = defaultRunDB persistConfig connPool
 instance YesodPersistRunner App where
     getDBRunner = defaultGetDBRunner connPool
+
+instance YesodAuth App where
+    type AuthId App = UserId
+
+    -- Where to send a user after successful login
+    --loginDest _ = HomeR
+    -- Where to send a user after logout
+    --logoutDest _ = HomeR
+
+    getAuthId creds = runDB $ do
+        x <- getBy $ UniqueUser $ credsIdent creds
+        case x of
+            Just (Entity uid _) -> return $ Just uid
+            Nothing -> do
+                fmap Just $ insert $ User (credsIdent creds)
+
+    -- You can add other plugins like BrowserID, email or OAuth here
+    authPlugins _ = [authOAuth2 "carnival" (authLearn consumerKey consumerSecret) getCreds]
+
+    authHttpManager = httpManager
+
+consumerKey = "aa02cb577894ae12346b2cf7804514fefd4735d40896d51638f341da0782ba9a"
+consumerSecret = "74061353de336c0befd9ef20dc2902ddc80c6101e30f4e913cb2f258566ea8a0"
+getCreds = undefined
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
