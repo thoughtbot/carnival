@@ -1,0 +1,89 @@
+#!/usr/bin/env sh
+
+# Set up app. Run this script immediately after cloning the codebase.
+# https://github.com/thoughtbot/guides/tree/master/protocol
+
+check_dependencies() {
+  for dependency in alex cabal ghc happy psql; do
+    if ! which "$dependency" > /dev/null; then
+      printf "Missing dependency: %s\n" "$dependency" >&2
+      exit 1
+    fi
+  done
+}
+
+create_databases() {
+  createdb "$app" 2>/dev/null || true
+  createdb "${app}_test" 2>/dev/null || true
+
+  psql template1 > /dev/null <<SQL
+    DO
+    \$body\$
+      BEGIN
+        IF NOT EXISTS (SELECT * FROM pg_catalog.pg_user WHERE usename = '$user')
+        THEN CREATE USER $user WITH PASSWORD '$user';
+        END IF;
+      END
+    \$body\$;
+
+    GRANT ALL PRIVILEGES ON DATABASE $app to $user;
+    GRANT ALL PRIVILEGES ON DATABASE ${app}_test to $user;
+SQL
+
+  if ! test_connections > /dev/null; then
+    printf "Couldn't connect to database\n" >&2
+    exit 1
+  fi
+}
+
+create_sandbox() {
+  if [ ! -e .cabal-sandbox ]; then
+    # Update Cabal
+    cabal update
+    cabal install cabal-install
+
+    # Create a sandbox for the project
+    cabal sandbox init
+
+    # Install framework
+    cabal install yesod-platform yesod-bin
+  fi
+}
+
+install_dependencies() {
+  cabal install --only-dependencies --avoid-reinstalls
+}
+
+check_sandbox_path() {
+  if [ "$(which yesod)" != "./.cabal-sandbox/bin/yesod" ]; then
+    printf "Error: couldn't find sandboxed yesod from PATH\n" >&2
+    printf "Add ./.cabal-sandbox/bin to your PATH and run ./bin/setup again\n" >&2
+    exit 1
+  fi
+}
+
+test_connection() {
+  local dbname="$1"
+  PGPASSWORD=$user
+  psql --username "$user" --dbname "$dbname" < /dev/null
+}
+
+test_connections() {
+  test_connection "$app" &&
+    test_connection "${app}_test"
+}
+
+app=carnival
+user="$app"
+
+set -e
+
+check_dependencies
+create_databases
+create_sandbox
+install_dependencies
+check_sandbox_path
+
+# Print instructions
+printf "\nSetup complete.\n"
+printf "Run \`yesod devel\` to run the site.\n"

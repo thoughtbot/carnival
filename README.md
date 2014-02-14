@@ -4,50 +4,19 @@ A disqus-like commenting service powering http://robots.thoughtbot.com.
 
 ## Getting started
 
-* Install ghc, alex, happy, and cabal-install.
+Install ghc, alex, happy, cabal, and Postgresql. On OS X, the easiest way is to
+install Haskell Platform using homebrew:
 
-*See [here](http://www.haskell.org/platform/mac.html).*
+    $ brew install haskell-platform
 
-* Update Cabal:
+Run the setup script first:
 
-```
-$ cabal update
-$ cabal install cabal-install
-```
+    $ bin/setup
 
-* Create a sandbox for the project:
+Then boot the site:
 
-```
-$ cabal sandbox init
-```
+    $ yesod devel
 
-*Ensure `./.cabal-sandbox/bin` is in your path.*
+And run the tests:
 
-* Install Yesod:
-
-```
-$ cabal install yesod-platform yesod-bin
-```
-
-* Setup the database:
-
-```
-$ psql
-postgres=# CREATE USER carnival WITH PASSWORD 'carnival';
-postgres=# CREATE DATABASE carnival;
-postgres=# CREATE DATABASE carnival_test;
-postgres=# GRANT ALL PRIVILEGES ON DATABASE carnival to carnival;
-postgres=# GRANT ALL PRIVILEGES ON DATABASE carnival_test to carnival;
-```
-
-* Run the site:
-
-```
-$ yesod devel
-```
-
-* Run the tests:
-
-```
-$ yesod test
-```
+    $ yesod test
