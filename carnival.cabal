@@ -19,9 +19,9 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     Handler.Session
                      Handler.Comments
                      Handler.Comment
-                     Handler.Home
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
