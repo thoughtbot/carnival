@@ -4,7 +4,7 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
-import Yesod.Auth.OAuth2
+import Yesod.Auth.OAuth2.Learn
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
@@ -131,15 +131,15 @@ instance YesodAuth App where
                 fmap Just $ insert $ buildUser creds
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [authOAuth2 "carnival" (authLearn consumerKey consumerSecret)]
+    authPlugins _ = [oauth2Learn clientId clientSecret]
 
     authHttpManager = httpManager
 
-consumerKey :: Text
-consumerKey = "aa02cb577894ae12346b2cf7804514fefd4735d40896d51638f341da0782ba9a"
+clientId :: Text
+clientId = "aa02cb577894ae12346b2cf7804514fefd4735d40896d51638f341da0782ba9a"
 
-consumerSecret :: Text
-consumerSecret = "74061353de336c0befd9ef20dc2902ddc80c6101e30f4e913cb2f258566ea8a0"
+clientSecret :: Text
+clientSecret = "74061353de336c0befd9ef20dc2902ddc80c6101e30f4e913cb2f258566ea8a0"
 
 buildUser :: Creds m -> User
 buildUser (Creds _ csId csExtra) = User
