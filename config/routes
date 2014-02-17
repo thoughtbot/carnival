@@ -1,5 +1,6 @@
 /static StaticR Static getStatic
 /auth   AuthR   Auth   getAuth
+/embed EmbedR GET
 
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET

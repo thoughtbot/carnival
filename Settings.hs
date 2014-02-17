@@ -17,6 +17,8 @@ import Control.Applicative
 import Settings.Development
 import Data.Default (def)
 import Text.Hamlet
+import Text.Coffee
+import Text.Lucius
 
 -- | Which Persistent backend this site is using.
 type PersistConf = PostgresConf
@@ -52,7 +54,10 @@ staticRoot conf = [st|#{appRoot conf}/static|]
 -- https://github.com/yesodweb/yesod/wiki/Overriding-widgetFile
 widgetFileSettings :: WidgetFileSettings
 widgetFileSettings = def
-    { wfsHamletSettings = defaultHamletSettings
+    { wfsLanguages = \hset -> defaultTemplateLanguages hset ++
+        [ TemplateLanguage True  "coffee"  Text.Coffee.coffeeFile   Text.Coffee.coffeeFileReload
+        ]
+    , wfsHamletSettings = defaultHamletSettings
         { hamletNewlines = AlwaysNewlines
         }
     }
@@ -64,6 +69,14 @@ widgetFile :: String -> Q Exp
 widgetFile = (if development then widgetFileReload
                              else widgetFileNoReload)
               widgetFileSettings
+
+coffeeFile :: String -> Q Exp
+coffeeFile f = (if development then Text.Coffee.coffeeFileReload $ globFile "coffee" f
+                               else Text.Coffee.coffeeFile $ globFile "coffee" f)
+
+luciusFile :: String -> Q Exp
+luciusFile f = (if development then Text.Lucius.luciusFileReload $ globFile "lucius" f
+                               else Text.Lucius.luciusFile $ globFile "lucius" f)
 
 data Extra = Extra
     { extraCopyright :: Text

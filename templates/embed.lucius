@@ -1,0 +1,75 @@
+article .comments {
+  cursor: pointer;
+  float: right;
+  margin-left: 10px;
+  opacity: 0;
+  padding: 0;
+  z-index: 9999;
+
+  .count {
+    background-image: url(/static/img/comments.png);
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    color: #fff;
+    display: block;
+    font-size: 11px;
+    height: 24px;
+    line-height: 20px;
+    margin-top: -2px;
+    text-align: center;
+    width: 20px;
+  }
+
+  ol, form {
+    display: none;
+  }
+}
+
+article.commenting .comments {
+  width: 180px;
+}
+
+article.commenting .comments.commenting {
+  ol {
+    border-bottom: 1px solid #f2f2f0;
+    display: block;
+    float: right;
+    margin-left: 0;
+    margin-top: -24px;
+    width: 150px;
+
+    li {
+      border-top: 1px solid #f2f2f0;
+      box-sizing: border-box;
+      list-style-type: none;
+      font-size: 14px;
+      margin: 0;
+      padding-bottom: 20px;
+      padding-top: 20px;
+
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .author {
+    font-weight: bold;
+  }
+
+  form {
+    display: block;
+    float: right;
+    width: 150px;
+
+    textarea {
+      appearance: none;
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      -webkit-box-shadow: none;
+      border-radius: 0;
+      padding: 0;
+      border: 0;
+    }
+  }
+}

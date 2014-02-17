@@ -1,10 +1,10 @@
 # Carnival
 
-A disqus-like commenting service powering http://robots.thoughtbot.com.
+A medium/disqus-like commenting service powering http://robots.thoughtbot.com.
 
 ## Getting started
 
-Install ghc, alex, happy, cabal, and Postgresql. On OS X, the easiest way is to
+Install ghc, alex, happy, cabal, Postgresql. On OS X, the easiest way is to
 install Haskell Platform using homebrew:
 
     $ brew install haskell-platform
