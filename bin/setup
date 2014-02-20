@@ -52,17 +52,6 @@ create_sandbox() {
     # Install framework
     cabal install yesod-platform yesod-bin
   fi
-
-  # Add forked dependencies, will be removed once the packages are
-  # released to Hackage.
-  for dep in hoauth2 yesod-auth-oauth2; do
-    if [ ! -d ../"$dep" ]; then
-      cd .. && git clone "https://github.com/pbrisbin/$dep"
-      cd -
-    fi
-
-    cabal sandbox add-source ../"$dep"
-  done
 }
 
 install_dependencies() {
