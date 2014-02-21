@@ -39,8 +39,6 @@ SQL
 }
 
 create_sandbox() {
-  local dep
-
   if [ ! -e .cabal-sandbox ]; then
     # Update Cabal
     cabal update
