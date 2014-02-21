@@ -18,7 +18,6 @@ import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
-import Data.Text (Text)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -125,13 +124,13 @@ instance YesodAuth App where
     logoutDest _ = SessionR
 
     getAuthId creds = runDB $ do
-        x <- getBy $ UniqueUser $ credsIdent creds
-        case x of
-            Just (Entity uid _) -> return $ Just uid
-            Nothing -> do
-                fmap Just $ insert $ buildUser creds
+        muser <- getBy $ UniqueUser $ credsIdent creds
 
-    -- You can add other plugins like BrowserID, email or OAuth here
+        case (muser, buildUser creds) of
+            (Just (Entity uid _), _     ) -> return $ Just uid
+            (_                  , Just u) -> fmap Just $ insert u
+            _                             -> return Nothing
+
     authPlugins m =
         [ oauth2Learn
             (learnOauthClientId $ learnOAuthKeys m)
@@ -140,20 +139,18 @@ instance YesodAuth App where
 
     authHttpManager = httpManager
 
-buildUser :: Creds m -> User
-buildUser (Creds _ csId csExtra) = User
-    { userFirstName = lookup' "first_name" csExtra
-    , userLastName  = lookup' "last_name" csExtra
-    , userEmail     = lookup' "email" csExtra
-    , userIdent     = csId
-    }
+buildUser :: Creds m -> Maybe User
+buildUser (Creds _ csId csExtra) = do
+    firstName <- lookup "first_name" csExtra
+    lastName  <- lookup "last_name" csExtra
+    email     <- lookup "email" csExtra
 
-    where
-        lookup' :: Text -> [(Text, Text)] -> Text
-        lookup' k vals =
-            case lookup k vals of
-                Just v  -> v
-                Nothing -> ""
+    return User
+        { userFirstName = firstName
+        , userLastName  = lastName
+        , userEmail     = email
+        , userIdent     = csId
+        }
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
