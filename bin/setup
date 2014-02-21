@@ -38,6 +38,12 @@ SQL
   fi
 }
 
+delete_sandbox() {
+  if [ "${RESET:-0}" -eq 1 ] && [ -e .cabal-sandbox ]; then
+    cabal sandbox delete
+  fi
+}
+
 create_sandbox() {
   if [ ! -e .cabal-sandbox ]; then
     # Update Cabal
@@ -85,6 +91,7 @@ set -e
 
 check_dependencies
 create_databases
+delete_sandbox
 create_sandbox
 install_dependencies
 check_sandbox_path
