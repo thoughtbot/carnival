@@ -13,7 +13,7 @@ import Settings.Development (development)
 import qualified Database.Persist
 import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
-import Settings (widgetFile, Extra (..))
+import Settings (widgetFile, Extra (..), LearnOAuthKeys (..))
 import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
@@ -31,6 +31,7 @@ data App = App
     , httpManager :: Manager
     , persistConfig :: Settings.PersistConf
     , appLogger :: Logger
+    , learnOAuthKeys :: LearnOAuthKeys
     }
 
 -- Set up i18n messages. See the message folder.
@@ -131,15 +132,13 @@ instance YesodAuth App where
                 fmap Just $ insert $ buildUser creds
 
     -- You can add other plugins like BrowserID, email or OAuth here
-    authPlugins _ = [oauth2Learn clientId clientSecret]
+    authPlugins m =
+        [ oauth2Learn
+            (learnOauthClientId $ learnOAuthKeys m)
+            (learnOauthClientSecret $ learnOAuthKeys m)
+        ]
 
     authHttpManager = httpManager
-
-clientId :: Text
-clientId = "aa02cb577894ae12346b2cf7804514fefd4735d40896d51638f341da0782ba9a"
-
-clientSecret :: Text
-clientSecret = "74061353de336c0befd9ef20dc2902ddc80c6101e30f4e913cb2f258566ea8a0"
 
 buildUser :: Creds m -> User
 buildUser (Creds _ csId csExtra) = User
