@@ -1,1 +1,2 @@
-^{widget}
+<div .container>
+  ^{widget}
