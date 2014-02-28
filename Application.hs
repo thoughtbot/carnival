@@ -7,6 +7,7 @@ module Application
 
 import Import
 import Settings
+import Yesod.Auth
 import Yesod.Default.Config
 import Yesod.Default.Main
 import Yesod.Default.Handlers
@@ -24,10 +25,14 @@ import Network.Wai.Logger (clockDateCacher)
 import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
 
+import System.Environment (lookupEnv)
+import qualified Data.Text as T
+
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
 import Handler.Comments
 import Handler.Comment
+import Handler.Session
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -79,8 +84,10 @@ makeFoundation conf = do
             updateLoop
     _ <- forkIO updateLoop
 
+    keys <- getLearnOAuthKeys
+
     let logger = Yesod.Core.Types.Logger loggerSet' getter
-        foundation = App conf s p manager dbconf logger
+        foundation = App conf s p manager dbconf logger keys
 
     -- Perform database migration using our application's logging settings.
     runLoggingT
@@ -88,6 +95,21 @@ makeFoundation conf = do
         (messageLoggerSource foundation logger)
 
     return foundation
+
+    where
+        getLearnOAuthKeys :: IO LearnOAuthKeys
+        getLearnOAuthKeys = do
+            envClientId     <- lookupEnv "LEARN_OAUTH_CLIENT_ID"
+            envClientSecret <- lookupEnv "LEARN_OAUTH_CLIENT_SECRET"
+
+            case (envClientId, envClientSecret) of
+                (Just clientId, Just clientSecret) ->
+                    return LearnOAuthKeys
+                        { learnOauthClientId     = T.pack clientId
+                        , learnOauthClientSecret = T.pack clientSecret
+                        }
+
+                _ -> return learnOAuthKeysDev
 
 -- for yesod devel
 getApplicationDev :: IO (Int, Application)

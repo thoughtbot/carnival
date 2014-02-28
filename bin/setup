@@ -4,6 +4,8 @@
 # https://github.com/thoughtbot/guides/tree/master/protocol
 
 check_dependencies() {
+  local dependency
+
   for dependency in alex cabal ghc happy psql; do
     if ! which "$dependency" > /dev/null; then
       printf "Missing dependency: %s\n" "$dependency" >&2
@@ -33,6 +35,12 @@ SQL
   if ! test_connections > /dev/null; then
     printf "Couldn't connect to database\n" >&2
     exit 1
+  fi
+}
+
+delete_sandbox() {
+  if [ "${RESET:-0}" -eq 1 ] && [ -e .cabal-sandbox ]; then
+    cabal sandbox delete
   fi
 }
 
@@ -83,6 +91,7 @@ set -e
 
 check_dependencies
 create_databases
+delete_sandbox
 create_sandbox
 install_dependencies
 check_sandbox_path

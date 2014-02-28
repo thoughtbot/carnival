@@ -74,3 +74,14 @@ parseExtra :: DefaultEnv -> Object -> Parser Extra
 parseExtra _ o = Extra
     <$> o .:  "copyright"
     <*> o .:? "analytics"
+
+data LearnOAuthKeys = LearnOAuthKeys
+    { learnOauthClientId     :: Text
+    , learnOauthClientSecret :: Text
+    }
+
+learnOAuthKeysDev :: LearnOAuthKeys
+learnOAuthKeysDev = LearnOAuthKeys
+    { learnOauthClientId     = "aa02cb577894ae12346b2cf7804514fefd4735d40896d51638f341da0782ba9a"
+    , learnOauthClientSecret = "74061353de336c0befd9ef20dc2902ddc80c6101e30f4e913cb2f258566ea8a0"
+    }

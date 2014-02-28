@@ -3,6 +3,8 @@ module Foundation where
 import Prelude
 import Yesod
 import Yesod.Static
+import Yesod.Auth
+import Yesod.Auth.OAuth2.Learn
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
@@ -11,11 +13,12 @@ import Settings.Development (development)
 import qualified Database.Persist
 import Database.Persist.Sql (SqlPersistT)
 import Settings.StaticFiles
-import Settings (widgetFile, Extra (..))
+import Settings (widgetFile, Extra (..), LearnOAuthKeys (..))
+import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
-import Model
+import Control.Applicative ((<$>), (<*>), pure)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -28,6 +31,7 @@ data App = App
     , httpManager :: Manager
     , persistConfig :: Settings.PersistConf
     , appLogger :: Logger
+    , learnOAuthKeys :: LearnOAuthKeys
     }
 
 -- Set up i18n messages. See the message folder.
@@ -79,6 +83,9 @@ instance Yesod App where
         Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
     urlRenderOverride _ _ = Nothing
 
+    -- The page to be redirected to when authentication is required.
+    authRoute _ = Just $ AuthR LoginR
+
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
@@ -107,6 +114,40 @@ instance YesodPersist App where
     runDB = defaultRunDB persistConfig connPool
 instance YesodPersistRunner App where
     getDBRunner = defaultGetDBRunner connPool
+
+instance YesodAuth App where
+    type AuthId App = UserId
+
+    -- Where to send a user after successful login
+    loginDest _ = SessionR
+
+    -- Where to send a user after logout
+    logoutDest _ = SessionR
+
+    getAuthId creds = runDB $ do
+        muser <- getBy $ UniqueUser $ credsIdent creds
+
+        case buildUser creds of
+            Nothing  -> return Nothing
+            (Just u) -> fmap Just $
+                case muser of
+                    (Just (Entity uid _)) -> replace uid u >> return uid
+                    _                     -> insert u
+
+    authPlugins m =
+        [ oauth2Learn
+            (learnOauthClientId $ learnOAuthKeys m)
+            (learnOauthClientSecret $ learnOAuthKeys m)
+        ]
+
+    authHttpManager = httpManager
+
+buildUser :: Creds m -> Maybe User
+buildUser (Creds _ csId csExtra) =
+    User <$> lookup "first_name" csExtra
+         <*> lookup "last_name" csExtra
+         <*> lookup "emal" csExtra
+         <*> pure csId
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.

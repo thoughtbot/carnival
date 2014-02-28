@@ -1,7 +1,10 @@
 /static StaticR Static getStatic
+/auth   AuthR   Auth   getAuth
 
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
 /comments CommentsR GET POST
 /comments/#CommentId CommentR PUT DELETE
+
+/session SessionR GET
