@@ -127,10 +127,12 @@ instance YesodAuth App where
     getAuthId creds = runDB $ do
         muser <- getBy $ UniqueUser $ credsIdent creds
 
-        case (muser, buildUser creds) of
-            (Just (Entity uid _), _     ) -> return $ Just uid
-            (_                  , Just u) -> fmap Just $ insert u
-            _                             -> return Nothing
+        case buildUser creds of
+            Nothing  -> return Nothing
+            (Just u) -> fmap Just $
+                case muser of
+                    (Just (Entity uid _)) -> replace uid u >> return uid
+                    _                     -> insert u
 
     authPlugins m =
         [ oauth2Learn
