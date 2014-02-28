@@ -18,6 +18,7 @@ import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
+import Control.Applicative ((<$>), (<*>), pure)
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -140,17 +141,11 @@ instance YesodAuth App where
     authHttpManager = httpManager
 
 buildUser :: Creds m -> Maybe User
-buildUser (Creds _ csId csExtra) = do
-    firstName <- lookup "first_name" csExtra
-    lastName  <- lookup "last_name" csExtra
-    email     <- lookup "email" csExtra
-
-    return User
-        { userFirstName = firstName
-        , userLastName  = lastName
-        , userEmail     = email
-        , userIdent     = csId
-        }
+buildUser (Creds _ csId csExtra) =
+    User <$> lookup "first_name" csExtra
+         <*> lookup "last_name" csExtra
+         <*> lookup "emal" csExtra
+         <*> pure csId
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
