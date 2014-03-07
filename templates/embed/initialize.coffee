@@ -1,1 +1,1 @@
-carnival = new Carnival(document.getElementsByTagName('article'))
+carnival = new Carnival()

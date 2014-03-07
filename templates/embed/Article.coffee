@@ -6,7 +6,7 @@ class Article
     @bindEvents()
 
   createBlocks: ->
-    [].slice.call(@element.querySelectorAll(':scope > p, :scope > pre')).map (blockElement, index) =>
+    [].slice.call(@element.querySelectorAll(CarnivalOptions.block_selector)).map (blockElement, index) =>
       new Block(blockElement, @id, index)
 
   insertIntoDom: ->
