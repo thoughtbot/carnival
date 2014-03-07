@@ -22,6 +22,7 @@ library
                      Handler.Session
                      Handler.Comments
                      Handler.Comment
+                     Handler.Embed
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

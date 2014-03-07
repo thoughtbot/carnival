@@ -108,6 +108,21 @@ instance Yesod App where
 
     makeLogger = return . appLogger
 
+embedLayout :: Widget -> Handler Html
+embedLayout widget = do
+    master <- getYesod
+    mmsg <- getMessage
+
+    -- We break up the default layout into two components:
+    -- default-layout is the contents of the body tag, and
+    -- default-layout-wrapper is the entire page. Since the final
+    -- value passed to hamletToRepHtml cannot be a widget, this allows
+    -- you to use normal widget features in default-layout.
+
+    pc <- widgetToPageContent $ do
+        widget
+    giveUrlRenderer $(hamletFile "templates/embed-layout-wrapper.hamlet")
+
 -- How to run database actions.
 instance YesodPersist App where
     type YesodPersistBackend App = SqlPersistT

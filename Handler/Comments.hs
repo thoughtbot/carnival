@@ -5,6 +5,8 @@ import Data.Maybe
 
 postCommentsR :: Handler ()
 postCommentsR = do
+    addHeader "Access-Control-Allow-Origin" "*"
+    addHeader "Access-Control-Allow-Methods" "*"
     comment <- parseJsonBody_ :: Handler Comment
     _       <- runDB $ insert comment
 
@@ -12,6 +14,8 @@ postCommentsR = do
 
 getCommentsR :: Handler Value
 getCommentsR = do
+    addHeader "Access-Control-Allow-Origin" "*"
+    addHeader "Access-Control-Allow-Methods" "*"
     filters <- fmap toThreadFilter $ lookupGetParam "thread"
     comments <- runDB $ selectList filters []
 
