@@ -1,18 +1,1 @@
-<h1>Session Info
-
-<h3>Profile:
-
-$maybe Entity _ u <- mu
-  <ul>
-    <li>
-      <strong>Name
-      : #{userFirstName u} #{userLastName u}
-    <li>
-      <strong>Email
-      : #{userEmail u}
-
-$nothing
-  <p>Not authenticated
-
-<h3>Session:
-<pre>#{show sess}
+<h1>Logged in

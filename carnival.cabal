@@ -20,6 +20,7 @@ library
                      Settings.StaticFiles
                      Settings.Development
                      Helper.Auth
+                     Helper.Request
                      Handler.Session
                      Handler.Comments
                      Handler.Comment
@@ -78,6 +79,7 @@ library
                  , wai-logger                    >= 2.1        && < 2.2
                  , yesod-auth-oauth2             >= 0.0.4
                  , http-types
+                 , wai
 
 executable         carnival
     if flag(library-only)

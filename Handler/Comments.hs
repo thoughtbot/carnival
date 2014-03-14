@@ -2,11 +2,11 @@ module Handler.Comments where
 
 import Import
 import Data.Maybe
+import Helper.Request
 
 postCommentsR :: Handler ()
 postCommentsR = do
-    addHeader "Access-Control-Allow-Origin" "*"
-    addHeader "Access-Control-Allow-Methods" "*"
+    allowCrossOrigin
     comment <- parseJsonBody_ :: Handler Comment
     _       <- runDB $ insert comment
 
@@ -14,8 +14,7 @@ postCommentsR = do
 
 getCommentsR :: Handler Value
 getCommentsR = do
-    addHeader "Access-Control-Allow-Origin" "*"
-    addHeader "Access-Control-Allow-Methods" "*"
+    allowCrossOrigin
     filters <- fmap toThreadFilter $ lookupGetParam "thread"
     comments <- runDB $ selectList filters []
 

@@ -20,7 +20,7 @@ article .comments {
     width: 20px;
   }
 
-  ol, form {
+  ol, .comment-form {
     display: none;
   }
 }
@@ -57,19 +57,23 @@ article.commenting .comments.commenting {
     font-weight: bold;
   }
 
-  form {
+  .comment-form {
     display: block;
-    float: right;
-    width: 150px;
 
-    textarea {
-      appearance: none;
-      -moz-appearance: none;
-      -webkit-appearance: none;
-      -webkit-box-shadow: none;
-      border-radius: 0;
-      padding: 0;
-      border: 0;
+    form {
+      display: none;
+      float: right;
+      width: 150px;
+
+      textarea {
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        -webkit-box-shadow: none;
+        border-radius: 0;
+        padding: 0;
+        border: 0;
+      }
     }
   }
 }
