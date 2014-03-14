@@ -12,6 +12,14 @@ import Control.Monad
 share [mkPersist sqlOnlySettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
 
+instance ToJSON (Entity User) where
+    toJSON (Entity uid u) = object
+        [ "id"         .= (String $ toPathPiece uid)
+        , "first_name" .= userFirstName u
+        , "last_name"  .= userLastName u
+        , "email"      .= userEmail u
+        ]
+
 instance ToJSON (Entity Comment) where
     toJSON (Entity cid c) = object
         [ "id"     .= (String $ toPathPiece cid)

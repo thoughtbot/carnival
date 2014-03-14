@@ -19,10 +19,12 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     Helper.Auth
                      Handler.Session
                      Handler.Comments
                      Handler.Comment
                      Handler.Embed
+                     Handler.User
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

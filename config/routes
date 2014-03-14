@@ -9,3 +9,4 @@
 /comments/#CommentId CommentR PUT DELETE
 
 /session SessionR GET
+/user UserR GET
