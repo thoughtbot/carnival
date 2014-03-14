@@ -9,4 +9,4 @@ User
     email Text
     ident Text
     UniqueUser ident
-    deriving Typeable
+    deriving Show Typeable
