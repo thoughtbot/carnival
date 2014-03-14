@@ -1,6 +1,6 @@
 Comment
     thread Text
-    body Text
+    body Markdown
     deriving Show
 
 User
