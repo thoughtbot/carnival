@@ -161,7 +161,7 @@ buildUser :: Creds m -> Maybe User
 buildUser (Creds _ csId csExtra) =
     User <$> lookup "first_name" csExtra
          <*> lookup "last_name" csExtra
-         <*> lookup "emal" csExtra
+         <*> lookup "email" csExtra
          <*> pure csId
 
 -- This instance is required to use forms. You can modify renderMessage to
