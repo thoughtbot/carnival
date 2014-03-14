@@ -30,6 +30,7 @@ class Carnival
 
   @get: (url, callback) ->
     request = new XMLHttpRequest
+    request.withCredentials = true
     request.open('GET', 'http://' + CarnivalOptions.host + url, true)
     request.onload = () ->
       if request.status >= 200 and request.status < 400
@@ -38,8 +39,46 @@ class Carnival
 
   @post: (url, data, callback) ->
     request = new XMLHttpRequest()
+    request.withCredentials = true
     request.open('POST', 'http://' + CarnivalOptions.host + url, true)
     request.onload = () ->
       if request.status >= 200 and request.status < 400
         callback()
     request.send(JSON.stringify(data))
+
+  @userName: ->
+    Carnival.user.first_name + ' ' + Carnival.user.last_name
+
+  @isLoggedIn: ->
+    @getUser()
+    if @user
+      return true
+    else
+      return false
+
+  @getUser: ->
+    request = new XMLHttpRequest
+    request.withCredentials = true
+    request.open('GET', 'http://' + CarnivalOptions.host + '/user', false)
+    request.send()
+    if request.status is 200
+      @user = JSON.parse(request.responseText).user
+
+  @hasLoggedIn: (event) =>
+    if event.origin != 'http://' + CarnivalOptions.host
+      return
+    @loginWindow.close()
+    @getUser()
+    document.dispatchEvent(new CustomEvent("hasLoggedIn", bubbles: true))
+
+  @login: ->
+    width = 600
+    height = 600
+    left = (screen.width/2)-(width/2)
+    top = (screen.height/2)-(height/2)
+    @loginWindow = window.open(
+      'http://' + CarnivalOptions.host + '/auth/page/learn/forward',
+      'carnivalLogin',
+      'height='+height+',width='+width+',top='+top+',left='+left+',menubar=no'
+    )
+    window.addEventListener 'message', @hasLoggedIn

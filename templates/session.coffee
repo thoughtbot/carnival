@@ -1,0 +1,1 @@
+window.opener.postMessage("hasLoggedIn", '*')
