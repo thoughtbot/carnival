@@ -80,6 +80,8 @@ library
                  , yesod-auth-oauth2             >= 0.0.4
                  , http-types
                  , wai
+                 , yesod-markdown                >= 0.8.4
+                 , blaze-markup
 
 executable         carnival
     if flag(library-only)

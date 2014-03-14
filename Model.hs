@@ -9,6 +9,10 @@ import Data.Typeable (Typeable)
 import Control.Applicative
 import Control.Monad
 
+import Yesod.Markdown
+import Text.Blaze.Renderer.String
+import qualified Data.Text as T
+
 share [mkPersist sqlOnlySettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
 
@@ -22,15 +26,20 @@ instance ToJSON (Entity User) where
 
 instance ToJSON (Entity Comment) where
     toJSON (Entity cid c) = object
-        [ "id"     .= (String $ toPathPiece cid)
-        , "thread" .= commentThread c
-        , "body"   .= commentBody c
+        [ "id"        .= (String $ toPathPiece cid)
+        , "thread"    .= commentThread c
+        , "body"      .= (unMarkdown $ commentBody c)
+        , "body_html" .= (String $ renderMarkdown c)
         ]
 
 instance FromJSON Comment where
     parseJSON (Object v) = Comment
         <$> v .: "thread"
-        <*> v .: "body"
+        <*> fmap asMarkdown (v .: "body")
+
+        where
+            asMarkdown :: Text -> Markdown
+            asMarkdown = Markdown . T.filter (/= '\r')
 
     parseJSON _ = mzero
 
@@ -39,3 +48,6 @@ toUpdates c =
     [ CommentThread =. (commentThread c)
     , CommentBody   =. (commentBody c)
     ]
+
+renderMarkdown :: Comment -> Text
+renderMarkdown = T.pack . renderMarkup . markdownToHtml . commentBody
