@@ -21,6 +21,7 @@ library
                      Settings.Development
                      Helper.Auth
                      Helper.Request
+                     Helper.Comment
                      Handler.Session
                      Handler.Comments
                      Handler.Comment

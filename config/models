@@ -1,8 +1,3 @@
-Comment
-    thread Text
-    body Markdown
-    deriving Show
-
 User
     firstName Text
     lastName Text
@@ -10,3 +5,9 @@ User
     ident Text
     UniqueUser ident
     deriving Show Typeable
+
+Comment
+    user UserId
+    thread Text
+    body Markdown
+    deriving Show
