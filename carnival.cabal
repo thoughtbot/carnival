@@ -83,6 +83,7 @@ library
                  , wai
                  , yesod-markdown                >= 0.8.4
                  , blaze-markup
+                 , gravatar
 
 executable         carnival
     if flag(library-only)

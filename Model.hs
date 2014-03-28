@@ -5,6 +5,7 @@ import Yesod
 import Data.Text (Text)
 import Database.Persist.Quasi
 import Data.Typeable (Typeable)
+import Network.Gravatar
 
 import Yesod.Markdown
 import Text.Blaze.Renderer.String
@@ -17,14 +18,15 @@ userName :: User -> Text
 userName u = T.concat [userFirstName u , " " , userLastName u]
 
 userGravatar :: User -> Text
-userGravatar _ = "" -- TODO
+userGravatar = T.pack . gravatar def . userEmail
 
 instance ToJSON (Entity User) where
     toJSON (Entity uid u) = object
-        [ "id"         .= (String $ toPathPiece uid)
-        , "first_name" .= userFirstName u
-        , "last_name"  .= userLastName u
-        , "email"      .= userEmail u
+        [ "id"           .= (String $ toPathPiece uid)
+        , "first_name"   .= userFirstName u
+        , "last_name"    .= userLastName u
+        , "email"        .= userEmail u
+        , "gravatar_url" .= userGravatar u
         ]
 
 data UserComment = UserComment (Entity Comment) User
