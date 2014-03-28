@@ -107,6 +107,8 @@ article.commenting .comments.commenting {
       }
 
       input[type=submit] {
+        font-size: 14px;
+        padding: .5em .8em;
         margin-left: 42px;
         margin-top: 10px;
       }
