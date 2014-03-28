@@ -19,11 +19,11 @@ getCommentsR :: Handler Value
 getCommentsR = do
     allowCrossOrigin
 
-    filters  <- fmap toThreadFilter $ lookupGetParam "thread"
+    filters  <- fmap toArticleFilter $ lookupGetParam "article"
     comments <- runDB $ selectList filters []
 
     return $ object ["comments" .= comments]
 
     where
-        toThreadFilter :: Maybe Text -> [Filter Comment]
-        toThreadFilter = maybeToList . fmap (CommentThread ==.)
+        toArticleFilter :: Maybe Text -> [Filter Comment]
+        toArticleFilter = maybeToList . fmap (CommentArticle ==.)

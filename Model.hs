@@ -25,6 +25,7 @@ instance ToJSON (Entity Comment) where
     toJSON (Entity cid c) = object
         [ "id"        .= (String $ toPathPiece cid)
         , "user_id"   .= (String $ toPathPiece $ commentUser c)
+        , "article"   .= commentArticle c
         , "thread"    .= commentThread c
         , "body"      .= (unMarkdown $ commentBody c)
         , "body_html" .= (String $ renderMarkdown c)

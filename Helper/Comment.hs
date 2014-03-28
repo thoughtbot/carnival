@@ -6,13 +6,15 @@ import Yesod.Markdown
 import qualified Data.Text as T
 
 data CommentRequest = CommentRequest
-    { reqThread :: Text
-    , reqBody   :: Markdown
+    { reqArticle :: Text
+    , reqThread  :: Text
+    , reqBody    :: Markdown
     }
 
 instance FromJSON CommentRequest where
     parseJSON (Object v) = CommentRequest
-        <$> v .: "thread"
+        <$> v .: "article"
+        <*> v .: "thread"
         <*> fmap asMarkdown (v .: "body")
 
         where
@@ -23,9 +25,10 @@ instance FromJSON CommentRequest where
 
 toComment :: UserId -> CommentRequest -> Comment
 toComment uid req = Comment
-    { commentUser   = uid
-    , commentThread = reqThread req
-    , commentBody   = reqBody req
+    { commentUser    = uid
+    , commentArticle = reqArticle req
+    , commentThread  = reqThread req
+    , commentBody    = reqBody req
     }
 
 requireOwnComment :: UserId -> CommentId -> Handler ()

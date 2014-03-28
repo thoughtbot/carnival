@@ -8,6 +8,7 @@ User
 
 Comment
     user UserId
+    article Text
     thread Text
     body Markdown
     deriving Show
