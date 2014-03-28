@@ -1,14 +1,11 @@
 class CommentForm
-  constructor: (@comments) ->
+  constructor: (@thread) ->
     @createElement()
     @bindEvents()
 
-  id: ->
-    'comment-form-' + @comments.id()
-
   createElement: ->
-    @element = document.createElement('div')
-    @element.id = @id()
+    @element = document.createElement('li')
+    @element.id = 'comment-form'
     @element.className = 'comment-form'
     @element.innerHTML = "<a><span>+</span> Leave a note</a><form><div class='author'><img src=''><span></span></div><textarea placeholder='Leave a note' class='body'></textarea><input type='submit' value='Save'></form>"
 
@@ -24,13 +21,8 @@ class CommentForm
     @element.addEventListener 'submit', (event) =>
       event.preventDefault()
       event.stopPropagation()
-      Carnival.post(
-        '/comments',
-        @commentHash(),
-        () =>
-          @comments.add(new Comment(@commentHash()))
-          @element.querySelector('.body').value = ''
-      )
+      @thread.add(@body())
+      @element.querySelector('.body').value = ''
     @element.querySelector('a').addEventListener 'click', (event) =>
       event.preventDefault()
       event.stopPropagation()
@@ -46,6 +38,3 @@ class CommentForm
     @element.querySelector('form').style.display = 'block'
     @element.querySelector('.author span').innerHTML = Carnival.userName()
     @element.querySelector('.author img').src = Carnival.userGravatarUrl()
-
-  commentHash: ->
-    { article: @comments.block.articleId, thread: @comments.thread(), body: @body() }

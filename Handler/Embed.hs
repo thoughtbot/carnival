@@ -12,6 +12,7 @@ getEmbedR = do
         toWidget $(coffeeFile "embed/Block")
         toWidget $(coffeeFile "embed/Comment")
         toWidget $(coffeeFile "embed/CommentForm")
-        toWidget $(coffeeFile "embed/Comments")
+        toWidget $(coffeeFile "embed/Indicator")
+        toWidget $(coffeeFile "embed/Thread")
         toWidget $(coffeeFile "embed/Carnival")
         toWidget $(coffeeFile "embed/initialize")

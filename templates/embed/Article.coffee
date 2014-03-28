@@ -1,6 +1,7 @@
 class Article
   constructor: (@element) ->
     @id = @element.getAttribute('data-url').replace(/\//g, '')
+    @thread = new Thread(this)
     @fetchComments()
     @bindEvents()
 
@@ -10,14 +11,15 @@ class Article
 
   insertBlocksIntoDom: ->
     for block in @blocks
-      block.commentData = @commentData.filter((comment) =>
+      block.setComments(@commentData.filter((comment) =>
         comment.thread is block.id()
-      )
+      ))
       block.insert(@element)
 
   bindEvents: ->
-    @element.addEventListener 'commenting', =>
+    @element.addEventListener 'commenting', (event) =>
       Carnival.addClass(@element, 'commenting')
+      @thread.displayForBlock(event.detail)
     @element.addEventListener 'doneCommenting', =>
       if @element.querySelectorAll('.commenting').length is 0
         Carnival.removeClass(@element, 'commenting')
