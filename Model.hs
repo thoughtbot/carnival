@@ -13,6 +13,12 @@ import qualified Data.Text as T
 share [mkPersist sqlOnlySettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
 
+userName :: User -> Text
+userName u = T.concat [userFirstName u , " " , userLastName u]
+
+userGravatar :: User -> Text
+userGravatar _ = "" -- TODO
+
 instance ToJSON (Entity User) where
     toJSON (Entity uid u) = object
         [ "id"         .= (String $ toPathPiece uid)
@@ -21,14 +27,17 @@ instance ToJSON (Entity User) where
         , "email"      .= userEmail u
         ]
 
-instance ToJSON (Entity Comment) where
-    toJSON (Entity cid c) = object
-        [ "id"        .= (String $ toPathPiece cid)
-        , "user_id"   .= (String $ toPathPiece $ commentUser c)
-        , "article"   .= commentArticle c
-        , "thread"    .= commentThread c
-        , "body"      .= (unMarkdown $ commentBody c)
-        , "body_html" .= (String $ renderMarkdown c)
+data UserComment = UserComment (Entity Comment) User
+
+instance ToJSON UserComment where
+    toJSON (UserComment (Entity cid c) u) = object
+        [ "id"           .= (String $ toPathPiece cid)
+        , "user_name"    .= userName u
+        , "gravatar_url" .= userGravatar u
+        , "article"      .= commentArticle c
+        , "thread"       .= commentThread c
+        , "body"         .= (unMarkdown $ commentBody c)
+        , "body_html"    .= (String $ renderMarkdown c)
         ]
 
 renderMarkdown :: Comment -> Text
