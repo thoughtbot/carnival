@@ -49,6 +49,9 @@ class Carnival
   @userName: ->
     Carnival.user.first_name + ' ' + Carnival.user.last_name
 
+  @userGravatarUrl: ->
+    Carnival.user.gravatar_url
+
   @isLoggedIn: ->
     @getUser()
     if @user

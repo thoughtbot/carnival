@@ -55,10 +55,35 @@ article.commenting .comments.commenting {
 
   .author {
     font-weight: bold;
+    font-size: 14px;
+
+    img {
+      -moz-border-radius: 100%;
+      -webkit-border-radius: 100%;
+      border-radius: 100%;
+      float: left;
+      height: 32px;
+      width: 32px;
+      margin-top: 0px;
+    }
+
+    span {
+      display: inline-block;
+      margin-left: 10px;
+    }
+  }
+
+  .body {
+    margin-left: 42px;
   }
 
   .comment-form {
     display: block;
+
+    a {
+      font-size: 14px;
+      margin-left: 60px;
+    }
 
     form {
       display: none;
@@ -66,13 +91,24 @@ article.commenting .comments.commenting {
       width: 150px;
 
       textarea {
-        appearance: none;
         -moz-appearance: none;
         -webkit-appearance: none;
         -webkit-box-shadow: none;
+        appearance: none;
         border-radius: 0;
-        padding: 0;
         border: 0;
+        height: 50px;
+        font-size: 14px;
+        outline-offset: 0;
+        outline: none;
+        overflow: hidden;
+        width: 100%;
+        padding: 0;
+      }
+
+      input[type=submit] {
+        margin-left: 42px;
+        margin-top: 10px;
       }
     }
   }

@@ -10,12 +10,17 @@ class CommentForm
     @element = document.createElement('div')
     @element.id = @id()
     @element.className = 'comment-form'
-    @element.innerHTML = "<a>Leave a note</a><form><div class='author'></div><textarea placeholder='Leave a note' class='body'></textarea><input type='submit' value='Save'></form>"
+    @element.innerHTML = "<a><span>+</span> Leave a note</a><form><div class='author'><img src=''><span></span></div><textarea placeholder='Leave a note' class='body'></textarea><input type='submit' value='Save'></form>"
 
   body: ->
     @element.querySelector('.body').value
 
+  resizeTextarea: ->
+    if @scrollHeight > @clientHeight
+      @style.height = @scrollHeight + "px"
+
   bindEvents: ->
+    @element.querySelector('textarea').addEventListener 'keyup', @resizeTextarea
     @element.addEventListener 'submit', (event) =>
       event.preventDefault()
       event.stopPropagation()
@@ -39,7 +44,8 @@ class CommentForm
   showCommentForm: ->
     @element.querySelector('a').style.display = 'none'
     @element.querySelector('form').style.display = 'block'
-    @element.querySelector('.author').innerHTML = Carnival.userName()
+    @element.querySelector('.author span').innerHTML = Carnival.userName()
+    @element.querySelector('.author img').src = Carnival.userGravatarUrl()
 
   commentHash: ->
-    { thread: @comments.thread(), body: @body() }
+    { article: @comments.block.articleId, thread: @comments.thread(), body: @body() }

@@ -1,11 +1,10 @@
 class Block
-  constructor: (@element, @prefix, @index) ->
+  constructor: (@element, @articleId, @index) ->
     @bindEvents()
-    @comments = new Comments(this)
     @element.id = @id()
 
   id: ->
-    @prefix + '-' + @index
+    @articleId + '-' + @index
 
   bindEvents: ->
     @element.addEventListener 'mouseenter', =>
@@ -14,4 +13,5 @@ class Block
       @comments.hide()
 
   insert: (articleElement) ->
+    @comments = new Comments(this)
     articleElement.insertBefore(@comments.element, @element)

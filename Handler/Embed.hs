@@ -1,11 +1,11 @@
 module Handler.Embed where
 
 import Import
+import Helper.Request
 
 getEmbedR :: Handler Html
 getEmbedR = do
-    addHeader "Access-Control-Allow-Origin" "*"
-    addHeader "Access-Control-Allow-Methods" "*"
+    allowCrossOrigin
     embedLayout $ do
         toWidget $(luciusFile "embed")
         toWidget $(coffeeFile "embed/Article")
