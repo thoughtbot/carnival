@@ -53,13 +53,14 @@ class Comments
     @block.id()
 
   fetchComments: ->
-    Carnival.get('/comments?thread=' + @thread(), (data) =>
-      @count(data.comments.length)
-      @comments = data.comments.map (comment) ->
-        new Comment(comment)
-      @insertCommentsIntoDom()
-      @showIfComments()
-    )
+    @count(@commentData().length)
+    @comments = @commentData().map (comment) ->
+      new Comment(comment)
+    @insertCommentsIntoDom()
+    @showIfComments()
+
+  commentData: ->
+    @block.commentData
 
   insertCommentsIntoDom: ->
     for comment in @comments

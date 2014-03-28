@@ -9,7 +9,7 @@ class Comment
     @element = document.createElement('li')
     @element.id = @id()
     @element.className = 'comment'
-    @element.innerHTML = "<div class='author'>Joe User</div><div class='body'>" + @comment.body + "</div>"
+    @element.innerHTML = "<div class='author'><img src='#{@comment.gravatar_url}'><span>#{@comment.user_name}</span></div><div class='body'>#{@comment.body}</div>"
 
   insert: (listElement) ->
     listElement.appendChild(@element)
