@@ -19,7 +19,7 @@ class Thread
     @setupElement()
     @insertCommentsIntoDom()
     @renderCommentForm()
-    @article.element.insertBefore(@element, @currentBlock.indicator.element)
+    @currentBlock.parent().insertBefore(@element, @currentBlock.indicator.element)
 
   comments: ->
     @currentBlock.comments

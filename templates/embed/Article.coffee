@@ -7,14 +7,14 @@ class Article
 
   createBlocks: ->
     @blocks = [].slice.call(@element.querySelectorAll(CarnivalOptions.block_selector)).map (blockElement, index) =>
-      new Block(blockElement, @id, index)
+      new Block(blockElement, @id)
 
   insertBlocksIntoDom: ->
     for block in @blocks
       block.setComments(@commentData.filter((comment) =>
         comment.thread is block.id()
       ))
-      block.insert(@element)
+      block.insert()
 
   bindEvents: ->
     @element.addEventListener 'commenting', (event) =>

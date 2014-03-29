@@ -1,12 +1,12 @@
 class Carnival
   constructor: () ->
     @setOptionsFromDefaults()
-    @elements = document.getElementsByTagName(CarnivalOptions.article_tag)
+    @elements = document.querySelectorAll(CarnivalOptions.article_selector)
     @articles = [].slice.call(@elements).map (articleElement) ->
       new Article(articleElement)
 
   @defaults:
-    article_tag: 'article'
+    article_selector: 'article'
     block_selector: ':scope > p, :scope > pre'
 
   setOptionsFromDefaults: ->
