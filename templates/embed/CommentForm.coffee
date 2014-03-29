@@ -38,3 +38,4 @@ class CommentForm
     @element.querySelector('form').style.display = 'block'
     @element.querySelector('.author span').innerHTML = Carnival.userName()
     @element.querySelector('.author img').src = Carnival.userGravatarUrl()
+    @element.querySelector('.body').focus()
