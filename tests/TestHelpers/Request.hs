@@ -1,0 +1,30 @@
+{-# LANGUAGE OverloadedStrings #-}
+module TestHelpers.Request
+    ( putBody
+    , getWithParams
+    ) where
+
+import Yesod.Test
+import Yesod (Yesod, RedirectUrl)
+import Data.Text (Text)
+import Data.ByteString.Lazy (ByteString)
+
+-- | Like @'postBody'@ but uses PUT
+putBody :: (Yesod site, RedirectUrl site url)
+        => url
+        -> ByteString
+        -> YesodExample site ()
+putBody url body = request $ do
+    setMethod "PUT"
+    setUrl url
+    setRequestBody body
+
+-- | Perform a GET request with query params present
+getWithParams :: (RedirectUrl site url, Yesod site)
+              => url
+              -> [(Text, Text)]
+              -> YesodExample site ()
+getWithParams url params = request $ do
+    setMethod  "GET"
+    mapM_ (\(k, v) -> addGetParam k v) params
+    setUrl url
