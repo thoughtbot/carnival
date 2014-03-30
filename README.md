@@ -21,6 +21,27 @@ And run the tests:
 
     $ yesod test
 
+## Deployment
+
+At this time, we're unable to come in under the 15 minute build timeout 
+on Heroku, therefore we need to deploy via an Anvil server:
+
+```
+$ heroku plugins:install https://github.com/ddollar/heroku-anvil
+```
+
+### Staging
+
+```
+$ heroku build -r -b https://github.com/begriffs/heroku-buildpack-ghc.git -a carnival-staging
+```
+
+### Production
+
+```
+$ heroku build -r -b https://github.com/begriffs/heroku-buildpack-ghc.git -a carnival-production
+```
+
 ## Managing Dependencies
 
 The `bin/setup` script will create a [cabal sandbox][cabal-sandbox] and 
