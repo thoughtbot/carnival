@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module TestHelpers.Request
     ( putBody
+    , delete
     , getWithParams
     ) where
 
@@ -18,6 +19,14 @@ putBody url body = request $ do
     setMethod "PUT"
     setUrl url
     setRequestBody body
+
+-- | Perform a DELETE request
+delete :: (Yesod site, RedirectUrl site url)
+       => url
+       -> YesodExample site ()
+delete url = request $ do
+    setMethod "DELETE"
+    setUrl url
 
 -- | Perform a GET request with query params present
 getWithParams :: (RedirectUrl site url, Yesod site)

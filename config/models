@@ -11,4 +11,4 @@ Comment
     article Text
     thread Text
     body Markdown
-    deriving Show
+    deriving Show Eq

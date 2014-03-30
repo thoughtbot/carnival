@@ -7,7 +7,7 @@ import Foundation as X
 -- Useful libraries
 import Data.Text as X (Text)
 import Data.Aeson as X
-import Database.Persist as X hiding (get)
+import Database.Persist as X hiding (get, delete)
 
 -- Test framework
 import Yesod.Test as X

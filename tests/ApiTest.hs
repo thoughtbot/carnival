@@ -2,6 +2,7 @@
 module ApiTest (apiSpecs) where
 
 import TestHelper
+import qualified Database.Persist as DB
 
 apiSpecs :: YesodSpec App
 apiSpecs =
@@ -58,4 +59,37 @@ apiSpecs =
         yit "forbids manipulating other users' comments" $ do
             clearTables
 
-            return ()
+            Entity uid1 _  <- createUser "1"
+            Entity uid2 u2 <- createUser "2"
+            Entity cid1 _  <- createComment uid1 "1" "1"
+            Entity cid2 _  <- createComment uid2 "1" "2"
+
+            authenticateAs u2
+
+            putBody (CommentR cid1) ""
+
+            statusIs 401
+
+            delete $ CommentR cid1
+
+            statusIs 401
+
+            putBody (CommentR cid2) $ encode $ object
+                [ "thread"  .= ("new thread"  :: Text)
+                , "article" .= ("new article" :: Text)
+                , "body"    .= ("new body"    :: Text)
+                ]
+
+            statusIs 200
+
+            Just c <- runDB $ DB.get cid2
+
+            assertEqual' "new body" $ commentBody c
+
+            delete $ CommentR cid2
+
+            mc <- runDB $ DB.get cid2
+
+            assertEqual' mc Nothing
+
+            statusIs 200
