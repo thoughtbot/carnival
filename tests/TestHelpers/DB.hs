@@ -40,11 +40,11 @@ createUser ident = do
 
     return $ Entity uid u
 
-createComment :: UserId -> Text -> Text -> Example (Entity Comment)
-createComment uid article body = do
+createComment :: UserId -> Text -> Text -> Text -> Example (Entity Comment)
+createComment uid thread article body = do
     let c = Comment
             { commentUser    = uid
-            , commentThread  = "thread"
+            , commentThread  = thread
             , commentArticle = article
             , commentBody    = Markdown body
             }
