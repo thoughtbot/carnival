@@ -12,8 +12,9 @@ apiSpecs =
 
             Entity uid u <- createUser "1"
             c1 <- createComment uid "1" "1" "1"
-            c2 <- createComment uid "1" "1" "2"
-            c3 <- createComment uid "1" "2" "3"
+            c2 <- createComment uid "1" "2" "2"
+            c3 <- createComment uid "2" "1" "3"
+            c4 <- createComment uid "2" "2" "4"
 
             get CommentsR
 
@@ -21,14 +22,20 @@ apiSpecs =
                 ["comments" .= [ UserComment c1 u
                                , UserComment c2 u
                                , UserComment c3 u
+                               , UserComment c4 u
                                ]]
 
-            getWithParams CommentsR [("article", "1")]
+            getWithParams CommentsR [("thread", "1")]
 
             bodyEquals' $ encode $ object
                 ["comments" .= [ UserComment c1 u
                                , UserComment c2 u
                                ]]
+
+            getWithParams CommentsR [("thread", "1"), ("article", "2")]
+
+            bodyEquals' $ encode $ object
+                ["comments" .= [ UserComment c2 u ]]
 
         yit "allows authorized commenting" $ do
             clearTables
