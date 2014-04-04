@@ -1,11 +1,22 @@
+{-# LANGUAGE OverloadedStrings #-}
 module TestHelpers.Auth
     ( authenticateAs
     ) where
 
 import Model
 import Foundation
+import Yesod.Default.Config
 import Yesod.Test
 
--- TODO: I have no idea how to do this...
+import qualified Data.Text as T
+
 authenticateAs :: User -> YesodExample App ()
-authenticateAs _ = return ()
+authenticateAs u = do
+    testRoot <- fmap (appRoot . settings) $ getTestYesod
+
+    let url = testRoot `T.append` "/auth/page/dummy"
+
+    request $ do
+        setMethod "POST"
+        addPostParam "ident" $ userIdent u
+        setUrl url
