@@ -1,1 +1,1 @@
-web: ./dist/build/carnival/carnival production -p $PORT
+web: ./dist/build/carnival/carnival $APP_ENV -p $PORT

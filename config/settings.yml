@@ -12,6 +12,7 @@ Testing:
   <<: *defaults
 
 Staging:
+  approot: "http://carnival-staging.herokuapp.com"
   <<: *defaults
 
 Production:
