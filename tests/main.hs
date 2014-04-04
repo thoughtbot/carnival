@@ -10,20 +10,13 @@ import Yesod.Test
 import Test.Hspec (hspec)
 import Application (makeFoundation)
 
-import CreateCommentTest
-import EditCommentTest
-import DeleteCommentTest
-import LoadCommentsTest
+import ApiTest
 
 main :: IO ()
 main = do
     foundation <- makeFoundation =<< testConfig
 
-    hspec $ yesodSpec foundation $ do
-        createCommentSpecs
-        editCommentSpecs
-        deleteCommentSpecs
-        loadCommentsSpecs
+    hspec $ yesodSpec foundation $ apiSpecs
 
 testConfig :: IO (AppConfig DefaultEnv Extra)
 testConfig =

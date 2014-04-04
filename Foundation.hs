@@ -4,6 +4,7 @@ import Prelude
 import Yesod
 import Yesod.Static
 import Yesod.Auth
+import Yesod.Auth.Dummy
 import Yesod.Auth.OAuth2.Learn
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
@@ -142,14 +143,13 @@ instance YesodAuth App where
     getAuthId creds = runDB $ do
         muser <- getBy $ UniqueUser $ credsIdent creds
 
-        case buildUser creds of
-            Nothing  -> return Nothing
-            (Just u) -> fmap Just $
-                case muser of
-                    (Just (Entity uid _)) -> replace uid u >> return uid
-                    _                     -> insert u
+        let newUser = buildUser creds
 
-    authPlugins m =
+        case muser of
+            Just (Entity uid _) -> fmap Just $ replaceUser uid newUser
+            _                   -> insertUser newUser
+
+    authPlugins m = addAuthBackDoor
         [ oauth2Learn
             (learnOauthClientId $ learnOAuthKeys m)
             (learnOauthClientSecret $ learnOAuthKeys m)
@@ -163,6 +163,17 @@ buildUser (Creds _ csId csExtra) =
          <*> lookup "last_name" csExtra
          <*> lookup "email" csExtra
          <*> pure csId
+
+replaceUser :: UserId -> Maybe User -> YesodDB App UserId
+replaceUser uid (Just u) = replace uid u >> return uid
+replaceUser uid _        = return uid
+
+insertUser :: Maybe User -> YesodDB App (Maybe UserId)
+insertUser (Just u) = fmap Just $ insert u
+insertUser _        = return Nothing
+
+addAuthBackDoor :: [AuthPlugin App] -> [AuthPlugin App]
+addAuthBackDoor = if development then (authDummy :) else id
 
 -- This instance is required to use forms. You can modify renderMessage to
 -- achieve customized and internationalized form validation messages.
