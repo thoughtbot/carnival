@@ -49,7 +49,10 @@ apiSpecs =
 
             statusIs 201
 
-            ((Entity _ c):_) <- runDB $ selectList [] []
+
+            (e@(Entity _ c):_) <- runDB $ selectList [] []
+
+            bodyEquals' $ encode $ object ["comment" .= UserComment e u]
 
             assertEqual' uid $ commentUser c
             assertEqual' "The thread"  $ commentThread c

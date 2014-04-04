@@ -6,14 +6,17 @@ import Helper.Comment
 import Helper.Request
 import Data.Maybe
 
-postCommentsR :: Handler ()
+postCommentsR :: Handler Value
 postCommentsR = do
     allowCrossOrigin
 
-    uid <- requireAuthId_
-    _   <- runDB . insert . toComment uid =<< parseJsonBody_
+    Entity uid u <- requireAuth_
 
-    sendResponseStatus status201 ("CREATED" :: Text)
+    c   <- fmap (toComment uid) parseJsonBody_
+    cid <- runDB $ insert c
+
+    sendResponseStatus status201 $ object
+        ["comment" .= UserComment (Entity cid c) u]
 
 getCommentsR :: Handler Value
 getCommentsR = do
