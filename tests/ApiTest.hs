@@ -68,11 +68,11 @@ apiSpecs =
 
             putBody (CommentR cid1) ""
 
-            statusIs 401
+            statusIs 403
 
             delete $ CommentR cid1
 
-            statusIs 401
+            statusIs 403
 
             putBody (CommentR cid2) $ encode $ object
                 [ "thread"  .= ("new thread"  :: Text)
