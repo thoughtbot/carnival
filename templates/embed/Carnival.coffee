@@ -43,7 +43,7 @@ class Carnival
     request.open('POST', 'http://' + CarnivalOptions.host + url, true)
     request.onload = () ->
       if request.status >= 200 and request.status < 400
-        callback()
+        callback(JSON.parse(@responseText))
     request.send(JSON.stringify(data))
 
   @userName: ->

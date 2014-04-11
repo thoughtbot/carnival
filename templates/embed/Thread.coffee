@@ -39,11 +39,12 @@ class Thread
     @element.appendChild(@commentForm.element)
 
   add: (body) ->
-    comment = new Comment(@commentHash(body))
     Carnival.post(
       '/comments',
       @commentHash(body),
-      () =>
+      (response) =>
+        console.log(response)
+        comment = new Comment(response.comment)
         @comments().push(comment)
         @currentBlock.indicator.setCount(@comments().length)
         @element.insertBefore(comment.element, @commentForm.element)
