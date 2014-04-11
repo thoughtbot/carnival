@@ -82,6 +82,6 @@ variable and (re-)running `bin/setup`:
 $ RESET=1 ./bin/setup
 ```
 
-This may be made easier in the future by using [cabal-constraints][].
+This may be made easier in the future by using [cabal-constraints][cabal-constraints].
 
-[cabal-constaints]: https://github.com/thoughtbot/carnival/issues/5
+[cabal-constraints]: https://github.com/thoughtbot/carnival/issues/5
