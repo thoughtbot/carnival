@@ -85,7 +85,7 @@ library
                  , yesod-markdown                >= 0.8.4
                  , blaze-markup
                  , gravatar
-                 , heroku                        > 0           && < 0.1.1
+                 , heroku
 
 executable         carnival
     if flag(library-only)
