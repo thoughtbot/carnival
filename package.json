@@ -3,5 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "coffee-script": "~1.7.1"
+  },
+  "engines": {
+    "node": "0.10.28"
   }
 }
