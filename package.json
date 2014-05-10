@@ -9,7 +9,7 @@
     "npm": ">=1.0.0"
   },
   "description": "A medium/disqus-like commenting service powering http://robots.thoughtbot.com.",
-  "main": "app.js",
+  "main": "web.js",
   "directories": {
     "test": "tests"
   },
