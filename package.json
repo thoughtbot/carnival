@@ -1,5 +1,7 @@
 {
   "name": "carnival",
   "version": "0.0.1",
-  "dependencies": {}
+  "dependencies": {
+    "coffee-script": "~1.7.1"
+  }
 }
