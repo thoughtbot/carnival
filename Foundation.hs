@@ -61,9 +61,6 @@ instance Yesod App where
         "config/client_session_key.aes"
 
     defaultLayout widget = do
-        master <- getYesod
-        mmsg <- getMessage
-
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final
@@ -111,9 +108,6 @@ instance Yesod App where
 
 embedLayout :: Widget -> Handler Html
 embedLayout widget = do
-    master <- getYesod
-    mmsg <- getMessage
-
     -- We break up the default layout into two components:
     -- default-layout is the contents of the body tag, and
     -- default-layout-wrapper is the entire page. Since the final

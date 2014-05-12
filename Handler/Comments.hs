@@ -12,7 +12,7 @@ postCommentsR = do
 
     Entity uid u <- requireAuth_
 
-    c   <- fmap (toComment uid) parseJsonBody_
+    c   <- fmap (toComment uid) requireJsonBody
     cid <- runDB $ insert c
 
     sendResponseStatus status201 $ object
