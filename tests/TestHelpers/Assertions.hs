@@ -36,7 +36,7 @@ assertEqual' actual expected = assertEqual msg actual expected
 -- | Like @bodyEquals@ but taking a @'ByteString'@ argument (as is
 --   returned by @'Data.Aeson.encode'@.
 --
---   > bodyEquals' $ encode ["comments" .= comments]
+--   > bodyEquals' $ encode $ object ["comments" .= comments]
 --
 bodyEquals' :: ByteString -> YesodExample site ()
 bodyEquals' = bodyEquals . BS.unpack
