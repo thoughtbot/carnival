@@ -17,7 +17,7 @@ apiSpecs =
 
             get CommentsR
 
-            bodyEquals' $ encode $ object
+            valueEquals $ object
                 ["comments" .= [ UserComment c1 u
                                , UserComment c2 u
                                , UserComment c3 u
@@ -25,7 +25,7 @@ apiSpecs =
 
             getWithParams CommentsR [("article", "1")]
 
-            bodyEquals' $ encode $ object
+            valueEquals $ object
                 ["comments" .= [ UserComment c1 u
                                , UserComment c2 u
                                ]]
@@ -52,7 +52,7 @@ apiSpecs =
 
             (e@(Entity _ c):_) <- runDB $ selectList [] []
 
-            bodyEquals' $ encode $ object ["comment" .= UserComment e u]
+            valueEquals $ object ["comment" .= UserComment e u]
 
             assertEqual' uid $ commentUser c
             assertEqual' "The thread"  $ commentThread c
