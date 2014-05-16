@@ -54,6 +54,7 @@ class Carnival
 
   @isLoggedIn: ->
     @getUser()
+    console.log(@user)
     if @user
       return true
     else
@@ -64,10 +65,12 @@ class Carnival
     request.withCredentials = true
     request.open('GET', 'http://' + CarnivalOptions.host + '/user', false)
     request.send()
+    console.log(request)
     if request.status is 200
       @user = JSON.parse(request.responseText).user
 
   @hasLoggedIn: (event) =>
+    console.log(event)
     if event.origin != 'http://' + CarnivalOptions.host
       return
     #@loginWindow.close()
