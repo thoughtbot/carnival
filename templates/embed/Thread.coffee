@@ -43,7 +43,6 @@ class Thread
       '/comments',
       @commentHash(body),
       (response) =>
-        console.log(response)
         comment = new Comment(response.comment)
         @comments().push(comment)
         @currentBlock.indicator.setCount(@comments().length)
