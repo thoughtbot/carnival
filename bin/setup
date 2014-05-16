@@ -54,7 +54,7 @@ create_sandbox() {
     cabal sandbox init
 
     # Install framework
-    cabal install yesod-platform yesod-bin
+    cabal install yesod-bin
   fi
 }
 
