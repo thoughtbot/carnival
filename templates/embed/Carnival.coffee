@@ -55,7 +55,7 @@ class Carnival
   @isLoggedIn: ->
     @getUser()
     console.log(@user)
-    if @user
+    if @user?
       return true
     else
       return false
