@@ -70,7 +70,7 @@ class Carnival
   @hasLoggedIn: (event) =>
     if event.origin != 'http://' + CarnivalOptions.host
       return
-    @loginWindow.close()
+    #@loginWindow.close()
     @getUser()
     document.dispatchEvent(new CustomEvent("hasLoggedIn", bubbles: true))
 
