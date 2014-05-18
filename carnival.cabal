@@ -19,6 +19,7 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
+                     Session
                      Helper.Auth
                      Helper.Request
                      Helper.Comment
@@ -86,6 +87,7 @@ library
                  , blaze-markup
                  , gravatar
                  , heroku
+                 , clientsession
 
 executable         carnival
     if flag(library-only)
