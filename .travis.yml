@@ -1,9 +1,11 @@
 language: haskell
 
+ghc: 7.8.2
+
 install:
   - cabal update
   - cabal install alex happy yesod-bin
-  - cabal install --enable-tests
+  - cabal install --only-dependencies --enable-tests
 
 script:
   - yesod test
