@@ -23,12 +23,13 @@ instance FromJSON CommentRequest where
 
     parseJSON _ = mzero
 
-toComment :: UserId -> CommentRequest -> Comment
-toComment uid req = Comment
+toComment :: UTCTime -> UserId -> CommentRequest -> Comment
+toComment t uid req = Comment
     { commentUser    = uid
     , commentArticle = reqArticle req
     , commentThread  = reqThread req
     , commentBody    = reqBody req
+    , commentCreated = t
     }
 
 requireOwnComment :: UserId -> CommentId -> Handler ()
@@ -37,3 +38,11 @@ requireOwnComment uid cid = do
 
     when (commentUser c /= uid) $
         permissionDenied "Action only appropriate for your own comments"
+
+-- | Updates the given comment with the request data, preserving the comment's
+--   created-at. Will respond 404 if the comment is not present.
+updateComment :: CommentId -> UserId -> CommentRequest -> YesodDB App ()
+updateComment cid uid req = do
+    t <- fmap commentCreated $ get404 cid
+    _ <- replace cid $ toComment t uid req
+    return ()

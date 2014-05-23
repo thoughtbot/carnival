@@ -8,6 +8,7 @@ import           Yesod                as Import hiding (Route (..))
 
 import           Control.Applicative  as Import (pure, (<$>), (<*>))
 import           Data.Text            as Import (Text)
+import           Data.Time            as Import (UTCTime, getCurrentTime)
 
 import           Foundation           as Import
 import           Model                as Import

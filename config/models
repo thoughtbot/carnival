@@ -11,4 +11,5 @@ Comment
     article Text
     thread Text
     body Markdown
+    created UTCTime default=now()
     deriving Show Eq

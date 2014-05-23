@@ -88,6 +88,7 @@ library
                  , gravatar
                  , heroku
                  , clientsession
+                 , time
 
 executable         carnival
     if flag(library-only)
@@ -127,3 +128,4 @@ test-suite test
                  , aeson
                  , HUnit
                  , yesod-auth
+                 , time

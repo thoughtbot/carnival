@@ -12,7 +12,8 @@ postCommentsR = do
 
     Entity uid u <- requireAuth_
 
-    c   <- fmap (toComment uid) requireJsonBody
+    now <- liftIO getCurrentTime
+    c   <- fmap (toComment now uid) requireJsonBody
     cid <- runDB $ insert c
 
     sendResponseStatus status201 $ object

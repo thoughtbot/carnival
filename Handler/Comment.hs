@@ -12,7 +12,7 @@ putCommentR commentId = do
     uid <- requireAuthId_
     requireOwnComment uid commentId
 
-    _ <- runDB . replace commentId . toComment uid =<< requireJsonBody
+    runDB $ updateComment commentId uid =<< requireJsonBody
 
     sendResponseStatus status200 ("UPDATED" :: Text)
 

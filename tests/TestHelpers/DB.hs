@@ -8,7 +8,9 @@ module TestHelpers.DB
 
 import Model
 import Foundation
+import Control.Monad.IO.Class (liftIO)
 import Data.Text (Text)
+import Data.Time (getCurrentTime)
 import Yesod.Test
 import Yesod.Markdown
 import Database.Persist
@@ -42,11 +44,13 @@ createUser ident = do
 
 createComment :: UserId -> Text -> Text -> Example (Entity Comment)
 createComment uid article body = do
+    now <- liftIO getCurrentTime
     let c = Comment
             { commentUser    = uid
             , commentThread  = "thread"
             , commentArticle = article
             , commentBody    = Markdown body
+            , commentCreated = now
             }
 
     cid <- runDB $ insert c
