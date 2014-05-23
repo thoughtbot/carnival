@@ -9,3 +9,6 @@ install:
 
 script:
   - yesod test
+
+notifications:
+  email: false
