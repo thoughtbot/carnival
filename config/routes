@@ -5,7 +5,7 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/comments CommentsR GET POST
+/comments CommentsR GET POST OPTIONS
 /comments/#CommentId CommentR PUT DELETE
 
 /session SessionR GET

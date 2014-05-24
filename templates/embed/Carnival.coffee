@@ -32,6 +32,7 @@ class Carnival
     request = new XMLHttpRequest
     request.withCredentials = true
     request.open('GET', 'http://' + CarnivalOptions.host + url, true)
+    request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
       if request.status >= 200 and request.status < 400
         callback(JSON.parse(request.responseText))
@@ -41,6 +42,7 @@ class Carnival
     request = new XMLHttpRequest()
     request.withCredentials = true
     request.open('POST', 'http://' + CarnivalOptions.host + url, true)
+    request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
       if request.status >= 200 and request.status < 400
         callback(JSON.parse(@responseText))

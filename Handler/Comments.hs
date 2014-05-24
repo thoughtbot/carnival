@@ -18,6 +18,11 @@ postCommentsR = do
     sendResponseStatus status201 $ object
         ["comment" .= UserComment (Entity cid c) u]
 
+optionsCommentsR :: Handler ()
+optionsCommentsR = do
+    allowCrossOrigin
+    sendResponseStatus status200 ()
+
 getCommentsR :: Handler Value
 getCommentsR = do
     allowCrossOrigin

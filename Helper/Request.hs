@@ -1,23 +1,24 @@
 module Helper.Request (allowCrossOrigin) where
 
 import Import
-import Network.Wai (requestHeaders)
-import Network.HTTP.Types (RequestHeaders)
+import Network.HTTP.Types (HeaderName)
 import Data.Text.Encoding (decodeUtf8)
 
-remoteOrigin :: Handler (Maybe Text)
-remoteOrigin = return . getOrigin . requestHeaders =<< waiRequest
-
-getOrigin :: RequestHeaders -> Maybe Text
-getOrigin = (fmap decodeUtf8) . lookup "Origin"
+lookupUtf8Header :: HeaderName -> Handler (Maybe Text)
+lookupUtf8Header headerName = return . fmap decodeUtf8 =<< lookupHeader headerName
 
 allowCrossOrigin :: Handler ()
 allowCrossOrigin = do
-    mo <- remoteOrigin
+    mo <- lookupUtf8Header "Origin"
+    mrh <- lookupUtf8Header "Access-Control-Request-Headers"
 
     case mo of
         Just o  -> addHeader "Access-Control-Allow-Origin" o
         Nothing -> return ()
 
-    addHeader "Access-Control-Allow-Methods" "*"
+    case mrh of
+        Just rh -> addHeader "Access-Control-Allow-Headers" rh
+        Nothing -> return ()
+
+    addHeader "Access-Control-Allow-Methods" "POST, GET, OPTIONS"
     addHeader "Access-Control-Allow-Credentials" "true"
