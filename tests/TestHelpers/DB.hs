@@ -15,7 +15,6 @@ import Yesod.Test
 import Yesod.Markdown
 import Database.Persist
 import Database.Persist.Sql (SqlPersistM, runSqlPersistMPool)
-import Control.Monad.IO.Class (liftIO)
 
 type Example = YesodExample App
 
