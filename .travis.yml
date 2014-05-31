@@ -4,8 +4,7 @@ ghc: 7.8.2
 
 install:
   - cabal update
-  - cabal install cabal-install
-  - cabal install alex happy yesod-bin
+  - cabal install alex happy yesod-bin --max-backjumps=-1 --reorder-goals
   - cabal install --only-dependencies --enable-tests
 
 script:
