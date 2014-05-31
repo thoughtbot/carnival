@@ -67,21 +67,8 @@ scratch:
 
 ```
 $ cabal sandbox delete
-$ cabal sandbox init
-$ cabal update
-$ cabal install --dependencies-only
+$ ./bin/setup
 ```
 
 This process should always work as long as there is a valid set of 
 dependency versions available.
-
-This process can also be done for you by setting the `RESET` environment 
-variable and (re-)running `bin/setup`:
-
-```
-$ RESET=1 ./bin/setup
-```
-
-This may be made easier in the future by using [cabal-constraints][cabal-constraints].
-
-[cabal-constraints]: https://github.com/thoughtbot/carnival/issues/5

@@ -2,10 +2,14 @@ language: haskell
 
 ghc: 7.8.2
 
+addons:
+  postgresql: "9.3"
+
 install:
-  - cabal update
   - cabal install alex happy yesod-bin --max-backjumps=-1 --reorder-goals
-  - cabal install --only-dependencies --enable-tests
+
+before_script:
+  - ./bin/setup
 
 script:
   - yesod test
