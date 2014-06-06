@@ -32,6 +32,8 @@ class Block
         k = first.concat(last)
         max = if k.length > len then len else k.length
         key += k[i].substring(0, 1) for i in [0..max-1]
+    if key == ""
+      key = @keyFromMarkup()
     return key
 
   getSentences: (el) ->
@@ -80,3 +82,9 @@ class Block
 
   top: ->
     @element.offsetTop - @element.scrollTop + @element.clientTop
+
+  keyFromMarkup: ->
+    if @element.querySelector('img')?
+      @element.querySelector('img').src.replace(/[^a-z ]+/gi, '')
+    else
+      ''
