@@ -21,8 +21,9 @@ class CommentForm
     @element.addEventListener 'submit', (event) =>
       event.preventDefault()
       event.stopPropagation()
-      @thread.add(@body())
-      @element.querySelector('.body').value = ''
+      if @hasBody()
+        @thread.add(@body())
+        @element.querySelector('.body').value = ''
     @element.querySelector('a').addEventListener 'click', (event) =>
       event.preventDefault()
       event.stopPropagation()
@@ -32,6 +33,9 @@ class CommentForm
         Carnival.login()
     document.addEventListener 'hasLoggedIn', =>
       @showCommentForm()
+
+  hasBody: ->
+    @body().replace(/\s/g, '').length > 4
 
   showCommentForm: ->
     @element.querySelector('a').style.display = 'none'
