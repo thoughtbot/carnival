@@ -20,6 +20,7 @@ import Network.HTTP.Types as Import
     ( status200
     , status201
     , status400
+    , status401
     , status403
     , status404
     )

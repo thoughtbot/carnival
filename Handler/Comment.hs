@@ -5,16 +5,14 @@ import Helper.Auth
 import Helper.Comment
 import Helper.Request
 
-putCommentR :: CommentId -> Handler ()
+putCommentR :: CommentId -> Handler Value
 putCommentR commentId = do
     allowCrossOrigin
 
-    uid <- requireAuthId_
+    Entity uid u <- requireAuth_
     requireOwnComment uid commentId
 
-    runDB $ updateComment commentId uid =<< requireJsonBody
-
-    sendResponseStatus status200 ("UPDATED" :: Text)
+    updateComment commentId uid u =<< requireJsonBody
 
 deleteCommentR :: CommentId -> Handler ()
 deleteCommentR commentId = do

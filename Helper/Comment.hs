@@ -11,6 +11,8 @@ data CommentRequest = CommentRequest
     , reqBody    :: Markdown
     }
 
+type Validated a = Either [Text] a
+
 instance FromJSON CommentRequest where
     parseJSON (Object v) = CommentRequest
         <$> v .: "article"
@@ -39,10 +41,30 @@ requireOwnComment uid cid = do
     when (commentUser c /= uid) $
         permissionDenied "Action only appropriate for your own comments"
 
--- | Updates the given comment with the request data, preserving the comment's
---   created-at. Will respond 404 if the comment is not present.
-updateComment :: CommentId -> UserId -> CommentRequest -> YesodDB App ()
-updateComment cid uid req = do
-    t <- fmap commentCreated $ get404 cid
-    _ <- replace cid $ toComment t uid req
-    return ()
+insertComment :: UserId -> User -> CommentRequest -> Handler Value
+insertComment uid u req = do
+    now <- liftIO getCurrentTime
+
+    process (validateComment $ toComment now uid req) $ \c -> do
+        cid <- runDB $ insert c
+
+        sendResponseStatus status201 $ object
+            ["comment" .= UserComment (Entity cid c) u]
+
+updateComment :: CommentId -> UserId -> User -> CommentRequest -> Handler Value
+updateComment cid uid u req = do
+    t <- fmap commentCreated $ runDB $ get404 cid
+
+    process (validateComment $ toComment t uid req) $ \c -> do
+        _ <- runDB $ replace cid c
+
+        sendResponseStatus status200 $ object
+            ["comment" .= UserComment (Entity cid c) u]
+
+validateComment :: Comment -> Validated Comment
+validateComment = Right
+
+process :: Validated a -> (a -> Handler Value) -> Handler Value
+process (Right v) f = f v
+process (Left es) _ = sendResponseStatus status400 $ object
+    ["errors" .= (map toJSON es)]

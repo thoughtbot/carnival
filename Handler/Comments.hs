@@ -12,12 +12,7 @@ postCommentsR = do
 
     Entity uid u <- requireAuth_
 
-    now <- liftIO getCurrentTime
-    c   <- fmap (toComment now uid) requireJsonBody
-    cid <- runDB $ insert c
-
-    sendResponseStatus status201 $ object
-        ["comment" .= UserComment (Entity cid c) u]
+    insertComment uid u =<< requireJsonBody
 
 optionsCommentsR :: Handler ()
 optionsCommentsR = do
