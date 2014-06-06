@@ -62,7 +62,8 @@ updateComment cid uid u req = do
             ["comment" .= UserComment (Entity cid c) u]
 
 validateComment :: Comment -> Validated Comment
-validateComment = Right
+validateComment (Comment _ _ _ "" _) = Left ["Body cannot be blank"]
+validateComment c = Right c
 
 process :: Validated a -> (a -> Handler Value) -> Handler Value
 process (Right v) f = f v
