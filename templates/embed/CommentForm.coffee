@@ -21,9 +21,7 @@ class CommentForm
     @element.addEventListener 'submit', (event) =>
       event.preventDefault()
       event.stopPropagation()
-      if @hasBody()
-        @thread.add(@body())
-        @element.querySelector('.body').value = ''
+      @saveComment()
     @element.querySelector('a.create').addEventListener 'click', (event) =>
       event.preventDefault()
       event.stopPropagation()
@@ -35,6 +33,9 @@ class CommentForm
       event.preventDefault()
       event.stopPropagation()
       @hideCommentForm()
+    @element.querySelector('textarea').addEventListener 'keydown', (event) =>
+      if event.keyCode == 13 and event.metaKey
+        @saveComment()
     document.addEventListener 'hasLoggedIn', =>
       @showCommentForm()
 
@@ -51,3 +52,8 @@ class CommentForm
   hideCommentForm: ->
     @element.querySelector('form').style.display = 'none'
     @element.querySelector('a').style.display = 'block'
+
+  saveComment: ->
+    if @hasBody()
+      @thread.add(@body())
+      @element.querySelector('.body').value = ''
