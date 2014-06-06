@@ -72,6 +72,8 @@ article.commenting {
 
       p {
         font-size: 14px;
+        padding: 0;
+        margin: 0;
       }
 
       .author {
@@ -105,7 +107,17 @@ article.commenting {
       a {
         cursor: pointer;
         font-size: 14px;
+      }
+
+      a.create {
         margin-left: 40px;
+      }
+
+      a.cancel {
+        color: #aaa;
+        float: right;
+        font-size: 11px;
+        margin-left: 10px;
       }
 
       form {
@@ -120,6 +132,7 @@ article.commenting {
           appearance: none;
           border-radius: 0;
           border: 0;
+          display: block;
           font-size: 14px;
           height: 50px;
           outline-offset: 0;
@@ -131,6 +144,7 @@ article.commenting {
         }
 
         input[type=submit] {
+          display: inline-block;
           font-size: 14px;
           padding: .5em .8em;
           margin-left: 42px;
