@@ -5,20 +5,42 @@ article {
     right: -30px;
     opacity: 0;
     padding: 0;
+    height: 24px;
+    width: 20px;
     z-index: 9998;
 
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+
+      path {
+        fill: #dfdfdd;
+        transition: fill .2s ease-in-out;
+      }
+    }
+
     .count {
-      background-image: url(/static/img/comments.png);
-      background-position: 0 0;
-      background-repeat: no-repeat;
       color: #fff;
       display: block;
       font-size: 11px;
       height: 24px;
       line-height: 20px;
-      margin-top: -2px;
       text-align: center;
       width: 20px;
+      z-index: 2;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .comment-indicator:hover,
+  .comment-indicator.commenting {
+    svg path {
+      transition: fill .2s ease-in-out;
+      fill: #ad141e;
     }
   }
 
