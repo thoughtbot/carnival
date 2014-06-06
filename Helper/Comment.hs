@@ -45,7 +45,7 @@ insertComment :: Entity User -> CommentRequest -> Handler Value
 insertComment (Entity uid u) req = do
     now <- liftIO getCurrentTime
 
-    process (validateComment $ toComment now uid req) $ \c -> do
+    whenValid (validateComment $ toComment now uid req) $ \c -> do
         cid <- runDB $ insert c
 
         sendResponseStatus status201 $ object
@@ -55,7 +55,7 @@ updateComment :: CommentId -> Entity User -> CommentRequest -> Handler Value
 updateComment cid (Entity uid u) req = do
     t <- fmap commentCreated $ runDB $ get404 cid
 
-    process (validateComment $ toComment t uid req) $ \c -> do
+    whenValid (validateComment $ toComment t uid req) $ \c -> do
         _ <- runDB $ replace cid c
 
         sendResponseStatus status200 $ object
@@ -65,7 +65,7 @@ validateComment :: Comment -> Validated Comment
 validateComment (Comment _ _ _ "" _) = Left ["Body cannot be blank"]
 validateComment c = Right c
 
-process :: Validated a -> (a -> Handler Value) -> Handler Value
-process (Right v) f = f v
-process (Left es) _ = sendResponseStatus status400 $ object
+whenValid :: Validated a -> (a -> Handler Value) -> Handler Value
+whenValid (Right v) f = f v
+whenValid (Left es) _ = sendResponseStatus status400 $ object
     ["errors" .= (map toJSON es)]
