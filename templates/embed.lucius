@@ -1,3 +1,9 @@
+.carnival {
+  position: absolute;
+  right: 0;
+  width: 180px;
+}
+
 article {
   .comment-indicator {
     cursor: pointer;
@@ -52,21 +58,21 @@ article {
 
 article.commenting {
   .comment-indicator {
-    width: 180px;
+    right: 150px;
   }
 
   ol.comments {
     display: block;
     position: absolute;
     right: -35px;
-    width: 150px;
+    width: 170px;
+    margin: 0;
 
     li {
       border-top: 1px solid #f2f2f0;
       box-sizing: border-box;
       list-style-type: none;
       font-size: 14px;
-      margin: 0;
       padding-bottom: 20px;
       padding-top: 20px;
 
@@ -123,7 +129,7 @@ article.commenting {
       form {
         display: none;
         float: right;
-        width: 150px;
+        width: 170px;
 
         textarea {
           -moz-appearance: none;
