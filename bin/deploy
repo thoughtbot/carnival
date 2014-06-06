@@ -1,0 +1,121 @@
+#!/bin/sh
+#
+# usage: ./bin/deploy [APP]
+#
+#   APP defaults to carnival-staging
+#
+###
+set -e
+
+if ! command -v jq >/dev/null; then
+  cat >&2 <<EOF
+
+  The jq program is required to deploy (it parses Heroku API responses).
+
+  Please install it and try again.
+  http://stedolan.github.io/jq/
+
+EOF
+  exit 1
+fi
+
+if [ ! -f .env ]; then
+  cat >&2 <<EOF
+
+  Environment file not found.
+
+  Please copy .env.sample to .env and try again.
+
+  % cp .env{.sample,} && ${VISUAL:-vim} .env
+
+EOF
+  exit 1
+fi
+
+. ./.env
+
+if [ -z "$GITHUB_OAUTH_TOKEN" ]; then
+  cat >&2 <<EOF
+
+  Environment variable GITHUB_OAUTH_TOKEN not set
+
+  Please generate one, set it in .env, and try again.
+  https://github.com/settings/applications#personal-access-tokens
+
+EOF
+  exit 1
+fi
+
+build() {
+  local release_app="$1"
+  local sources="$GITHUB/repos/$REPO/tarball/$DEPLOY_BRANCH?access_token=$GITHUB_OAUTH_TOKEN"
+  local version="$(git rev-parse --short HEAD)"
+
+  printf "Building version %s on %s...\n" "$version" "$COMPILE_APP"
+  build_id="$(start_build "$sources" "$version" | jq -r ".id")"
+
+  printf "Monitoring build %s..." "$build_id"
+  monitor_build "$build_id" || build_failed "$build_id"
+
+  slug="$(get_build "$build_id" | jq -r ".slug.id")"
+
+  printf "Releasing slug %s to %s...\n" "$slug" "$release_app"
+  release "$slug" "$release_app"
+}
+
+start_build() {
+  local sources="$1" version="$2"
+  local data="$(printf '{"source_blob":{"url":"%s","version":"%s"}}' "$sources" "$version")"
+
+  curl_heroku "/apps/$COMPILE_APP/builds" -# -X POST -d "$data"
+}
+
+monitor_build() {
+  local build_id="$1" status='pending'
+
+  while [ "$status" = 'pending' ]; do
+    sleep 3; printf '.'
+    status="$(get_build "$build_id" | jq -r ".status")"
+  done
+  printf "\n"
+
+  [ "$status" = 'succeeded' ]
+}
+
+build_failed() {
+  local build_id="$1"
+
+  {
+    printf "!!! Build not successful.\n"
+    printf "!!! API Response:\n"
+    get_build "$build_id"
+  } >&2
+
+  exit 1
+}
+
+get_build() {
+  local build_id="$1"
+
+  curl_heroku "/apps/$COMPILE_APP/builds/$build_id" -s
+}
+
+release() {
+  local slug="$1" release_app="$2"
+  local data="$(printf '{"slug":"%s"}' "$slug")"
+
+  curl_heroku "/apps/$release_app/releases" -# -X POST -d "$data"
+}
+
+curl_heroku() {
+  local path="$1"; shift
+
+  curl -n "$HEROKU$path" \
+    -H "Content-Type: application/json" \
+    -H 'Accept: application/vnd.heroku+json; version=3' "$@"
+}
+
+: ${GITHUB:=https://api.github.com}
+: ${HEROKU:=https://api.heroku.com}
+
+build "${1:-carnival-staging}"

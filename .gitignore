@@ -9,3 +9,4 @@ cabal-dev/
 yesod-devel/
 .cabal-sandbox
 cabal.sandbox.config
+.env

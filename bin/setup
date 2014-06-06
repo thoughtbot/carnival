@@ -67,6 +67,12 @@ check_sandbox_path() {
   esac
 }
 
+copy_env_file() {
+  if [ ! -f ./.env ]; then
+    cp ./.env{.sample,}
+  fi
+}
+
 test_connection() {
   local dbname="$1"
   PGPASSWORD=$user
@@ -88,6 +94,7 @@ check_dependencies
 if [ "$TRAVIS" != "true" ]; then
   create_sandbox
   check_sandbox_path
+  copy_env_file
 fi
 
 install_dependencies
