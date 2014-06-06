@@ -21,10 +21,10 @@ assertBool msg = liftIO . HUnit.assertBool msg
 
 -- | Like @'assertEqual'@ but no message argument.
 --
---   > assertEqual' actual expected
+--   > assertEqual' expected actual
 --
 assertEqual' :: (Eq a, Show a) => a -> a -> YesodExample site ()
-assertEqual' actual expected = assertEqual msg actual expected
+assertEqual' expected actual = assertEqual msg actual expected
 
     where
         msg :: String

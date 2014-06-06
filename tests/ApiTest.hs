@@ -96,3 +96,18 @@ apiSpecs =
             assertEqual' mc Nothing
 
             statusIs 200
+
+        yit "forbids posting empty comments" $ do
+            clearTables
+
+            Entity _ u <- createUser "1"
+
+            authenticateAs u
+
+            postBody CommentsR $ encode $ object
+                [ "thread"  .= ("The thread"  :: Text)
+                , "article" .= ("The article" :: Text)
+                , "body"    .= (""            :: Text)
+                ]
+
+            statusIs 400
