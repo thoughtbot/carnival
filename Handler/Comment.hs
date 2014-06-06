@@ -9,10 +9,10 @@ putCommentR :: CommentId -> Handler Value
 putCommentR commentId = do
     allowCrossOrigin
 
-    Entity uid u <- requireAuth_
-    requireOwnComment uid commentId
+    u <- requireAuth_
+    requireOwnComment (entityKey u) commentId
 
-    updateComment commentId uid u =<< requireJsonBody
+    updateComment commentId u =<< requireJsonBody
 
 deleteCommentR :: CommentId -> Handler ()
 deleteCommentR commentId = do

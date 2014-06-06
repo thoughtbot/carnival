@@ -41,8 +41,8 @@ requireOwnComment uid cid = do
     when (commentUser c /= uid) $
         permissionDenied "Action only appropriate for your own comments"
 
-insertComment :: UserId -> User -> CommentRequest -> Handler Value
-insertComment uid u req = do
+insertComment :: Entity User -> CommentRequest -> Handler Value
+insertComment (Entity uid u) req = do
     now <- liftIO getCurrentTime
 
     process (validateComment $ toComment now uid req) $ \c -> do
@@ -51,8 +51,8 @@ insertComment uid u req = do
         sendResponseStatus status201 $ object
             ["comment" .= UserComment (Entity cid c) u]
 
-updateComment :: CommentId -> UserId -> User -> CommentRequest -> Handler Value
-updateComment cid uid u req = do
+updateComment :: CommentId -> Entity User -> CommentRequest -> Handler Value
+updateComment cid (Entity uid u) req = do
     t <- fmap commentCreated $ runDB $ get404 cid
 
     process (validateComment $ toComment t uid req) $ \c -> do

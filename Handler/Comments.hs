@@ -10,9 +10,9 @@ postCommentsR :: Handler Value
 postCommentsR = do
     allowCrossOrigin
 
-    Entity uid u <- requireAuth_
+    u <- requireAuth_
 
-    insertComment uid u =<< requireJsonBody
+    insertComment u =<< requireJsonBody
 
 optionsCommentsR :: Handler ()
 optionsCommentsR = do
