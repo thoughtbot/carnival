@@ -14,7 +14,6 @@ class Indicator
     @element.setAttribute('data-indicator-for', @block.id())
     @element.className = 'comment-indicator'
     @element.innerHTML = "<span class='count'></span>"
-    @element.style.minHeight = @block.element.offsetHeight + 'px'
 
   bindEvents: ->
     @element.addEventListener 'mouseenter', =>

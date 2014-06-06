@@ -1,8 +1,8 @@
 article {
   .comment-indicator {
     cursor: pointer;
-    float: right;
-    margin-left: 10px;
+    position: absolute;
+    right: -30px;
     opacity: 0;
     padding: 0;
     z-index: 9998;
@@ -35,9 +35,8 @@ article.commenting {
 
   ol.comments {
     display: block;
-    float: right;
-    margin-left: -170px;
-    margin-top: -10px;
+    position: absolute;
+    right: -35px;
     width: 150px;
 
     li {

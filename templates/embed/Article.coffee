@@ -1,6 +1,7 @@
 class Article
   constructor: (@element) ->
     @id = @element.getAttribute('data-url').replace(/\//g, '')
+    @container = @createContainer()
     @thread = new Thread(this)
     @fetchComments()
     @bindEvents()
@@ -30,3 +31,9 @@ class Article
       @createBlocks()
       @insertBlocksIntoDom()
     )
+
+  createContainer: ->
+    container = document.createElement('div')
+    container.className = 'carnival'
+    @element.insertBefore(container, @element.firstChild)
+    container

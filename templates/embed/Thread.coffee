@@ -19,7 +19,8 @@ class Thread
     @setupElement()
     @insertCommentsIntoDom()
     @renderCommentForm()
-    @currentBlock.parent().insertBefore(@element, @currentBlock.indicator.element)
+    @article.container.insertBefore(@element, @article.container.lastChild)
+    @element.style.top = @currentBlock.top() + 'px'
 
   comments: ->
     @currentBlock.comments

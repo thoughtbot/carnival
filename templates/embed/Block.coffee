@@ -77,3 +77,6 @@ class Block
   deactivate: =>
     Carnival.removeClass(@element, 'commenting')
     @element.dispatchEvent(new CustomEvent("doneCommenting", bubbles: true, detail: this))
+
+  top: ->
+    @element.offsetTop - @element.scrollTop + @element.clientTop
