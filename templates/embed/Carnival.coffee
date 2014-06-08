@@ -10,6 +10,7 @@ class Carnival
     article_selector: 'article'
     block_selector: ':scope > p, :scope > pre'
     enabled: true
+    onNewComment: (comment) ->
 
   setOptionsFromDefaults: ->
     for property of Carnival.defaults

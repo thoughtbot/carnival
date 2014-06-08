@@ -13,3 +13,4 @@ class Comment
 
   insert: (listElement) ->
     listElement.appendChild(@element)
+    CarnivalOptions.onNewComment(this)

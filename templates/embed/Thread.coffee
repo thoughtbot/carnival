@@ -47,7 +47,8 @@ class Thread
         comment = new Comment(response.comment)
         @comments().push(comment)
         @currentBlock.indicator.setCount(@comments().length)
-        @element.insertBefore(comment.element, @commentForm.element)
+        comment.insert(@element)
+        @renderCommentForm()
     )
 
   commentHash: (body) ->
