@@ -23,24 +23,19 @@ And run the tests:
 
 ## Deployment
 
-At this time, we're unable to come in under the 15 minute build timeout 
-on Heroku, therefore we need to deploy via an Anvil server:
+Staging is the default deploy target:
 
 ```
-$ heroku plugins:install https://github.com/ddollar/heroku-anvil
+$ ./bin/deploy
 ```
 
-### Staging
+The production app can be passed as an argument if desired:
 
 ```
-$ heroku build -r -b https://github.com/begriffs/heroku-buildpack-ghc.git -a carnival-staging
+$ ./bin/deploy carnival-production
 ```
 
-### Production
-
-```
-$ heroku build -r -b https://github.com/begriffs/heroku-buildpack-ghc.git -a carnival-production
-```
+Deploys require a valid `./.env` file, see `./.env.sample` for details.
 
 ## Managing Dependencies
 
@@ -51,7 +46,7 @@ project, they'll need to be installed via:
 [cabal-sandbox]: http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html
 
 ```
-$ cabal install --dependencies-only
+$ cabal install --dependencies-only --enable-tests
 ```
 
 The `bin/setup` script is idempotent, so you can simply re-run that to 
