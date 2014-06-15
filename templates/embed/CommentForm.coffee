@@ -7,7 +7,7 @@ class CommentForm
     @element = document.createElement('li')
     @element.id = 'comment-form'
     @element.className = 'comment-form'
-    @element.innerHTML = "<a class='create'><span>+</span> Leave a note</a><form><a class='cancel'>✖</a><div class='author'><img src=''><span></span></div><textarea placeholder='Leave a note' class='body'></textarea><input type='submit' value='Save'></form>"
+    @element.innerHTML = "<a class='create'><span>+</span> Leave a comment</a><form><a class='cancel'>✖</a><div class='author'><img src=''><span></span></div><textarea placeholder='Type here&hellip;' class='body'></textarea><input type='submit' value='Comment'></form>"
 
   body: ->
     @element.querySelector('.body').value
