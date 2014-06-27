@@ -35,6 +35,7 @@ import Handler.Comment
 import Handler.Session
 import Handler.Embed
 import Handler.User
+import Handler.Feed
 import Helper.Heroku
 
 -- This line actually creates our YesodDispatch instance. It is the second half

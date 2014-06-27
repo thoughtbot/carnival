@@ -70,3 +70,10 @@ whenValid :: Validated a -> (a -> Handler Value) -> Handler Value
 whenValid (Right v) f = f v
 whenValid (Left es) _ = sendResponseStatus status400 $ object
     ["errors" .= (map toJSON es)]
+
+-- N.B. This is N+1. Consider rewriting as a join, IFF this
+-- becomes an issue.
+addUserInfo :: Entity Comment -> YesodDB App (Maybe UserComment)
+addUserInfo e@(Entity _ c) = do
+    u <- get $ commentUser c
+    return $ fmap (UserComment e) u

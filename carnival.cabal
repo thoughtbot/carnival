@@ -24,11 +24,13 @@ library
                      Helper.Request
                      Helper.Comment
                      Helper.Heroku
+                     Helper.Feed
                      Handler.Session
                      Handler.Comments
                      Handler.Comment
                      Handler.Embed
                      Handler.User
+                     Handler.Feed
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -89,6 +91,10 @@ library
                  , heroku
                  , clientsession
                  , time
+                 , yesod-newsfeed
+                 , containers
+                 , blaze-html
+                 , xml-conduit
 
 executable         carnival
     if flag(library-only)
