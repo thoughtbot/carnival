@@ -67,10 +67,51 @@ check_sandbox_path() {
   esac
 }
 
-copy_env_file() {
-  if [ ! -f ./.env ]; then
-    cp ./.env{.sample,}
-  fi
+init_env_file() {
+  [ -f ./.env ] && return 0
+
+  local token client_id client_secret
+
+  cat <<EOF
+Please enter a GitHub OAuth token granting access to this Repo.
+
+  https://github.com/settings/applications#personal-access-tokens
+
+This is required to deploy. If you don't plan on deploying, you can leave this
+blank for now.
+
+EOF
+
+  printf "GitHub OAuth Token: "
+  read token
+
+  cat <<EOF
+
+Please enter the Client ID and Secret for the Carnival Development OAuth
+application on Learn.
+
+  https://learn.thoughtbot.com/oauth/applications/14
+
+This is required to run a development instance with working authentication. You
+may leave these blank for now and still be able to run tests or a development
+instance without working authentication.
+
+EOF
+
+  printf "Client ID: "
+  read client_id
+
+  printf "Secret: "
+  read client_secret
+
+  cat > .env <<EOF
+REPO="thoughtbot/$app"
+DEPLOY_BRANCH="master"
+COMPILE_APP="$app-staging"
+GITHUB_OAUTH_TOKEN="$token"
+LEARN_OAUTH_CLIENT_ID="$client_id"
+LEARN_OAUTH_CLIENT_SECRET="$client_secret"
+EOF
 }
 
 test_connection() {
@@ -94,7 +135,7 @@ check_dependencies
 if [ "$TRAVIS" != "true" ]; then
   create_sandbox
   check_sandbox_path
-  copy_env_file
+  init_env_file
 fi
 
 install_dependencies

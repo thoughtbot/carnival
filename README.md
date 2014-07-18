@@ -35,8 +35,6 @@ The production app can be passed as an argument if desired:
 $ ./bin/deploy carnival-production
 ```
 
-Deploys require a valid `./.env` file, see `./.env.sample` for details.
-
 ## Managing Dependencies
 
 The `bin/setup` script will create a [cabal sandbox][cabal-sandbox] and 
