@@ -95,6 +95,7 @@ library
                  , containers
                  , blaze-html
                  , xml-conduit
+                 , load-env                      >= 0.0.4
 
 executable         carnival
     if flag(library-only)

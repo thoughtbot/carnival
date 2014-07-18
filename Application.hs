@@ -25,6 +25,7 @@ import Network.Wai.Logger (clockDateCacher)
 import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
 
+import LoadEnv
 import System.Environment (lookupEnv)
 import qualified Data.Text as T
 
@@ -68,6 +69,8 @@ makeApplication conf = do
 -- performs some initialization.
 makeFoundation :: AppConfig DefaultEnv Extra -> IO App
 makeFoundation conf = do
+    loadEnv
+
     manager <- newManager conduitManagerSettings
     s <- staticSite
     dbconf <-
@@ -116,7 +119,7 @@ makeFoundation conf = do
                         , learnOauthClientSecret = T.pack clientSecret
                         }
 
-                _ -> return learnOAuthKeysDev
+                _ -> error "LEARN_OAUTH_CLIENT_ID or LEARN_OAUTH_CLIENT_SECRET not set"
 
 -- for yesod devel
 getApplicationDev :: IO (Int, Application)
