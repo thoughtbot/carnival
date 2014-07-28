@@ -24,7 +24,6 @@ library
                      Helper.Request
                      Helper.Comment
                      Helper.Heroku
-                     Helper.Feed
                      Handler.Session
                      Handler.Comments
                      Handler.Comment
@@ -91,7 +90,7 @@ library
                  , heroku                        >= 0.1.2
                  , clientsession
                  , time
-                 , yesod-newsfeed
+                 , yesod-newsfeed                >= 1.2.1
                  , containers
                  , blaze-html
                  , xml-conduit

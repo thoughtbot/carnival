@@ -3,8 +3,8 @@ module Handler.Feed where
 import Import
 import Prelude (head)
 import Helper.Comment
-import Helper.Feed
 import Yesod.Markdown
+import Yesod.RssFeed
 import Data.Text as T (concat)
 import Data.Maybe
 import Control.Monad (when)
