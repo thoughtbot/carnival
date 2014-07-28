@@ -37,9 +37,18 @@ $ ./bin/deploy carnival-production
 
 ## Managing Dependencies
 
-The `bin/setup` script will create a [cabal sandbox][cabal-sandbox] and 
-install dependencies into it. If new dependencies are added to the 
-project, they'll need to be installed via:
+To mitigate so-called *cabal hell*, we're using two features available in recent
+versions of Cabal: sandboxes and freezing.
+
+### Sandbox
+
+Sandboxing means that all packages will be installed into a project-local
+sandbox. This prevents working on multiple projects with conflicting
+dependencies from causing issues.
+
+The `bin/setup` script will create a [cabal sandbox][cabal-sandbox] and install
+current dependencies into it. If new dependencies are added to the project,
+they'll need to be installed via:
 
 [cabal-sandbox]: http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html
 
@@ -47,21 +56,32 @@ project, they'll need to be installed via:
 $ cabal install --dependencies-only --enable-tests
 ```
 
-The `bin/setup` script is idempotent, so you can simply re-run that to 
-install all of the dependencies for you if you prefer.
+The `bin/setup` script is idempotent, so you can also re-run that to install the
+new dependencies.
 
-It is entirely possible that the introduction of a new dependency 
-requires upgrades of existing dependencies. This situation can be 
-difficult to manage depending on the exact circumstances and may result 
-in "cabal hell".
-
-Thanks to the introduction of sandboxes, one can always reset from 
-scratch:
+If you run into dependency issues, you can always reset from scratch:
 
 ```
 $ cabal sandbox delete
 $ ./bin/setup
 ```
 
-This process should always work as long as there is a valid set of 
-dependency versions available.
+This process should always work as long as there is a valid set of dependency
+versions available.
+
+### Freeze
+
+Freezing means that after dependencies are resolved, exact versions for all
+packages are written to a `config.cabal` file. This ensures that all developers,
+the CI server, and deployments will use the *exact* same versions of all
+dependencies.
+
+There is one notable exception: `base`.
+
+This package represents GHC itself and enforcing all developers to use the same
+exact version it too strict. For this reason, after running `cabal freeze`, we
+manually replace the exactly specified `base` version in `cabal.config` with a
+more lenient constraint.
+
+If you need to re-run `cabal freeze` be sure to retain the more lenient
+constraint on `base`.
