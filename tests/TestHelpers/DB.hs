@@ -12,9 +12,10 @@ import Control.Monad.IO.Class (liftIO)
 import Data.Text (Text)
 import Data.Time (getCurrentTime)
 import Yesod.Test
-import Yesod.Markdown
 import Database.Persist
 import Database.Persist.Sql (SqlPersistM, runSqlPersistMPool)
+import Text.Markdown
+import qualified Data.Text.Lazy as TL
 
 type Example = YesodExample App
 
@@ -41,7 +42,7 @@ createUser ident = do
 
     return $ Entity uid u
 
-createComment :: UserId -> Text -> Text -> Example (Entity Comment)
+createComment :: UserId -> Text -> TL.Text -> Example (Entity Comment)
 createComment uid article body = do
     now <- liftIO getCurrentTime
     let c = Comment

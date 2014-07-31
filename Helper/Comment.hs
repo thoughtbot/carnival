@@ -2,8 +2,8 @@ module Helper.Comment where
 
 import Import
 import Control.Monad
-import Yesod.Markdown
-import qualified Data.Text as T
+import Text.Markdown
+import qualified Data.Text.Lazy as TL
 
 data CommentRequest = CommentRequest
     { reqArticle :: Text
@@ -20,8 +20,8 @@ instance FromJSON CommentRequest where
         <*> fmap asMarkdown (v .: "body")
 
         where
-            asMarkdown :: Text -> Markdown
-            asMarkdown = Markdown . T.filter (/= '\r')
+            asMarkdown :: TL.Text -> Markdown
+            asMarkdown = Markdown . TL.filter (/= '\r')
 
     parseJSON _ = mzero
 

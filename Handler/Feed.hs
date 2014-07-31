@@ -3,11 +3,11 @@ module Handler.Feed where
 import Import
 import Prelude (head)
 import Helper.Comment
-import Yesod.Markdown
 import Yesod.RssFeed
 import Data.Text as T (concat)
 import Data.Maybe
 import Control.Monad (when)
+import Text.Blaze.Html (toMarkup)
 
 getFeedR :: Handler RepRss
 getFeedR = do
@@ -44,5 +44,5 @@ commentToRssEntry (UserComment (Entity _ c) u) = do
         { feedEntryLink    = T.concat ["http://robots.thoughtbot.com/", commentArticle c]
         , feedEntryUpdated = (commentCreated c)
         , feedEntryTitle   = T.concat ["New comment from ", userName u]
-        , feedEntryContent = markdownToHtml (commentBody c)
+        , feedEntryContent = toMarkup $ commentBody c
         }
