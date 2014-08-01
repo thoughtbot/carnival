@@ -1,5 +1,7 @@
 name:              carnival
 version:           0.0.0
+license:           MIT
+license-file:      LICENSE
 cabal-version:     >= 1.8
 build-type:        Simple
 
