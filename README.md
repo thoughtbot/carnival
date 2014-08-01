@@ -2,6 +2,14 @@
 
 A medium/disqus-like commenting service powering http://robots.thoughtbot.com.
 
+## Credits
+
+![thoughtbot](http://thoughtbot.com/logo.png)
+
+Carnival is maintained and funded by [thoughtbot, inc](http://thoughtbot.com/community)
+
+Thank you to all [the contributors](https://github.com/thoughtbot/paperclip/contributors)!
+
 ## Getting started
 
 Install ghc, alex, happy, cabal, Postgresql. On OS X, the easiest way is to
@@ -85,3 +93,10 @@ more lenient constraint.
 
 If you need to re-run `cabal freeze` be sure to retain the more lenient
 constraint on `base`.
+
+## License
+
+The names and logos for thoughtbot are trademarks of thoughtbot, inc.
+
+Carnival is Copyright © 2014 thoughtbot, inc. It is free software, and may be
+redistributed under the terms specified in the LICENSE file.
