@@ -43,6 +43,8 @@ The production app can be passed as an argument if desired:
 $ ./bin/deploy carnival-production
 ```
 
+Read more about deploying Carnival in [Ship You A Haskell](http://robots.thoughtbot.com/ship-you-a-haskell).
+
 ## Managing Dependencies
 
 To mitigate so-called *cabal hell*, we're using two features available in recent
