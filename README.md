@@ -8,7 +8,7 @@ A medium/disqus-like commenting service powering http://robots.thoughtbot.com.
 
 Carnival is maintained and funded by [thoughtbot, inc](http://thoughtbot.com/community)
 
-Thank you to all [the contributors](https://github.com/thoughtbot/paperclip/contributors)!
+Thank you to all [the contributors](https://github.com/thoughtbot/carnival/contributors)!
 
 ## Getting started
 
