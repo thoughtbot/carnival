@@ -19,36 +19,13 @@ EOF
   exit 1
 fi
 
-if [ ! -f .env ]; then
-  cat >&2 <<EOF
-
-  Environment file not found.
-
-  Please copy .env.sample to .env and try again.
-
-  % cp .env{.sample,} && ${VISUAL:-vim} .env
-
-EOF
-  exit 1
-fi
-
-. ./.env
-
-if [ -z "$GITHUB_OAUTH_TOKEN" ]; then
-  cat >&2 <<EOF
-
-  Environment variable GITHUB_OAUTH_TOKEN not set
-
-  Please generate one, set it in .env, and try again.
-  https://github.com/settings/applications#personal-access-tokens
-
-EOF
-  exit 1
-fi
+: ${REPO:="thoughtbot/carnival"}
+: ${DEPLOY_BRANCH:="master"}
+: ${COMPILE_APP:="carnival-staging"}
 
 build() {
   local release_app="$1"
-  local sources="$GITHUB/repos/$REPO/tarball/$DEPLOY_BRANCH?access_token=$GITHUB_OAUTH_TOKEN"
+  local sources="$GITHUB/repos/$REPO/tarball/$DEPLOY_BRANCH"
   local version="$(git rev-parse --short HEAD)"
 
   printf "Building version %s on %s...\n" "$version" "$COMPILE_APP"
