@@ -55,7 +55,7 @@ type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 instance Yesod App where
     approot = ApprootMaster $ appRoot . settings
 
-    makeSessionBackend _ = S.makeSessionBackend "SESSION_SECRET"
+    makeSessionBackend _ = S.makeSessionBackend "SESSION"
 
     defaultLayout widget = do
         -- We break up the default layout into two components:

@@ -91,7 +91,7 @@ library
                  , blaze-markup
                  , gravatar
                  , heroku                        >= 0.1.2
-                 , clientsession
+                 , clientsession                 >= 0.9.1
                  , time
                  , yesod-newsfeed                >= 1.2.1
                  , containers
