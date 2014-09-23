@@ -6,7 +6,7 @@
 check_dependencies() {
   local dependency
 
-  for dependency in alex cabal ghc happy psql; do
+  for dependency in cabal ghc psql; do
     if ! command -v "$dependency" >/dev/null; then
       printf "Missing dependency: %s\n" "$dependency" >&2
       exit 1
@@ -48,7 +48,7 @@ create_sandbox() {
     cabal sandbox init
 
     # Install framework
-    cabal install yesod-bin
+    cabal install yesod-bin alex happy
   fi
 }
 
