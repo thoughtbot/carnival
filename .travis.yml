@@ -1,6 +1,6 @@
 language: haskell
 
-ghc: 7.8.2
+ghc: 7.8
 
 addons:
   postgresql: "9.3"
@@ -12,7 +12,7 @@ before_script:
   - ./bin/setup
 
 script:
-  - yesod test
+  - LEARN_OAUTH_CLIENT_ID=x LEARN_OAUTH_CLIENT_SECRET=x yesod test
 
 notifications:
   email: false
@@ -20,8 +20,3 @@ notifications:
 branches:
   only:
     - master
-
-env:
-  global:
-  - secure: WJzSlQG/za5O/USWHjUJcUaBhaCaJjK3FOHO8JkyjC06/WjK5c/+MRrlwzBLjlRtOGWE7r0ORz/t6MHwEA/Hvk90JBb9fxOu0AU/FZnzuwaBmjyaa92SM5Uz5P0+H4bzKaudFDjGnhHSw17YHGp/93Ofk/EGUBl17M3asMb1t7Y=
-  - secure: PVxcBYxaX04x3txjTRkdAfOyBrQJ08zzWEfGy8cGod6nZqoXy6XrKVuotfoLnU53kb+nuF6zhwqIHRfNZYd+Hy6gOT3vLDoFPY2H057anLt31PY3SRFAtyHhEigPkS3aqg797VUQMM+1GztR/urWUYXySi+gEg7vN+Hmbh3dxDU=
