@@ -70,31 +70,20 @@ check_sandbox_path() {
 init_env_file() {
   [ -f ./.env ] && return 0
 
-  local token client_id client_secret
-
-  cat <<EOF
-Please enter a GitHub OAuth token granting access to this Repo.
-
-  https://github.com/settings/applications#personal-access-tokens
-
-This is required to deploy. If you don't plan on deploying, you can leave this
-blank for now.
-
-EOF
-
-  printf "GitHub OAuth Token: "
-  read token
+  local client_id client_secret
 
   cat <<EOF
 
 Please enter the Client ID and Secret for the Carnival Development OAuth
-application on Learn.
+application on Upcase
 
-  https://learn.thoughtbot.com/oauth/applications/14
+  https://upcase.com/oauth/applications/14
 
 This is required to run a development instance with working authentication. You
-may leave these blank for now and still be able to run tests or a development
+may enter fake values for now and still be able to run tests or a development
 instance without working authentication.
+
+The values can be updated later by editing the generated ./.env file.
 
 EOF
 
@@ -105,10 +94,6 @@ EOF
   read client_secret
 
   cat > .env <<EOF
-REPO="thoughtbot/$app"
-DEPLOY_BRANCH="master"
-COMPILE_APP="$app-staging"
-GITHUB_OAUTH_TOKEN="$token"
 LEARN_OAUTH_CLIENT_ID="$client_id"
 LEARN_OAUTH_CLIENT_SECRET="$client_secret"
 EOF
