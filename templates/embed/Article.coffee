@@ -1,6 +1,7 @@
 class Article
   constructor: (@element) ->
     @id = @element.getAttribute('data-url').replace(/\//g, '')
+    @title = document.title
     @container = @createContainer()
     @thread = new Thread(this)
     @fetchComments()
