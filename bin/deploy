@@ -23,6 +23,9 @@ fi
 : ${DEPLOY_BRANCH:="master"}
 : ${COMPILE_APP:="carnival-staging"}
 
+: ${HEROKU_DASHBOARD:="https://dashboard-next.heroku.com"}
+: ${HEROKU_APPS:="orgs/thoughtbot/apps"}
+
 build() {
   local release_app="$1"
   local sources="$GITHUB/repos/$REPO/tarball/$DEPLOY_BRANCH"
@@ -64,8 +67,8 @@ build_failed() {
 
   {
     printf "!!! Build not successful.\n"
-    printf "!!! API Response:\n"
-    get_build "$build_id"
+    printf "!!! Please check the build log: %s/%s/%s/activity/builds/%s\n" \
+     "$HEROKU_DASHBOARD" "$HEROKU_APPS" "$COMPILE_APP" "$build_id"
   } >&2
 
   exit 1
