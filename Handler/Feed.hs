@@ -43,6 +43,6 @@ commentToRssEntry (UserComment (Entity _ c) u) = do
     return FeedEntry
         { feedEntryLink    = T.concat ["http://robots.thoughtbot.com/", commentArticle c]
         , feedEntryUpdated = (commentCreated c)
-        , feedEntryTitle   = T.concat ["New comment from ", userName u]
+        , feedEntryTitle   = T.concat ["New comment from ", userName u, " on ", commentArticleTitle c]
         , feedEntryContent = toMarkup $ commentBody c
         }

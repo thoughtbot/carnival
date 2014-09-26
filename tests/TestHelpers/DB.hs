@@ -46,10 +46,11 @@ createComment :: UserId -> Text -> TL.Text -> Example (Entity Comment)
 createComment uid article body = do
     now <- liftIO getCurrentTime
     let c = Comment
-            { commentUser    = uid
-            , commentThread  = "thread"
+            { commentUser = uid
+            , commentThread = "thread"
+            , commentArticleTitle = "title"
             , commentArticle = article
-            , commentBody    = Markdown body
+            , commentBody = Markdown body
             , commentCreated = now
             }
 

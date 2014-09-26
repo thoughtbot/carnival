@@ -7,8 +7,9 @@ import qualified Data.Text.Lazy as TL
 
 data CommentRequest = CommentRequest
     { reqArticle :: Text
-    , reqThread  :: Text
-    , reqBody    :: Markdown
+    , reqArticleTitle :: Text
+    , reqThread :: Text
+    , reqBody :: Markdown
     }
 
 type Validated a = Either [Text] a
@@ -16,6 +17,7 @@ type Validated a = Either [Text] a
 instance FromJSON CommentRequest where
     parseJSON (Object v) = CommentRequest
         <$> v .: "article"
+        <*> v .: "articleTitle"
         <*> v .: "thread"
         <*> fmap asMarkdown (v .: "body")
 
@@ -27,10 +29,11 @@ instance FromJSON CommentRequest where
 
 toComment :: UTCTime -> UserId -> CommentRequest -> Comment
 toComment t uid req = Comment
-    { commentUser    = uid
+    { commentUser = uid
     , commentArticle = reqArticle req
-    , commentThread  = reqThread req
-    , commentBody    = reqBody req
+    , commentArticleTitle = reqArticleTitle req
+    , commentThread = reqThread req
+    , commentBody = reqBody req
     , commentCreated = t
     }
 

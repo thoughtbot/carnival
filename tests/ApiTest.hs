@@ -42,9 +42,10 @@ apiSpecs =
             authenticateAs u
 
             postBody CommentsR $ encode $ object
-                [ "thread"  .= ("The thread"  :: Text)
+                [ "thread" .= ("The thread"  :: Text)
+                , "articleTitle" .= ("The Title"   :: Text)
                 , "article" .= ("The article" :: Text)
-                , "body"    .= ("The body"    :: Text)
+                , "body" .= ("The body"    :: Text)
                 ]
 
             statusIs 201
@@ -56,6 +57,7 @@ apiSpecs =
 
             assertEqual' uid $ commentUser c
             assertEqual' "The thread"  $ commentThread c
+            assertEqual' "The Title"   $ commentArticleTitle c
             assertEqual' "The article" $ commentArticle c
             assertEqual' "The body"    $ commentBody c
 
@@ -78,9 +80,10 @@ apiSpecs =
             statusIs 403
 
             putBody (CommentR cid2) $ encode $ object
-                [ "thread"  .= ("new thread"  :: Text)
+                [ "thread" .= ("new thread"  :: Text)
+                , "articleTitle" .= ("new title"   :: Text)
                 , "article" .= ("new article" :: Text)
-                , "body"    .= ("new body"    :: Text)
+                , "body" .= ("new body"    :: Text)
                 ]
 
             statusIs 200
@@ -105,9 +108,9 @@ apiSpecs =
             authenticateAs u
 
             postBody CommentsR $ encode $ object
-                [ "thread"  .= ("The thread"  :: Text)
-                , "article" .= ("The article" :: Text)
-                , "body"    .= (""            :: Text)
+                [ "thread" .= ("The thread"  :: Text)
+                , "articleTitle" .= ("The article" :: Text)
+                , "body" .= ("" :: Text)
                 ]
 
             statusIs 400
