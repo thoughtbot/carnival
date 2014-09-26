@@ -6,7 +6,7 @@
 module Settings where
 
 import Prelude
-import Text.Shakespeare.Text (st)
+import Text.Shakespeare.Text (st, textFile, textFileReload)
 import Language.Haskell.TH.Syntax
 import Database.Persist.Postgresql (PostgresConf)
 import Database.Persist.Sql (SqlBackend)
@@ -86,6 +86,10 @@ coffeeFile f = (if development then Text.Coffee.coffeeFileReload $ globFile "cof
 luciusFile :: String -> Q Exp
 luciusFile f = (if development then Text.Lucius.luciusFileReload $ globFile "lucius" f
                                else Text.Lucius.luciusFile $ globFile "lucius" f)
+
+textFile :: String -> Q Exp
+textFile f = (if development then Text.Shakespeare.Text.textFileReload $ globFile "text" f
+                             else Text.Shakespeare.Text.textFile $ globFile "text" f)
 
 data Extra = Extra
     { extraCopyright :: Text

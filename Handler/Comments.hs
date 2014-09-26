@@ -3,7 +3,9 @@ module Handler.Comments where
 import Import
 
 import Model.Comment
+import Model.Subscription
 import Model.UserComment
+import Notification
 
 import Helper.Auth
 import Helper.Request
@@ -45,8 +47,13 @@ postCommentsR = do
     runValidation validateComment c $ \v -> do
         cid <- runDB $ insert v
 
-        sendResponseStatus status201 $ object
-            ["comment" .= UserComment (Entity cid v) u]
+        let userComment = UserComment (Entity cid v) u
+            notification = NewComment userComment
+
+        runDB $ subscribe (notificationName notification) $ entityKey u
+
+        sendNotification notification
+        sendResponseStatus status201 $ object ["comment" .= userComment]
 
 putCommentR :: CommentId -> Handler Value
 putCommentR commentId = do

@@ -12,3 +12,4 @@
 
 /session SessionR GET
 /user UserR GET
+/unsubscribe/#Token UnsubscribeR GET

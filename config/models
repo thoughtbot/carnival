@@ -4,7 +4,7 @@ User
     email Text
     ident Text
     UniqueUser ident
-    deriving Show Typeable
+    deriving Eq Show Typeable
 
 Comment
     user UserId
@@ -13,4 +13,11 @@ Comment
     thread Text
     body Markdown
     created UTCTime default=now()
-    deriving Show Eq
+    deriving Eq Show
+
+Subscription
+    name Text
+    user UserId
+    token Token
+    active Bool
+    UniqueSubscription token

@@ -1,5 +1,11 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
-module Model.User where
+module Model.User
+    ( User(..)
+    , userName
+    , userGravatar
+    , findUsers
+    , findUsers'
+    ) where
 
 import Import
 
@@ -21,3 +27,10 @@ userName u = userFirstName u <> " " <> userLastName u
 
 userGravatar :: User -> Text
 userGravatar = T.pack . gravatar def . userEmail
+
+findUsers :: [UserId] -> DB [Entity User]
+findUsers userIds = selectList [UserId <-. userIds] []
+
+-- | Same as @findUsers@, but discards the @entityKey@
+findUsers' :: [UserId] -> DB [User]
+findUsers' = fmap (map entityVal) . findUsers

@@ -8,10 +8,6 @@ import Control.Monad (forM)
 import Data.List (find)
 import Data.Maybe (catMaybes, maybeToList)
 
-import Text.Markdown (Markdown(..))
-
-import qualified Data.Text.Lazy as TL
-
 data UserComment = UserComment (Entity Comment) (Entity User)
 
 instance ToJSON UserComment where
@@ -26,10 +22,6 @@ instance ToJSON UserComment where
         , "body" .= unMarkdown (commentBody c)
         , "body_html" .= String (renderMarkdown c)
         ]
-
-      where
-        unMarkdown :: Markdown -> TL.Text
-        unMarkdown (Markdown t) = t
 
 findUserComments :: Maybe Text -> DB [UserComment]
 findUserComments marticle = do

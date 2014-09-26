@@ -8,8 +8,11 @@ import Model.UserComment as X
 import Foundation as X
 
 -- Useful libraries
+import Control.Applicative as X
+import Control.Monad as X
 import Data.Text as X (Text)
 import Data.Aeson as X
+import Data.Monoid as X
 import Database.Persist as X hiding (get, delete)
 
 -- Test framework

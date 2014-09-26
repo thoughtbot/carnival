@@ -19,12 +19,15 @@ library
                      Import
                      Model
                      Model.Comment
+                     Model.Subscription
                      Model.User
                      Model.UserComment
                      Settings
                      Settings.StaticFiles
                      Settings.Development
                      Session
+                     SendMail
+                     Notification
                      Helper.Auth
                      Helper.Request
                      Helper.Heroku
@@ -34,6 +37,9 @@ library
                      Handler.Embed
                      Handler.User
                      Handler.Feed
+                     Handler.Unsubscribe
+                     Network.Mail.SendGrid
+                     Network.Mail.RecipientOverride
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -102,6 +108,10 @@ library
                  , yesod-text-markdown
                  , transformers
                  , mtl
+                 , smtp-mail                     >= 0.1.4.5 && < 0.2
+                 , network
+                 , mime-mail
+                 , random
 
     -- see https://github.com/yesodweb/yesod/issues/814
     if !os(windows)
@@ -147,3 +157,4 @@ test-suite test
                  , time
                  , markdown
                  , html-conduit < 1.1.1
+                 , mime-mail

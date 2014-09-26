@@ -2,7 +2,7 @@ module Main where
 
 -- Libraries
 import Database.Persist.Sql (runSqlPersistMPool)
-import Test.Hspec (hspec, after)
+import Test.Hspec (hspec, after, before)
 import Yesod.Default.Config
 import Yesod.Test
 
@@ -12,15 +12,19 @@ import Application (makeFoundation)
 
 -- Tests
 import ApiTest
+import NotificationTest
 
 main :: IO ()
-main = mapM_ run [apiSpecs]
+main = mapM_ run [apiSpecs, notificationSpecs]
 
 run :: YesodSpec App -> IO ()
 run spec = do
     foundation <- makeFoundation =<< testConfig
 
-    hspec $ after (cleanup foundation) $ yesodSpec foundation spec
+    hspec $
+        before (cleanup foundation) $
+        after (cleanup foundation) $
+        yesodSpec foundation spec
 
     where
         cleanup :: App -> IO ()
@@ -29,6 +33,7 @@ run spec = do
 
             flip runSqlPersistMPool pool $ do
                 deleteWhere ([] :: [Filter Comment])
+                deleteWhere ([] :: [Filter Subscription])
                 deleteWhere ([] :: [Filter User])
 
 testConfig :: IO (AppConfig DefaultEnv Extra)
