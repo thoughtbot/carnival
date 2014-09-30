@@ -8,8 +8,6 @@ apiSpecs :: YesodSpec App
 apiSpecs =
     ydescribe "Comments API" $ do
         yit "allows reading of comments by article" $ do
-            clearTables
-
             Entity uid u <- createUser "1"
             c1 <- createComment uid "1" "1"
             c2 <- createComment uid "1" "2"
@@ -31,8 +29,6 @@ apiSpecs =
                                ]]
 
         yit "allows authorized commenting" $ do
-            clearTables
-
             post CommentsR
 
             statusIs 401
@@ -62,8 +58,6 @@ apiSpecs =
             assertEqual' "The body"    $ commentBody c
 
         yit "forbids manipulating other users' comments" $ do
-            clearTables
-
             Entity uid1 _  <- createUser "1"
             Entity uid2 u2 <- createUser "2"
             Entity cid1 _  <- createComment uid1 "1" "1"
@@ -101,8 +95,6 @@ apiSpecs =
             statusIs 200
 
         yit "forbids posting empty comments" $ do
-            clearTables
-
             Entity _ u <- createUser "1"
 
             authenticateAs u

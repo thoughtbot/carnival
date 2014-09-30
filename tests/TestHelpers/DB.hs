@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module TestHelpers.DB
     ( runDB
-    , clearTables
     , createUser
     , createComment
     ) where
@@ -23,11 +22,6 @@ runDB :: SqlPersistM a -> Example a
 runDB query = do
     pool <- fmap connPool getTestYesod
     liftIO $ runSqlPersistMPool query pool
-
-clearTables :: Example ()
-clearTables = runDB $ do
-    deleteWhere ([] :: [Filter Comment])
-    deleteWhere ([] :: [Filter User])
 
 createUser :: Text -> Example (Entity User)
 createUser ident = do
