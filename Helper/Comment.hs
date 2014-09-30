@@ -16,8 +16,8 @@ type Validated a = Either [Text] a
 
 instance FromJSON CommentRequest where
     parseJSON (Object v) = CommentRequest
-        <$> v .: "article"
-        <*> v .: "articleTitle"
+        <$> v .: "article_url"
+        <*> v .: "article_title"
         <*> v .: "thread"
         <*> fmap asMarkdown (v .: "body")
 

@@ -39,8 +39,8 @@ apiSpecs =
 
             postBody CommentsR $ encode $ object
                 [ "thread" .= ("The thread"  :: Text)
-                , "articleTitle" .= ("The Title"   :: Text)
-                , "article" .= ("The article" :: Text)
+                , "article_title" .= ("The article title"   :: Text)
+                , "article_url" .= ("The article url" :: Text)
                 , "body" .= ("The body"    :: Text)
                 ]
 
@@ -52,10 +52,10 @@ apiSpecs =
             valueEquals $ object ["comment" .= UserComment e u]
 
             assertEqual' uid $ commentUser c
-            assertEqual' "The thread"  $ commentThread c
-            assertEqual' "The Title"   $ commentArticleTitle c
-            assertEqual' "The article" $ commentArticleURL c
-            assertEqual' "The body"    $ commentBody c
+            assertEqual' "The thread" $ commentThread c
+            assertEqual' "The article title" $ commentArticleTitle c
+            assertEqual' "The article url" $ commentArticleURL c
+            assertEqual' "The body" $ commentBody c
 
         yit "forbids manipulating other users' comments" $ do
             Entity uid1 _  <- createUser "1"
@@ -75,8 +75,8 @@ apiSpecs =
 
             putBody (CommentR cid2) $ encode $ object
                 [ "thread" .= ("new thread"  :: Text)
-                , "articleTitle" .= ("new title"   :: Text)
-                , "article" .= ("new article" :: Text)
+                , "article_title" .= ("new title"   :: Text)
+                , "article_url" .= ("new article" :: Text)
                 , "body" .= ("new body"    :: Text)
                 ]
 
@@ -101,7 +101,8 @@ apiSpecs =
 
             postBody CommentsR $ encode $ object
                 [ "thread" .= ("The thread"  :: Text)
-                , "articleTitle" .= ("The article" :: Text)
+                , "article_url" .= ("The article" :: Text)
+                , "article_title" .= ("The title" :: Text)
                 , "body" .= ("" :: Text)
                 ]
 
