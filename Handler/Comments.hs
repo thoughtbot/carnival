@@ -30,4 +30,4 @@ getCommentsR = do
 
     where
         toArticleFilter :: Maybe Text -> [Filter Comment]
-        toArticleFilter = maybeToList . fmap (CommentArticle ==.)
+        toArticleFilter = maybeToList . fmap (CommentArticleURL ==.)

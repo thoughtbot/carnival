@@ -43,7 +43,7 @@ createComment uid article body = do
             { commentUser = uid
             , commentThread = "thread"
             , commentArticleTitle = "title"
-            , commentArticle = article
+            , commentArticleURL = article
             , commentBody = Markdown body
             , commentCreated = now
             }

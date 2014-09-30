@@ -30,7 +30,7 @@ instance FromJSON CommentRequest where
 toComment :: UTCTime -> UserId -> CommentRequest -> Comment
 toComment t uid req = Comment
     { commentUser = uid
-    , commentArticle = reqArticle req
+    , commentArticleURL = reqArticle req
     , commentArticleTitle = reqArticleTitle req
     , commentThread = reqThread req
     , commentBody = reqBody req

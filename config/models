@@ -8,7 +8,7 @@ User
 
 Comment
     user UserId
-    article Text
+    articleURL Text
     articleTitle Text default=''
     thread Text
     body Markdown

@@ -42,7 +42,7 @@ instance ToJSON UserComment where
         , "user_id"      .= (String $ toPathPiece $ commentUser c)
         , "user_name"    .= userName u
         , "gravatar_url" .= userGravatar u
-        , "article"      .= commentArticle c
+        , "article_url"  .= commentArticleURL c
         , "thread"       .= commentThread c
         , "body"         .= (unMarkdown $ commentBody c)
         , "body_html"    .= (String $ renderMarkdown c)

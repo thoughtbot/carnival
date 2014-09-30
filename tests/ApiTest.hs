@@ -54,7 +54,7 @@ apiSpecs =
             assertEqual' uid $ commentUser c
             assertEqual' "The thread"  $ commentThread c
             assertEqual' "The Title"   $ commentArticleTitle c
-            assertEqual' "The article" $ commentArticle c
+            assertEqual' "The article" $ commentArticleURL c
             assertEqual' "The body"    $ commentBody c
 
         yit "forbids manipulating other users' comments" $ do
