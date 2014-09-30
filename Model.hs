@@ -38,14 +38,15 @@ data UserComment = UserComment (Entity Comment) User
 
 instance ToJSON UserComment where
     toJSON (UserComment (Entity cid c) u) = object
-        [ "id"           .= (String $ toPathPiece cid)
-        , "user_id"      .= (String $ toPathPiece $ commentUser c)
-        , "user_name"    .= userName u
+        [ "id" .= (String $ toPathPiece cid)
+        , "user_id" .= (String $ toPathPiece $ commentUser c)
+        , "user_name" .= userName u
         , "gravatar_url" .= userGravatar u
-        , "article_url"  .= commentArticleURL c
-        , "thread"       .= commentThread c
-        , "body"         .= (unMarkdown $ commentBody c)
-        , "body_html"    .= (String $ renderMarkdown c)
+        , "article_url" .= commentArticleURL c
+        , "article_title" .= commentArticleTitle c
+        , "thread" .= commentThread c
+        , "body" .= (unMarkdown $ commentBody c)
+        , "body_html" .= (String $ renderMarkdown c)
         ]
 
 unMarkdown :: Markdown -> TL.Text
