@@ -1,0 +1,44 @@
+#!/bin/sh
+#
+# usage: ./bin/migrate-deploy [APP] [MIGRATION, ...]
+#
+###
+set -e
+
+if [ $# -lt 2 ]; then
+  sed '/^# \(usage:.*\)/!d; s//\1/' "$0" >&2
+  exit 64
+fi
+
+app="$1"; shift
+
+cat <<EOF
+Running a migration deploy to $app. This will:
+
+  - Put the app in maintenance mode
+  - Backup the database
+  - Execute the given migration scripts in order
+  - Deploy
+  - Take the app out of maintenance mode
+
+If something goes wrong, you may have to manually restore the database backup:
+
+  https://devcenter.heroku.com/articles/pgbackups
+
+Waiting 3 seconds, press ^C to cancel...
+
+EOF
+
+sleep 3
+
+heroku maintenance:on --app "$app"
+heroku pgbackups:capture --app "$app" --expire
+
+for migration; do
+  printf "Migrate: %s\n" "$migration"
+  heroku pg:psql --app "$app" < "$migration"
+done
+
+./bin/deploy "$app"
+
+heroku maintenance:off --app "$app"

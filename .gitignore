@@ -10,3 +10,4 @@ yesod-devel/
 .cabal-sandbox
 cabal.sandbox.config
 .env
+!migrations/*.sql
