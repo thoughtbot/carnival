@@ -3,15 +3,14 @@ module TestHelpers.Auth
     ( authenticateAs
     ) where
 
-import Model
-import Foundation
+import Import
 import Yesod.Default.Config
 import Yesod.Test
 
 import qualified Data.Text as T
 
-authenticateAs :: User -> YesodExample App ()
-authenticateAs u = do
+authenticateAs :: Entity User -> YesodExample App ()
+authenticateAs (Entity _ u) = do
     testRoot <- fmap (appRoot . settings) $ getTestYesod
 
     let url = testRoot `T.append` "/auth/page/dummy"

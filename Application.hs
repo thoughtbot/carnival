@@ -32,7 +32,6 @@ import qualified Data.Text as T
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
 import Handler.Comments
-import Handler.Comment
 import Handler.Session
 import Handler.Embed
 import Handler.User

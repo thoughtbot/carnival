@@ -8,10 +8,10 @@ apiSpecs :: YesodSpec App
 apiSpecs =
     ydescribe "Comments API" $ do
         yit "allows reading of comments by article" $ do
-            Entity uid u <- createUser "1"
-            c1 <- createComment uid "1" "1"
-            c2 <- createComment uid "1" "2"
-            c3 <- createComment uid "2" "3"
+            u <- createUser "1"
+            c1 <- createComment (entityKey u) "1" "1"
+            c2 <- createComment (entityKey u) "1" "2"
+            c3 <- createComment (entityKey u) "2" "3"
 
             get CommentsR
 
@@ -33,7 +33,7 @@ apiSpecs =
 
             statusIs 401
 
-            Entity uid u <- createUser "1"
+            u <- createUser "1"
 
             authenticateAs u
 
@@ -46,22 +46,21 @@ apiSpecs =
 
             statusIs 201
 
-
             (e@(Entity _ c):_) <- runDB $ selectList [] []
 
             valueEquals $ object ["comment" .= UserComment e u]
 
-            assertEqual' uid $ commentUser c
+            assertEqual' (entityKey u) $ commentUser c
             assertEqual' "The thread" $ commentThread c
             assertEqual' "The article title" $ commentArticleTitle c
             assertEqual' "The article url" $ commentArticleURL c
             assertEqual' "The body" $ commentBody c
 
         yit "forbids manipulating other users' comments" $ do
-            Entity uid1 _  <- createUser "1"
-            Entity uid2 u2 <- createUser "2"
-            Entity cid1 _  <- createComment uid1 "1" "1"
-            Entity cid2 _  <- createComment uid2 "1" "2"
+            u1  <- createUser "1"
+            u2 <- createUser "2"
+            Entity cid1 _  <- createComment (entityKey u1) "1" "1"
+            Entity cid2 _  <- createComment (entityKey u2) "1" "2"
 
             authenticateAs u2
 
@@ -95,7 +94,7 @@ apiSpecs =
             statusIs 200
 
         yit "forbids posting empty comments" $ do
-            Entity _ u <- createUser "1"
+            u <- createUser "1"
 
             authenticateAs u
 

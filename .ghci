@@ -3,3 +3,4 @@
 :set -XFlexibleInstances
 :set -XStandaloneDeriving
 :set -XViewPatterns
+:set -XRankNTypes

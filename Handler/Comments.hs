@@ -1,33 +1,104 @@
 module Handler.Comments where
 
 import Import
+
+import Model.Comment
+import Model.UserComment
+
 import Helper.Auth
-import Helper.Comment
 import Helper.Request
-import Data.Maybe
+import Helper.Validation
+
+import Control.Monad (mzero)
+import Text.Markdown
+
+import qualified Data.Text.Lazy as TL
+
+data CommentRequest = CommentRequest
+    { reqArticle :: Text
+    , reqArticleTitle :: Text
+    , reqThread :: Text
+    , reqBody :: Markdown
+    }
+
+instance FromJSON CommentRequest where
+    parseJSON (Object v) = CommentRequest
+        <$> v .: "article_url"
+        <*> v .: "article_title"
+        <*> v .: "thread"
+        <*> fmap asMarkdown (v .: "body")
+
+        where
+            asMarkdown :: TL.Text -> Markdown
+            asMarkdown = Markdown . TL.filter (/= '\r')
+
+    parseJSON _ = mzero
 
 postCommentsR :: Handler Value
 postCommentsR = do
     allowCrossOrigin
 
     u <- requireAuth_
+    t <- liftIO getCurrentTime
+    c <- fmap (buildComment t u) $ requireJsonBody
 
-    insertComment u =<< requireJsonBody
+    runValidation validateComment c $ \v -> do
+        cid <- runDB $ insert v
 
-optionsCommentsR :: Handler ()
-optionsCommentsR = do
+        sendResponseStatus status201 $ object
+            ["comment" .= UserComment (Entity cid v) u]
+
+putCommentR :: CommentId -> Handler Value
+putCommentR commentId = do
     allowCrossOrigin
-    sendResponseStatus status200 ()
+
+    u <- requireAuth_
+    c <- runDB $ get404 commentId
+
+    requireOwnComment c $ entityKey u
+
+    c' <- fmap (buildComment (commentCreated c) u) requireJsonBody
+
+    runValidation validateComment c' $ \v -> do
+        runDB $ replace commentId v
+
+        sendResponseStatus status200 $ object
+            ["comment" .= UserComment (Entity commentId v) u]
+
+deleteCommentR :: CommentId -> Handler ()
+deleteCommentR commentId = do
+    allowCrossOrigin
+
+    u <- requireAuth_
+    c <- runDB $ get404 commentId
+
+    requireOwnComment c $ entityKey u
+
+    runDB $ delete commentId
+
+    sendResponseStatus status200 ("DELETED" :: Text)
 
 getCommentsR :: Handler Value
 getCommentsR = do
     allowCrossOrigin
 
-    filters  <- fmap toArticleFilter $ lookupGetParam "article"
-    comments <- runDB $ mapM addUserInfo =<< selectList filters []
+    marticle <- lookupGetParam "article"
+    comments <- runDB $ findUserComments marticle
 
-    return $ object ["comments" .= catMaybes comments]
+    return $ object ["comments" .= comments]
 
-    where
-        toArticleFilter :: Maybe Text -> [Filter Comment]
-        toArticleFilter = maybeToList . fmap (CommentArticleURL ==.)
+optionsCommentsR :: Handler ()
+optionsCommentsR = do
+    allowCrossOrigin
+
+    sendResponseStatus status200 ()
+
+buildComment :: UTCTime -> Entity User -> CommentRequest -> Comment
+buildComment t u req = Comment
+    { commentUser = entityKey u
+    , commentArticleURL = reqArticle req
+    , commentArticleTitle = reqArticleTitle req
+    , commentThread = reqThread req
+    , commentBody = reqBody req
+    , commentCreated = t
+    }

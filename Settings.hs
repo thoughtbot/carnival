@@ -9,8 +9,11 @@ import Prelude
 import Text.Shakespeare.Text (st)
 import Language.Haskell.TH.Syntax
 import Database.Persist.Postgresql (PostgresConf)
+import Database.Persist.Sql (SqlBackend)
 import Yesod.Default.Config
 import Yesod.Default.Util
+import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.Reader (ReaderT)
 import Data.Text (Text)
 import Data.Yaml
 import Control.Applicative
@@ -22,6 +25,12 @@ import Text.Lucius
 
 -- | Which Persistent backend this site is using.
 type PersistConf = PostgresConf
+
+-- | Actions which only require access to the database connection can be given
+--   type @DB a@ (as opposed to @YesodDB App a@). This allows them to also be
+--   called in tests.
+type DB a = forall (m :: * -> *).
+    (MonadIO m, Functor m) => ReaderT SqlBackend m a
 
 -- Static setting below. Changing these requires a recompile
 
