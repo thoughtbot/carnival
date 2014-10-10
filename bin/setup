@@ -3,6 +3,22 @@
 # Set up app. Run this script immediately after cloning the codebase.
 # https://github.com/thoughtbot/guides/tree/master/protocol
 
+cabal_install() {
+  cabal install "$@" \
+    --avoid-reinstalls \
+    --max-backjumps=-1 \
+    --reorder-goals
+}
+
+cabal_install_if_needed() {
+  local cmd="$1"
+  local pkg="${2:-$cmd}"
+
+  if ! command -v "$cmd" >/dev/null; then
+    cabal_install "$pkg"
+  fi
+}
+
 check_dependencies() {
   local dependency
 
@@ -38,33 +54,27 @@ SQL
   fi
 }
 
+install_base_dependencies() {
+  cd # Ensure we're outside the context of any sandbox
+
+  cabal update
+  cabal_install cabal-install
+  cabal_install_if_needed alex
+  cabal_install_if_needed happy
+  cabal_install_if_needed yesod yesod-bin
+
+  cd -
+}
+
 create_sandbox() {
   if [ ! -e .cabal-sandbox ]; then
-    # Update Cabal
-    cabal update
-    cabal install cabal-install
-
-    # Create a sandbox for the project
     cabal sandbox init
-
-    # Install framework
-    cabal install yesod-bin alex happy
   fi
 }
 
-install_dependencies() {
-  cabal install --enable-tests --only-dependencies --avoid-reinstalls
-}
 
-check_sandbox_path() {
-  case "$(command -v yesod)" in
-    *cabal-sandbox*) : ;;
-    *)
-      printf "Error: couldn't find sandboxed yesod from PATH\n" >&2
-      printf "Add ./.cabal-sandbox/bin to your PATH and run ./bin/setup again\n" >&2
-      exit 1
-      ;;
-  esac
+install_app_dependencies() {
+  cabal_install --enable-tests --only-dependencies
 }
 
 init_env_file() {
@@ -116,14 +126,14 @@ user="$app"
 set -e
 
 check_dependencies
+install_base_dependencies
 
 if [ "$TRAVIS" != "true" ]; then
   create_sandbox
-  check_sandbox_path
   init_env_file
 fi
 
-install_dependencies
+install_app_dependencies
 create_databases
 
 heroku join --app carnival-staging || true
