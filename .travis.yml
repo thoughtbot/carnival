@@ -6,7 +6,9 @@ addons:
   postgresql: "9.3"
 
 install:
+  - mv cabal.config{,.bak}
   - cabal install alex happy yesod-bin --max-backjumps=-1 --reorder-goals
+  - mv cabal.config{.bak,}
 
 before_script:
   - ./bin/setup

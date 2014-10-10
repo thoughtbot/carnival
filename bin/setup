@@ -126,13 +126,13 @@ user="$app"
 set -e
 
 check_dependencies
-install_base_dependencies
 
 if [ "$TRAVIS" != "true" ]; then
-  create_sandbox
+  install_base_dependencies
   init_env_file
 fi
 
+create_sandbox
 install_app_dependencies
 create_databases
 
