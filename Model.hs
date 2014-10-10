@@ -14,9 +14,9 @@ import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
 
 import Text.Markdown (Markdown(..))
-import Text.Markdown.Instances ()
+import Yesod.Text.Markdown ()
 
-share [mkPersist sqlOnlySettings, mkMigrate "migrateAll"]
+share [mkPersist sqlSettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
 
 userName :: User -> Text
