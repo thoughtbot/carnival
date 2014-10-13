@@ -1,1 +1,1 @@
-web: ./dist/build/carnival/carnival $APP_ENV -p $PORT
+web: ./.halcyon/install/bin/carnival $APP_ENV -p $PORT
