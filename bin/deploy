@@ -9,7 +9,10 @@ set -e
 
 case "${1:-carnival-staging}" in
   carnival-staging) git push staging master ;;
-  carnival-production) ./bin/copy-slug carnival-{staging,production} ;;
+  carnival-production)
+    ./bin/copy-slug carnival-{staging,production}
+    heroku restart --app carnival-production
+    ;;
   *)
     sed '/^# \(usage:.*\)/!d; s//\1/' "$0" >&2
     exit 64
