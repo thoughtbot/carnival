@@ -15,7 +15,7 @@ sendGridHost :: HostName
 sendGridHost = "smtp.sendgrid.net"
 
 sendGridPort :: PortNumber
-sendGridPort = PortNum 587
+sendGridPort = 587
 
 -- | Send a @'Mail'@ with SendGrid using the given credentials
 sendMailWithSendGrid :: UserName -> Password -> Mail -> IO ()
