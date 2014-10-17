@@ -20,6 +20,8 @@ article {
       top: 0;
       left: 0;
       z-index: 0;
+      width: 20px;
+      height: 24px;
 
       path {
         fill: #dfdfdd;
@@ -97,8 +99,6 @@ article.commenting {
         vertical-align: middle;
 
         img {
-          -moz-border-radius: 2px;
-          -webkit-border-radius: 2px;
           border-radius: 2px;
           display: inline-block;
           height: 20px;
@@ -166,8 +166,8 @@ article.commenting {
         input[type=submit] {
           display: inline-block;
           font-size: 14px;
-          padding: .5em .8em;
           margin-top: 10px;
+          padding: .5em .8em;
         }
       }
     }
@@ -175,16 +175,69 @@ article.commenting {
 }
 
 @media only screen
-and (max-width: 760px) {
+and (max-width: 640px) {
   article {
     .comment-indicator {
-      display: none;
+      float: right;
+      position: relative;
+      right: -20px;
     }
   }
 
   article.commenting {
     .comment-indicator {
-      display: none;
+      right: -20px;
     }
+
+    .carnival {
+      background-color: #fff;
+      border-top: 1px solid #ccc;
+      bottom: 0;
+      height: 60%;
+      left: 0;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      z-index: 9999;
+    }
+
+    ol.comments {
+      bottom: auto;
+      height: 100%;
+      left: 0;
+      overflow: scroll;
+      padding-bottom: 15px;
+      padding-top: 15px;
+      position: absolute;
+      top: 0 !important;
+      width: 100%;
+
+      li {
+        background-color: #fff;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin: 10px;
+        padding: 5px;
+      }
+
+      li:first-child {
+        border-top: 1px solid #ccc;
+        padding-top: 5px;
+      }
+
+      .comment-form {
+        border: none;
+
+        form {
+          width: 100%;
+          float: none;
+        }
+      }
+    }
+  }
+
+  .post.commenting {
+    padding-left: inherit;
+    padding-right: inherit;
   }
 }
