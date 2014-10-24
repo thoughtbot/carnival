@@ -1,243 +1,254 @@
 .carnival {
+  display: none;
   position: absolute;
   right: 0;
   width: 180px;
 }
 
-article {
-  .carnival-comment-indicator {
-    cursor: pointer;
+.carnival-comment-indicator {
+  cursor: pointer;
+  position: absolute;
+  right: -30px;
+  opacity: 0;
+  padding: 0;
+  height: 24px;
+  width: 20px;
+  z-index: 9998;
+
+  svg {
     position: absolute;
-    right: -30px;
-    opacity: 0;
-    padding: 0;
-    height: 24px;
+    top: 0;
+    left: 0;
+    z-index: 0;
     width: 20px;
-    z-index: 9998;
+    height: 24px;
 
-    svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      z-index: 0;
-      width: 20px;
-      height: 24px;
-
-      path {
-        fill: #dfdfdd;
-        transition: fill .2s ease-in-out;
-      }
-    }
-
-    .carnival-count {
-      color: #fff;
-      display: block;
-      font-size: 11px;
-      height: 24px;
-      line-height: 20px;
-      text-align: center;
-      width: 20px;
-      z-index: 2;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-  }
-
-  .carnival-comment-indicator:hover,
-  .carnival-comment-indicator.commenting {
-    svg path {
+    path {
+      fill: #dfdfdd;
       transition: fill .2s ease-in-out;
-      fill: #ad141e;
     }
-  }
-
-  ol.carnival-comments, .carnival-comment-form {
-    display: none;
-    z-index: 9999;
   }
 }
 
-article.commenting {
+.carnival-count {
+  color: #fff;
+  display: block;
+  font-size: 11px;
+  height: 24px;
+  line-height: 20px;
+  text-align: center;
+  width: 20px;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.carnival-comment-indicator:hover,
+.carnival-comment-indicator.commenting {
+  svg path {
+    transition: fill .2s ease-in-out;
+    fill: #ad141e;
+  }
+}
+
+.carnival-comments,
+.carnival-comment-form {
+  display: none;
+  z-index: 9999;
+}
+
+.carnival-author {
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 10pt;
+  vertical-align: middle;
+
+  img {
+    border-radius: 2px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    margin: 0px;
+    vertical-align: middle;
+  }
+
+  span {
+    display: inline-block;
+    line-height: 20px;
+    margin-left: 7px;
+  }
+}
+
+.carnival-body {
+  margin: 5px 0 0 0;
+}
+
+.carnival-comment-form {
+  border: none;
+  padding-bottom: 20px;
+  padding-top: 20px;
+
+  a {
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  a.carnival-create {
+    margin: 0;
+  }
+
+  a.carnival-cancel {
+    color: #aaa;
+    float: right;
+    font-size: 11px;
+    margin-left: 10px;
+  }
+
+  form {
+    display: none;
+    float: right;
+    width: 170px;
+
+    textarea {
+      -moz-appearance: none;
+      -webkit-appearance: none;
+      -webkit-box-shadow: none;
+      appearance: none;
+      border-radius: 0;
+      border: 0;
+      display: block;
+      font-family: sans-serif;
+      font-size: 10pt;
+      height: 50px;
+      margin-top: 10px;
+      outline-offset: 0;
+      outline: none;
+      overflow: hidden;
+      padding: 0;
+      resize: none;
+      width: 100%;
+    }
+
+    input[type=submit] {
+      display: inline-block;
+      font-size: 14px;
+      margin-top: 10px;
+      padding: .5em .8em;
+    }
+  }
+}
+
+.carnival-comments {
+  position: absolute;
+  right: -35px;
+  width: 170px;
+  margin: 0;
+
+  li:first-child {
+    border-top: 0;
+    margin-top: -4px;
+    padding-top: 0;
+  }
+}
+
+.carnival-comment {
+  border-top: 1px solid #f2f2f0;
+  box-sizing: border-box;
+  list-style-type: none;
+  font-size: 14px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+
+  p {
+    font-family: sans-serif;
+    font-size: 10pt;
+    line-height: 1.5;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.commenting {
+  .carnival {
+    display: block;
+  }
+
   .carnival-comment-indicator {
     right: 150px;
   }
 
-  ol.carnival-comments {
+  .carnival-comment-form {
     display: block;
-    position: absolute;
-    right: -35px;
-    width: 170px;
-    margin: 0;
+  }
 
-    li:first-child {
-      border-top: 0;
-      margin-top: -4px;
-      padding-top: 0;
-    }
-
-    li {
-      border-top: 1px solid #f2f2f0;
-      box-sizing: border-box;
-      list-style-type: none;
-      font-size: 14px;
-      padding-bottom: 20px;
-      padding-top: 20px;
-
-      p {
-        font-family: sans-serif;
-        font-size: 10pt;
-        line-height: 1.5;
-        padding: 0;
-        margin: 0;
-      }
-
-      .carnival-author {
-        font-family: sans-serif;
-        font-weight: bold;
-        font-size: 10pt;
-        vertical-align: middle;
-
-        img {
-          border-radius: 2px;
-          display: inline-block;
-          height: 20px;
-          width: 20px;
-          margin: 0px;
-          vertical-align: middle;
-        }
-
-        span {
-          display: inline-block;
-          line-height: 20px;
-          margin-left: 7px;
-        }
-      }
-
-      .carnival-body {
-        margin: 5px 0 0 0;
-      }
-    }
-
-    .carnival-comment-form {
-      display: block;
-
-      a {
-        cursor: pointer;
-        font-size: 14px;
-      }
-
-      a.carnival-create {
-        margin: 0;
-      }
-
-      a.carnival-cancel {
-        color: #aaa;
-        float: right;
-        font-size: 11px;
-        margin-left: 10px;
-      }
-
-      form {
-        display: none;
-        float: right;
-        width: 170px;
-
-        textarea {
-          -moz-appearance: none;
-          -webkit-appearance: none;
-          -webkit-box-shadow: none;
-          appearance: none;
-          border-radius: 0;
-          border: 0;
-          display: block;
-          font-family: sans-serif;
-          font-size: 10pt;
-          height: 50px;
-          margin-top: 10px;
-          outline-offset: 0;
-          outline: none;
-          overflow: hidden;
-          padding: 0;
-          resize: none;
-          width: 100%;
-        }
-
-        input[type=submit] {
-          display: inline-block;
-          font-size: 14px;
-          margin-top: 10px;
-          padding: .5em .8em;
-        }
-      }
-    }
+  .carnival-comments {
+    display: block;
   }
 }
 
 @media only screen
 and (max-width: 640px) {
-  article {
-    .carnival-comment-indicator {
-      float: right;
-      position: relative;
-      right: -20px;
+  .carnival {
+    background-color: #fff;
+    border-top: 1px solid #ccc;
+    bottom: 0;
+    height: 60%;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+  }
+
+  .carnival-comment-indicator {
+    float: right;
+    position: relative;
+    right: -20px;
+  }
+
+  .carnival-comment-form {
+    margin: 10px;
+    padding: 5px;
+
+    form {
+      width: 100%;
+      float: none;
+
+      input[type=submit] {
+        width: 100%;
+      }
     }
   }
 
-  article.commenting {
-    .carnival-comment-indicator {
-      right: -20px;
-    }
+  .carnival-comments {
+    bottom: auto;
+    height: 100%;
+    left: 0;
+    overflow: scroll;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    position: absolute;
+    top: 0 !important;
+    width: 100%;
 
-    .carnival {
-      background-color: #fff;
+    li:first-child {
       border-top: 1px solid #ccc;
-      bottom: 0;
-      height: 60%;
-      left: 0;
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-      z-index: 9999;
-    }
-
-    ol.carnival-comments {
-      bottom: auto;
-      height: 100%;
-      left: 0;
-      overflow: scroll;
-      padding-bottom: 15px;
-      padding-top: 15px;
-      position: absolute;
-      top: 0 !important;
-      width: 100%;
-
-      li {
-        background-color: #fff;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        margin: 10px;
-        padding: 5px;
-      }
-
-      li:first-child {
-        border-top: 1px solid #ccc;
-        padding-top: 5px;
-      }
-
-      .carnival-comment-form {
-        border: none;
-
-        form {
-          width: 100%;
-          float: none;
-        }
-      }
+      padding-top: 5px;
     }
   }
 
-  .post.commenting {
-    padding-left: inherit;
-    padding-right: inherit;
+  .carnival-comment {
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 5px;
+  }
+
+  .commenting {
+    .carnival-comment-indicator {
+      right: -20px;
+    }
   }
 }
