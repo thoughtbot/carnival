@@ -6,11 +6,11 @@ class CommentForm
   createElement: ->
     @element = document.createElement('li')
     @element.id = 'comment-form'
-    @element.className = 'comment-form'
-    @element.innerHTML = "<a class='create'><span>+</span> Leave a comment</a><form><a class='cancel'>✖</a><div class='author'><img src=''><span></span></div><textarea placeholder='Type here&hellip;' class='body'></textarea><input type='submit' value='Comment'></form>"
+    @element.className = 'carnival-comment-form'
+    @element.innerHTML = "<a class='carnival-create'><span>+</span> Leave a comment</a><form><a class='carnival-cancel'>✖</a><div class='carnival-author'><img src=''><span></span></div><textarea placeholder='Type here&hellip;' class='carnival-body'></textarea><input type='submit' value='Comment'></form>"
 
   body: ->
-    @element.querySelector('.body').value
+    @element.querySelector('.carnival-body').value
 
   resizeTextarea: ->
     if @scrollHeight > @clientHeight
@@ -22,14 +22,14 @@ class CommentForm
       event.preventDefault()
       event.stopPropagation()
       @saveComment()
-    @element.querySelector('a.create').addEventListener 'click', (event) =>
+    @element.querySelector('a.carnival-create').addEventListener 'click', (event) =>
       event.preventDefault()
       event.stopPropagation()
       if Carnival.isLoggedIn()
         @showCommentForm()
       else
         Carnival.login()
-    @element.querySelector('a.cancel').addEventListener 'click', (event) =>
+    @element.querySelector('a.carnival-cancel').addEventListener 'click', (event) =>
       event.preventDefault()
       event.stopPropagation()
       @hideCommentForm()
@@ -45,9 +45,9 @@ class CommentForm
   showCommentForm: ->
     @element.querySelector('a').style.display = 'none'
     @element.querySelector('form').style.display = 'block'
-    @element.querySelector('.author span').innerHTML = Carnival.userName()
-    @element.querySelector('.author img').src = Carnival.userGravatarUrl()
-    @element.querySelector('.body').focus()
+    @element.querySelector('.carnival-author span').innerHTML = Carnival.userName()
+    @element.querySelector('.carnival-author img').src = Carnival.userGravatarUrl()
+    @element.querySelector('.carnival-body').focus()
 
   hideCommentForm: ->
     @element.querySelector('form').style.display = 'none'
@@ -56,4 +56,4 @@ class CommentForm
   saveComment: ->
     if @hasBody()
       @thread.add(@body())
-      @element.querySelector('.body').value = ''
+      @element.querySelector('.carnival-body').value = ''

@@ -13,7 +13,7 @@ class Thread
   setupElement: ->
     @element.id = @id()
     @element.setAttribute('data-comments-for', @currentBlock.id())
-    @element.className = 'comments'
+    @element.className = 'carnival-comments'
 
   displayForBlock: (@currentBlock) ->
     @setupElement()
@@ -26,7 +26,7 @@ class Thread
     @currentBlock.comments
 
   removeAllComments: ->
-    [].slice.call(@element.querySelectorAll('li.comment')).map((comment) =>
+    [].slice.call(@element.querySelectorAll('li.carnival-comment')).map((comment) =>
       @element.removeChild(comment)
     )
 

@@ -5,7 +5,7 @@
 }
 
 article {
-  .comment-indicator {
+  .carnival-comment-indicator {
     cursor: pointer;
     position: absolute;
     right: -30px;
@@ -29,7 +29,7 @@ article {
       }
     }
 
-    .count {
+    .carnival-count {
       color: #fff;
       display: block;
       font-size: 11px;
@@ -44,26 +44,26 @@ article {
     }
   }
 
-  .comment-indicator:hover,
-  .comment-indicator.commenting {
+  .carnival-comment-indicator:hover,
+  .carnival-comment-indicator.commenting {
     svg path {
       transition: fill .2s ease-in-out;
       fill: #ad141e;
     }
   }
 
-  ol.comments, .comment-form {
+  ol.carnival-comments, .carnival-comment-form {
     display: none;
     z-index: 9999;
   }
 }
 
 article.commenting {
-  .comment-indicator {
+  .carnival-comment-indicator {
     right: 150px;
   }
 
-  ol.comments {
+  ol.carnival-comments {
     display: block;
     position: absolute;
     right: -35px;
@@ -92,7 +92,7 @@ article.commenting {
         margin: 0;
       }
 
-      .author {
+      .carnival-author {
         font-family: sans-serif;
         font-weight: bold;
         font-size: 10pt;
@@ -114,12 +114,12 @@ article.commenting {
         }
       }
 
-      .body {
+      .carnival-body {
         margin: 5px 0 0 0;
       }
     }
 
-    .comment-form {
+    .carnival-comment-form {
       display: block;
 
       a {
@@ -127,11 +127,11 @@ article.commenting {
         font-size: 14px;
       }
 
-      a.create {
+      a.carnival-create {
         margin: 0;
       }
 
-      a.cancel {
+      a.carnival-cancel {
         color: #aaa;
         float: right;
         font-size: 11px;
@@ -177,7 +177,7 @@ article.commenting {
 @media only screen
 and (max-width: 640px) {
   article {
-    .comment-indicator {
+    .carnival-comment-indicator {
       float: right;
       position: relative;
       right: -20px;
@@ -185,7 +185,7 @@ and (max-width: 640px) {
   }
 
   article.commenting {
-    .comment-indicator {
+    .carnival-comment-indicator {
       right: -20px;
     }
 
@@ -201,7 +201,7 @@ and (max-width: 640px) {
       z-index: 9999;
     }
 
-    ol.comments {
+    ol.carnival-comments {
       bottom: auto;
       height: 100%;
       left: 0;
@@ -225,7 +225,7 @@ and (max-width: 640px) {
         padding-top: 5px;
       }
 
-      .comment-form {
+      .carnival-comment-form {
         border: none;
 
         form {
