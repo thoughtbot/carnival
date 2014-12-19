@@ -25,7 +25,6 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
-                     Session
                      SendMail
                      Notification
                      Helper.Auth
