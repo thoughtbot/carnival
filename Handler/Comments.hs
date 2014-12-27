@@ -42,7 +42,7 @@ postCommentsR = do
 
     u <- requireAuth_
     t <- liftIO getCurrentTime
-    c <- fmap (buildComment t u) $ requireJsonBody
+    c <- fmap (buildComment t u) requireJsonBody
 
     runValidation validateComment c $ \v -> do
         cid <- runDB $ insert v
