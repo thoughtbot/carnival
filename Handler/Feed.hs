@@ -12,7 +12,7 @@ import Yesod.RssFeed
 
 getFeedR :: Handler RepRss
 getFeedR = do
-    comments <- runDB $ findRecentUserComments
+    comments <- runDB findRecentUserComments
 
     when (null comments) notFound
 
