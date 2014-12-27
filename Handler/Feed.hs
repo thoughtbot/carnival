@@ -39,7 +39,7 @@ feedFromComments comments = do
         getCommentCreated (UserComment (Entity _ c) _) =
             commentCreated c
 
-commentToRssEntry :: UserComment -> Handler (FeedEntry (Text))
+commentToRssEntry :: UserComment -> Handler (FeedEntry Text)
 commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) = 
     return FeedEntry
         { feedEntryLink =
