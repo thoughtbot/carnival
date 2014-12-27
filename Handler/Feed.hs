@@ -40,7 +40,7 @@ feedFromComments comments = do
             commentCreated c
 
 commentToRssEntry :: UserComment -> Handler (FeedEntry (Text))
-commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) = do
+commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) = 
     return FeedEntry
         { feedEntryLink =
             "http://robots.thoughtbot.com/" <> commentArticleURL c
