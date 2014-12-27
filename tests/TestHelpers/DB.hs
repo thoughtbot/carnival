@@ -34,7 +34,7 @@ runDB query = do
     liftIO $ runSqlPersistMPool query pool
 
 createUser :: Text -> Example (Entity User)
-createUser ident = do
+createUser ident =
     insertEntity User
         { userFirstName = "John" <> ident
         , userLastName  = "Smith"
