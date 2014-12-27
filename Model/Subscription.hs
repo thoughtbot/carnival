@@ -23,7 +23,7 @@ subscribe :: Text -> UserId -> DB ()
 subscribe name userId = do
     token <- liftIO newToken
 
-    void $ insert $ Subscription
+    void $ insert Subscription
         { subscriptionName = name
         , subscriptionUser = userId
         , subscriptionToken = token

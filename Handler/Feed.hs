@@ -11,7 +11,7 @@ import Yesod.RssFeed
 
 getFeedR :: Handler RepRss
 getFeedR = do
-    comments <- runDB $ findRecentUserComments
+    comments <- runDB findRecentUserComments
 
     when (null comments) notFound
 
@@ -38,12 +38,12 @@ feedFromComments comments = do
         getCommentCreated (UserComment (Entity _ c) _) =
             commentCreated c
 
-commentToRssEntry :: UserComment -> Handler (FeedEntry (Text))
-commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) = do
+commentToRssEntry :: UserComment -> Handler (FeedEntry Text)
+commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) = 
     return FeedEntry
         { feedEntryLink =
             "http://robots.thoughtbot.com/" <> commentArticleURL c
-        , feedEntryUpdated = (commentCreated c)
+        , feedEntryUpdated = commentCreated c
         , feedEntryTitle =
             "New comment from " <> userName u <> " on " <> commentArticleTitle c
         , feedEntryContent = toMarkup $ commentBody c

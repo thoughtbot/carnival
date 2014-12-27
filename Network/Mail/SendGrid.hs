@@ -19,8 +19,7 @@ sendGridPort = 587
 
 -- | Send a @'Mail'@ with SendGrid using the given credentials
 sendMailWithSendGrid :: UserName -> Password -> Mail -> IO ()
-sendMailWithSendGrid u p m =
-    sendMailWithLogin' sendGridHost sendGridPort u p m
+sendMailWithSendGrid = sendMailWithLogin' sendGridHost sendGridPort 
 
 -- | Send a @'Mail'@ with SendGrid using credentials found in the
 --   @SENDGRID_USERNAME@ and @SENDGRID_PASSWORD@ environment variables. Raises

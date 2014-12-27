@@ -31,4 +31,4 @@ notificationSpecs =
 
                     get $ UnsubscribeR $ recipientToken r
 
-                    assertEqual' [] =<< runDB (notificationRecipients $ n)
+                    assertEqual' [] =<< runDB (notificationRecipients n)

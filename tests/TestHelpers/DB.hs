@@ -34,7 +34,7 @@ runDB query = do
     liftIO $ runSqlPersistMPool query pool
 
 createUser :: Text -> Example (Entity User)
-createUser ident = do
+createUser ident =
     insertEntity User
         { userName      = "John Smith (" <> ident <> ")"
         , userEmail     = "john-" <> ident <> "@gmail.com"
@@ -64,7 +64,7 @@ createNotification article thread u = do
 
     return $ NewComment $ UserComment c u
 
-subscribeUser :: Text -> Text -> (Entity User) -> Example ()
+subscribeUser :: Text -> Text -> Entity User -> Example ()
 subscribeUser article thread eu = do
     notification <- createNotification article thread eu
 
