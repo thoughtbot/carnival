@@ -11,7 +11,7 @@ import qualified Data.Text as T
 
 authenticateAs :: Entity User -> YesodExample App ()
 authenticateAs (Entity _ u) = do
-    testRoot <- fmap (appRoot . settings) $ getTestYesod
+    testRoot <- fmap (appRoot . settings) getTestYesod
 
     let url = testRoot `T.append` "/auth/page/dummy"
 
