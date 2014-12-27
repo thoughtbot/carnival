@@ -54,7 +54,7 @@ notificationName n =
 notificationFrom :: Notification -> Address
 notificationFrom n =
     let u = notificationUser n
-    in Address (Just $ userName u) $ "carnival-notifications@thoughtbot.com"
+    in Address (Just $ userName u) "carnival-notifications@thoughtbot.com"
 
 notificationRecipients :: Notification -> DB [Recipient]
 notificationRecipients n = do
