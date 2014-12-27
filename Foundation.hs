@@ -111,8 +111,7 @@ embedLayout widget = do
     -- value passed to hamletToRepHtml cannot be a widget, this allows
     -- you to use normal widget features in default-layout.
 
-    pc <- widgetToPageContent $ do
-        widget
+    pc <- widgetToPageContent $ widget
     withUrlRenderer $(hamletFile "templates/embed-layout-wrapper.hamlet")
 
 -- How to run database actions.
