@@ -64,7 +64,7 @@ createNotification article thread u = do
 
     return $ NewComment $ UserComment c u
 
-subscribeUser :: Text -> Text -> (Entity User) -> Example ()
+subscribeUser :: Text -> Text -> Entity User -> Example ()
 subscribeUser article thread eu = do
     notification <- createNotification article thread eu
 
