@@ -35,5 +35,5 @@ getWithParams :: (RedirectUrl site url, Yesod site)
               -> YesodExample site ()
 getWithParams url params = request $ do
     setMethod  "GET"
-    mapM_ ( uncurry addGetParam) params
+    mapM_ (uncurry addGetParam) params
     setUrl url
