@@ -20,7 +20,6 @@ import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
 import Control.Applicative ((<$>), (<*>), pure)
-import qualified Session as S
 
 -- | The site argument for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
@@ -55,7 +54,7 @@ type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 instance Yesod App where
     approot = ApprootMaster $ appRoot . settings
 
-    makeSessionBackend _ = S.makeSessionBackend "SESSION_KEY"
+    makeSessionBackend _ = fmap Just $ envClientSessionBackend 120 "SESSION_KEY"
 
     defaultLayout widget = do
         -- We break up the default layout into two components:

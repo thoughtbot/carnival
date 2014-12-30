@@ -2,7 +2,7 @@ module Main where
 
 -- Libraries
 import Database.Persist.Sql (runSqlPersistMPool)
-import Test.Hspec (hspec, after, before)
+import Test.Hspec (hspec, after_, before_)
 import Yesod.Default.Config
 import Yesod.Test
 
@@ -22,8 +22,8 @@ run spec = do
     foundation <- makeFoundation =<< testConfig
 
     hspec $
-        before (cleanup foundation) $
-        after (cleanup foundation) $
+        before_ (cleanup foundation) $
+        after_ (cleanup foundation) $
         yesodSpec foundation spec
 
     where

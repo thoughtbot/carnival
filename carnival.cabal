@@ -25,7 +25,6 @@ library
                      Settings
                      Settings.StaticFiles
                      Settings.Development
-                     Session
                      SendMail
                      Notification
                      Helper.Auth
@@ -145,7 +144,7 @@ test-suite test
                  , resourcet
                  , monad-logger
                  , transformers
-                 , hspec
+                 , hspec >= 2.0.0
                  , text
                  , bytestring
                  , shakespeare-text
