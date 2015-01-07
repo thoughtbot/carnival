@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+[ -d /app/halcyon ] || \
+  git clone https://github.com/mietek/halcyon.git /app/halcyon
+
+export HALCYON_NO_SELF_UPDATE=1
+export HALCYON_SANDBOX_EXTRA_CONFIGURE_FLAGS='--enable-tests'
+source <(/app/halcyon/halcyon paths)
+
+halcyon build
+
+ln -sf /app/sandbox/.halcyon-sandbox.config cabal.sandbox.config
