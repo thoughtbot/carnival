@@ -10,24 +10,66 @@ Carnival is maintained and funded by [thoughtbot, inc](http://thoughtbot.com/com
 
 Thank you to all [the contributors](https://github.com/thoughtbot/carnival/contributors)!
 
+## Pre-requisites
+
+Carnival is built locally, on CI, and deployed using [halcyon][]. Therefore,
+there is **no pre-requisite of a Haskell environment**, though you will need the
+following tools:
+
+- PostgreSQL
+- CoffeeScript
+- Heroku Toolbelt (needed for setup and deployment)
+- jq (needed for deployment)
+- `brew install bash coreutils` (if on OSX)
+
+[halcyon]: https://halcyon.sh/
+
 ## Getting started
 
-Install ghc, alex, happy, cabal, Postgresql. On OS X, the easiest way is to
-install Haskell Platform using homebrew:
+Carnival can be setup with one command:
 
-    $ brew install haskell-platform
+```
+$ ./bin/setup
+```
 
-Run the setup script first:
+How long this takes depends on a number of things. All build artifacts are
+cached between anyone who builds Carnival (including Travis and Heroku). This
+means many builds can complete in under a minute. Unfortunately, the artifacts
+are specific to your platform. If you are the first person to build a given
+version of Carnival on your platform, it can take closer to 45 minutes.
 
-    $ bin/setup
+## Developing
 
-Then boot the site:
+Before doing anything:
 
-    $ yesod devel
+```
+$ source <(/app/halcyon/halcyon paths)
 
-And run the tests:
+# If your shell doesn't support the above, you can use this POSIX version
+$ /app/halcyon/halcyon paths > halcyon-env && . halcyon-env
+```
 
-    $ yesod test
+This sets the needed environment variables to use halcyon-built dependencies. If
+you prefer to set these persistently from your shell profile file, that works
+too.
+
+Run a development instance:
+
+```
+$ yesod devel
+```
+
+Run the tests:
+
+```
+$ yesod test
+```
+
+Do anything else:
+
+```
+$ ghci Model.hs
+```
 
 ## Deployment
 
@@ -43,58 +85,9 @@ The production app can be passed as an argument if desired:
 $ ./bin/deploy carnival-production
 ```
 
-Read more about deploying Carnival in [Ship You A Haskell](http://robots.thoughtbot.com/ship-you-a-haskell).
+Read more about deploying Carnival in [Ship You A Haskell][ship-you].
 
-## Managing Dependencies
-
-To mitigate so-called *cabal hell*, we're using two features available in recent
-versions of Cabal: sandboxes and freezing.
-
-### Sandbox
-
-Sandboxing means that all packages will be installed into a project-local
-sandbox. This prevents working on multiple projects with conflicting
-dependencies from causing issues.
-
-The `bin/setup` script will create a [cabal sandbox][cabal-sandbox] and install
-current dependencies into it. If new dependencies are added to the project,
-they'll need to be installed via:
-
-[cabal-sandbox]: http://coldwa.st/e/blog/2013-08-20-Cabal-sandbox.html
-
-```
-$ cabal install --dependencies-only --enable-tests
-```
-
-The `bin/setup` script is idempotent, so you can also re-run that to install the
-new dependencies.
-
-If you run into dependency issues, you can always reset from scratch:
-
-```
-$ cabal sandbox delete
-$ ./bin/setup
-```
-
-This process should always work as long as there is a valid set of dependency
-versions available.
-
-### Freeze
-
-Freezing means that after dependencies are resolved, exact versions for all
-packages are written to a `config.cabal` file. This ensures that all developers,
-the CI server, and deployments will use the *exact* same versions of all
-dependencies.
-
-There is one notable exception: `base`.
-
-This package represents GHC itself and enforcing all developers to use the same
-exact version it too strict. For this reason, after running `cabal freeze`, we
-manually replace the exactly specified `base` version in `cabal.config` with a
-more lenient constraint.
-
-If you need to re-run `cabal freeze` be sure to retain the more lenient
-constraint on `base`.
+[ship-you]: http://robots.thoughtbot.com/ship-you-a-haskell
 
 ## License
 

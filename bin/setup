@@ -1,145 +1,48 @@
-#!/usr/bin/env sh
+#!/bin/sh
+set -e
 
-# Set up app. Run this script immediately after cloning the codebase.
-# https://github.com/thoughtbot/guides/tree/master/protocol
+get_env() {
+  local var
 
-cabal_install() {
-  cabal install "$@" \
-    --avoid-reinstalls \
-    --max-backjumps=-1 \
-    --reorder-goals
-}
+  for var in \
+    HALCYON_AWS_ACCESS_KEY_ID \
+    HALCYON_AWS_SECRET_ACCESS_KEY \
+    HALCYON_S3_BUCKET; do
 
-cabal_install_if_needed() {
-  local cmd="$1"
-  local pkg="${2:-$cmd}"
-
-  if ! command -v "$cmd" >/dev/null; then
-    cabal_install "$pkg"
-  fi
-}
-
-check_dependencies() {
-  local dependency
-
-  for dependency in cabal ghc psql; do
-    if ! command -v "$dependency" >/dev/null; then
-      printf "Missing dependency: %s\n" "$dependency" >&2
-      exit 1
-    fi
+    printf 'export %s=' "$var"
+    heroku config:get "$var" --app carnival-staging
   done
-}
-
-create_databases() {
-  createdb "$app" 2>/dev/null || true
-  createdb "${app}_test" 2>/dev/null || true
-
-  psql template1 > /dev/null <<SQL
-    DO
-    \$body\$
-      BEGIN
-        IF NOT EXISTS (SELECT * FROM pg_catalog.pg_user WHERE usename = '$user')
-        THEN CREATE USER $user WITH PASSWORD '$user';
-        END IF;
-      END
-    \$body\$;
-
-    GRANT ALL PRIVILEGES ON DATABASE $app to $user;
-    GRANT ALL PRIVILEGES ON DATABASE ${app}_test to $user;
-SQL
-
-  if ! test_connections > /dev/null; then
-    printf "Couldn't connect to database\n" >&2
-    exit 1
-  fi
-}
-
-install_base_dependencies() {
-  cd # Ensure we're outside the context of any sandbox
-
-  cabal update
-  cabal_install cabal-install
-  cabal_install_if_needed alex
-  cabal_install_if_needed happy
-  cabal_install_if_needed yesod yesod-bin
-
-  cd -
-}
-
-create_sandbox() {
-  if [ ! -e .cabal-sandbox ]; then
-    cabal sandbox init
-  fi
-}
-
-
-install_app_dependencies() {
-  cabal_install --enable-tests --only-dependencies
-}
-
-init_env_file() {
-  [ -f ./.env ] && return 0
-
-  local client_id client_secret
 
   cat <<EOF
 
-Please create a new GitHub developer application:
-
-  https://github.com/settings/applications
-
-Then, enter the Client ID and Secret below.
-
-This is required to run a development instance with working authentication. You
-may enter fake values for now and still be able to run tests or a development
-instance without working authentication.
-
-The values can be updated later by editing the generated ./.env file.
-
-EOF
-
-  printf "Client ID: "
-  read client_id
-
-  printf "Secret: "
-  read client_secret
-
-  cat > .env <<EOF
-GITHUB_OAUTH_CLIENT_ID="$client_id"
-GITHUB_OAUTH_CLIENT_SECRET="$client_secret"
+# Create a new application and update these values
+# https://github.com/settings/applications
+export GITHUB_OAUTH_CLIENT_ID=x
+export GITHUB_OAUTH_CLIENT_SECRET=x
 EOF
 }
 
-test_connection() {
-  local dbname="$1"
-  PGPASSWORD=$user
-  psql --username "$user" --dbname "$dbname" < /dev/null
-}
-
-test_connections() {
-  test_connection "$app" &&
-    test_connection "${app}_test"
-}
-
-app=carnival
-user="$app"
-
-set -e
-
-check_dependencies
-
-if [ "$TRAVIS" != "true" ]; then
-  install_base_dependencies
-  init_env_file
+if ! command -v heroku >/dev/null; then
+  echo "The \`heroku' command is required to run this setup." >&2
+  echo "https://toolbelt.heroku.com/" >&2
+  exit 1
 fi
 
-create_sandbox
-install_app_dependencies
-create_databases
+if [ ! -w /app ]; then
+  echo 'Using sudo to create a user-writable /app directory for building'
+  sudo mkdir -p /app
+  sudo chown $USER /app
+fi
 
 heroku join --app carnival-staging || true
 heroku join --app carnival-production || true
 
-# Print instructions
-printf "\nSetup complete.\n"
-printf "Run \`yesod devel\` to run the site.\n"
+if [ ! -f ./.env ]; then
+  echo 'Creating ./.env...'
+  get_env > ./.env
+fi
+
+./bin/setup-db
+./bin/halcyon-build
+
+echo 'Setup complete'
