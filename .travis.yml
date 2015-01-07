@@ -17,6 +17,9 @@ install:
   - sudo chown $USER:$USER /app
   - ./bin/halcyon-build
 
+before_script:
+  - ./bin/setup-db
+
 script:
   - ./bin/halcyon-test
 

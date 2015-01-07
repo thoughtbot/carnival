@@ -1,0 +1,28 @@
+#!/bin/sh
+set -e
+
+app='carnival'
+user="$app"
+
+# Create databases
+createdb "$app" 2>/dev/null || true
+createdb "${app}_test" 2>/dev/null || true
+
+# Grant privileges
+psql template1 >/dev/null <<SQL
+  DO
+  \$body\$
+    BEGIN
+      IF NOT EXISTS (SELECT * FROM pg_catalog.pg_user WHERE usename = '$user')
+      THEN CREATE USER $user WITH PASSWORD '$user';
+      END IF;
+    END
+  \$body\$;
+
+  GRANT ALL PRIVILEGES ON DATABASE $app to $user;
+  GRANT ALL PRIVILEGES ON DATABASE ${app}_test to $user;
+SQL
+
+# Test connections
+PGPASSWORD="$user" psql --username "$user" --dbname "$app" </dev/null
+PGPASSWORD="$user" psql --username "$user" --dbname "${app}_test" </dev/null
