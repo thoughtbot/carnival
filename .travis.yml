@@ -21,7 +21,7 @@ before_script:
   - ./bin/setup-db
 
 script:
-  - ./bin/halcyon-test
+  - source ./bin/halcyon-env && yesod test
 
 notifications:
   email: false

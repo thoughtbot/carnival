@@ -1,0 +1,44 @@
+_pprint() {
+  IFS=: && echo "$*"
+}
+
+_path="$(_pprint \
+  /app/bin \
+  /app/usr/bin \
+  /app/ghc/bin \
+  /app/cabal/bin \
+  /app/sandbox/bin \
+  /app/sandbox/usr/bin
+)"
+export PATH="$_path:$PATH"
+
+_path="$(_pprint \
+  /app/include \
+  /app/usr/include \
+  /app/sandbox/include \
+  /app/sandbox/usr/include
+)"
+export CPATH="$_path:$CPATH"
+
+_path="$(_pprint \
+ /app/lib \
+ /app/usr/lib \
+ /app/ghc/usr/lib \
+ /app/sandbox/lib \
+ /app/sandbox/usr/lib
+)"
+export LIBRARY_PATH="$_path:$LIBRARY_PATH"
+export LD_LIBRARY_PATH="$_path:$LD_LIBRARY_PATH"
+
+_path="$(_pprint \
+  /app/usr/lib/pkgconfig \
+  /app/usr/share/pkgconfig \
+  /app/sandbox/usr/lib/pkgconfig \
+  /app/sandbox/usr/share/pkgconfig
+)"
+export PKG_CONFIG_PATH="$_path:$PKG_CONFIG_PATH"
+export PKG_CONFIG_SYSROOT_DIR=/app/sandbox
+
+# NOTE: A UTF-8 locale is needed to work around a Cabal issue.
+# https://github.com/haskell/cabal/issues/1883
+export LANG="${LANG:-C.UTF-8}"

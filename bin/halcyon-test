@@ -1,5 +1,0 @@
-#!/bin/bash
-export HALCYON_NO_SELF_UPDATE=1
-source <(/app/halcyon/halcyon paths)
-
-yesod test
