@@ -1,7 +1,14 @@
 #!/bin/sh
 get_env() {
   heroku config --app carnival-staging |\
-    sed '/^\(LEARN_.*\|HALCYON_.*\): *\(.*\)/!d; s//export \1=\2/g'
+    sed '/^\(HALCYON_\(AWS_\|S3_\).*\): *\(.*\)/!d; s//export \1=\3/g'
+
+  cat <<EOF
+
+# Update these variables from https://upcase.com/oauth/applications
+export LEARN_OAUTH_CLIENT_ID=x
+export LEARN_OAUTH_CLIENT_SECRET=x
+EOF
 }
 
 if ! command -v heroku >/dev/null; then
@@ -20,6 +27,7 @@ heroku join --app carnival-staging || true
 heroku join --app carnival-production || true
 
 if [ ! -f ./.env ]; then
+  echo 'Creating ./.env...'
   get_env > ./.env
 fi
 
