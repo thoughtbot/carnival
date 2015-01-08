@@ -1,0 +1,31 @@
+{
+  "name": "carnival",
+  "version": "0.0.1",
+  "dependencies": {
+    "coffee-script": "~1.7.1"
+  },
+  "engines": {
+    "node": ">=0.4.7 <0.7.0",
+    "npm": ">=1.0.0"
+  },
+  "description": "A medium/disqus-like commenting service powering http://robots.thoughtbot.com.",
+  "main": "web.js",
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {
+    "coffee-script": "~1.7.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thoughtbot/carnival.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/thoughtbot/carnival/issues"
+  }
+}
