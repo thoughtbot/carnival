@@ -6,7 +6,9 @@ set -e
 [ -d /app/halcyon ] || \
   git clone https://github.com/mietek/halcyon.git /app/halcyon
 
+export HALCYON_APP_REBUILD=1
 export HALCYON_NO_SELF_UPDATE=1
+export HALCYON_EXTRA_CONFIGURE_FLAGS='-fdev'
 export HALCYON_SANDBOX_EXTRA_CONFIGURE_FLAGS='--enable-tests'
 source <(/app/halcyon/halcyon paths)
 
