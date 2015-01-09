@@ -6,6 +6,13 @@ set -e
 [ -d /app/halcyon ] || \
   git clone https://github.com/mietek/halcyon.git /app/halcyon
 
+if [ -z "$HALCYON_AWS_ACCESS_KEY_ID" ] || \
+  [ -z "$HALCYON_AWS_SECRET_ACCESS_KEY" ] || \
+  [ -z "$HALCYON_S3_BUCKET" ]; then
+  echo "Make sure Halcyon environment variables are set." >&2
+  exit 1
+fi
+
 export HALCYON_NO_SELF_UPDATE=1
 export HALCYON_SANDBOX_EXTRA_CONFIGURE_FLAGS='--enable-tests'
 source <(/app/halcyon/halcyon paths)
