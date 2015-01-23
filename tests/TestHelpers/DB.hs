@@ -36,7 +36,7 @@ runDB query = do
 createUser :: Text -> Example (Entity User)
 createUser ident = do
     insertEntity User
-        { userName      = "John " <> ident <> " Smith"
+        { userName      = "John Smith (" <> ident <> ")"
         , userEmail     = "john-" <> ident <> "@gmail.com"
         , userPlugin    = "dummy"
         , userIdent     = ident
