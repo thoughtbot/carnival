@@ -52,7 +52,7 @@ class Carnival
     request.send(JSON.stringify(data))
 
   @userName: ->
-    Carnival.user.first_name + ' ' + Carnival.user.last_name
+    Carnival.user.name
 
   @userGravatarUrl: ->
     Carnival.user.gravatar_url

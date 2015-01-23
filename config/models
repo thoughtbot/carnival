@@ -1,6 +1,5 @@
 User
-    firstName Text
-    lastName Text
+    name Text
     email Text
     plugin Text
     ident Text

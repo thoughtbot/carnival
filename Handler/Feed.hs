@@ -1,7 +1,6 @@
 module Handler.Feed where
 
 import Import
-import Model.User
 import Model.UserComment
 
 import Prelude (head)
