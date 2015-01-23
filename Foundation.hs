@@ -131,7 +131,7 @@ instance YesodAuth App where
     logoutDest _ = SessionR
 
     getAuthId creds = runDB $ do
-        muser <- getBy $ UniqueUser $ credsIdent creds
+        muser <- getBy $ UniqueUser (credsPlugin creds) (credsIdent creds)
 
         let newUser = buildUser creds
 
@@ -148,11 +148,12 @@ instance YesodAuth App where
     authHttpManager = httpManager
 
 buildUser :: Creds m -> Maybe User
-buildUser (Creds _ csId csExtra) =
+buildUser (Creds csPlugin csIdent csExtra) =
     User <$> lookup "first_name" csExtra
          <*> lookup "last_name" csExtra
          <*> lookup "email" csExtra
-         <*> pure csId
+         <*> pure csPlugin
+         <*> pure csIdent
 
 replaceUser :: UserId -> Maybe User -> YesodDB App UserId
 replaceUser uid (Just u) = replace uid u >> return uid

@@ -39,6 +39,7 @@ createUser ident = do
         { userFirstName = "John" <> ident
         , userLastName  = "Smith"
         , userEmail     = "john-" <> ident <> "@gmail.com"
+        , userPlugin    = "dummy"
         , userIdent     = ident
         }
 
