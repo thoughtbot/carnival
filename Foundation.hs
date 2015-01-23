@@ -12,7 +12,7 @@ import Network.HTTP.Conduit (Manager)
 import qualified Settings
 import Settings.Development (development)
 import qualified Database.Persist
-import qualified Data.Text as T
+import Data.Monoid ((<>))
 import Data.Text (Text)
 import Database.Persist.Sql (SqlBackend)
 import Settings.StaticFiles
@@ -157,12 +157,10 @@ buildUser (Creds csPlugin csIdent csExtra) =
          <*> pure csIdent
 
 buildName :: [(Text, Text)] -> Maybe Text
-buildName csExtra = T.intercalate " " <$> parts
-  where
-    parts = sequence
-        [ lookup "first_name" csExtra
-        , lookup "last_name" csExtra
-        ]
+buildName csExtra = do
+    firstName <- lookup "first_name" csExtra
+    lastName <- lookup "last_name" csExtra
+    return $ firstName <> " " <> lastName
 
 replaceUser :: UserId -> Maybe User -> YesodDB App UserId
 replaceUser uid (Just u) = replace uid u >> return uid
