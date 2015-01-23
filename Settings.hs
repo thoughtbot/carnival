@@ -101,7 +101,7 @@ parseExtra _ o = Extra
     <$> o .:  "copyright"
     <*> o .:? "analytics"
 
-data LearnOAuthKeys = LearnOAuthKeys
-    { learnOauthClientId     :: Text
-    , learnOauthClientSecret :: Text
+data OAuthKeys = OAuthKeys
+    { oauthKeysClientId     :: Text
+    , oauthKeysClientSecret :: Text
     }

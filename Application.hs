@@ -94,7 +94,7 @@ makeFoundation conf = do
             updateLoop
     _ <- forkIO updateLoop
 
-    keys <- getLearnOAuthKeys
+    keys <- getOAuthKeys "GITHUB"
 
     let logger = Yesod.Core.Types.Logger loggerSet' getter
         foundation = App conf s p manager dbconf logger keys
@@ -107,19 +107,23 @@ makeFoundation conf = do
     return foundation
 
     where
-        getLearnOAuthKeys :: IO LearnOAuthKeys
-        getLearnOAuthKeys = do
-            envClientId     <- lookupEnv "LEARN_OAUTH_CLIENT_ID"
-            envClientSecret <- lookupEnv "LEARN_OAUTH_CLIENT_SECRET"
+        getOAuthKeys :: String -> IO OAuthKeys
+        getOAuthKeys plugin = do
+            envClientId     <- lookupEnv $ plugin <> "_OAUTH_CLIENT_ID"
+            envClientSecret <- lookupEnv $ plugin <> "_OAUTH_CLIENT_SECRET"
 
             case (envClientId, envClientSecret) of
                 (Just clientId, Just clientSecret) ->
-                    return LearnOAuthKeys
-                        { learnOauthClientId     = T.pack clientId
-                        , learnOauthClientSecret = T.pack clientSecret
+                    return OAuthKeys
+                        { oauthKeysClientId     = T.pack clientId
+                        , oauthKeysClientSecret = T.pack clientSecret
                         }
 
-                _ -> error "LEARN_OAUTH_CLIENT_ID or LEARN_OAUTH_CLIENT_SECRET not set"
+                _ -> error
+                        $  plugin
+                        <> "_OAUTH_CLIENT_ID or "
+                        <> plugin
+                        <> "_OAUTH_CLIENT_SECRET not set"
 
 -- for yesod devel
 getApplicationDev :: IO (Int, Application)
