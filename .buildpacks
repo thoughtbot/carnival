@@ -1,2 +1,2 @@
-https://github.com/thoughtbot/heroku-buildpack-nodejs.git
+https://github.com/heroku/heroku-buildpack-nodejs.git#v70
 https://github.com/thoughtbot/haskell-on-heroku.git
