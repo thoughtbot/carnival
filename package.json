@@ -5,8 +5,8 @@
     "coffee-script": "~1.7.1"
   },
   "engines": {
-    "node": ">=0.4.7 <0.7.0",
-    "npm": ">=1.0.0"
+    "node": "0.10.x",
+    "npm": "2.1.x"
   },
   "description": "A medium/disqus-like commenting service powering http://robots.thoughtbot.com.",
   "main": "web.js",
