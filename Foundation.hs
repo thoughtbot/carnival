@@ -5,18 +5,16 @@ import Yesod
 import Yesod.Static
 import Yesod.Auth
 import Yesod.Auth.Dummy
-import Yesod.Auth.OAuth2.Learn
+import Yesod.Auth.OAuth2.Github
 import Yesod.Default.Config
 import Yesod.Default.Util (addStaticContentExternal)
 import Network.HTTP.Conduit (Manager)
 import qualified Settings
 import Settings.Development (development)
 import qualified Database.Persist
-import Data.Monoid ((<>))
-import Data.Text (Text)
 import Database.Persist.Sql (SqlBackend)
 import Settings.StaticFiles
-import Settings (widgetFile, Extra (..), LearnOAuthKeys (..))
+import Settings (widgetFile, Extra (..), OAuthKeys (..))
 import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
@@ -34,7 +32,7 @@ data App = App
     , httpManager :: Manager
     , persistConfig :: Settings.PersistConf
     , appLogger :: Logger
-    , learnOAuthKeys :: LearnOAuthKeys
+    , githubOAuthKeys :: OAuthKeys
     }
 
 -- Set up i18n messages. See the message folder.
@@ -142,25 +140,19 @@ instance YesodAuth App where
             _                   -> insertUser newUser
 
     authPlugins m = addAuthBackDoor
-        [ oauth2Learn
-            (learnOauthClientId $ learnOAuthKeys m)
-            (learnOauthClientSecret $ learnOAuthKeys m)
+        [ oauth2Github
+            (oauthKeysClientId $ githubOAuthKeys m)
+            (oauthKeysClientSecret $ githubOAuthKeys m)
         ]
 
     authHttpManager = httpManager
 
 buildUser :: Creds m -> Maybe User
 buildUser (Creds csPlugin csIdent csExtra) =
-    User <$> buildName csExtra
+    User <$> lookup "name" csExtra
          <*> lookup "email" csExtra
          <*> pure csPlugin
          <*> pure csIdent
-
-buildName :: [(Text, Text)] -> Maybe Text
-buildName csExtra = do
-    firstName <- lookup "first_name" csExtra
-    lastName <- lookup "last_name" csExtra
-    return $ firstName <> " " <> lastName
 
 replaceUser :: UserId -> Maybe User -> YesodDB App UserId
 replaceUser uid (Just u) = replace uid u >> return uid
