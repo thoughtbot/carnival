@@ -12,6 +12,8 @@ import Network.HTTP.Conduit (Manager)
 import qualified Settings
 import Settings.Development (development)
 import qualified Database.Persist
+import Data.Monoid ((<>))
+import Data.Text (Text)
 import Database.Persist.Sql (SqlBackend)
 import Settings.StaticFiles
 import Settings (widgetFile, Extra (..), LearnOAuthKeys (..))
@@ -149,11 +151,16 @@ instance YesodAuth App where
 
 buildUser :: Creds m -> Maybe User
 buildUser (Creds csPlugin csIdent csExtra) =
-    User <$> lookup "first_name" csExtra
-         <*> lookup "last_name" csExtra
+    User <$> buildName csExtra
          <*> lookup "email" csExtra
          <*> pure csPlugin
          <*> pure csIdent
+
+buildName :: [(Text, Text)] -> Maybe Text
+buildName csExtra = do
+    firstName <- lookup "first_name" csExtra
+    lastName <- lookup "last_name" csExtra
+    return $ firstName <> " " <> lastName
 
 replaceUser :: UserId -> Maybe User -> YesodDB App UserId
 replaceUser uid (Just u) = replace uid u >> return uid

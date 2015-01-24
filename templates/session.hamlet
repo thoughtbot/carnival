@@ -5,7 +5,7 @@
 
     $maybe Entity _ u <- mu
         <ul>
-            <li><strong>Name</strong>: #{userFirstName u} #{userLastName u}
+            <li><strong>Name</strong>: #{userName u}
             <li><strong>Email</strong>: #{userEmail u}
     $nothing
         <p>Not authenticated
