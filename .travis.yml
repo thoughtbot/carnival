@@ -14,7 +14,7 @@ before_script:
   - ./bin/setup
 
 script:
-  - LEARN_OAUTH_CLIENT_ID=x LEARN_OAUTH_CLIENT_SECRET=x yesod test
+  - GITHUB_OAUTH_CLIENT_ID=x GITHUB_OAUTH_CLIENT_SECRET=x yesod test
 
 notifications:
   email: false
