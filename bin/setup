@@ -84,10 +84,11 @@ init_env_file() {
 
   cat <<EOF
 
-Please enter the Client ID and Secret for the Carnival Development OAuth
-application on GitHub
+Please create a new GitHub developer application:
 
-  https://github.com/organizations/thoughtbot/settings/applications
+  https://github.com/settings/applications
+
+Then, enter the Client ID and Secret below.
 
 This is required to run a development instance with working authentication. You
 may enter fake values for now and still be able to run tests or a development
