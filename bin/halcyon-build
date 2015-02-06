@@ -9,9 +9,21 @@ private_storage_setup() {
 
 [ -f ./.env ] && source ./.env
 
-if ! private_storage_setup; then
-  echo 'You must set the Halcyon variables for AWS credentials' >&2
-  echo 'https://halcyon.sh/reference/#private-storage-options' >&2
+if [ "${NO_PRIVATE_STORAGE:-0}" -eq 0 ] && ! private_storage_setup; then
+  cat >&2 <<EOF
+
+ERROR: The Halcyon variables for AWS credentials are not set
+
+This build would only use public S3 storage. That means it could build a lot
+more things from scratch than expected and what gets built would not be cached
+for future use.
+
+https://halcyon.sh/reference/#private-storage-options
+
+If you wish to continue without private storage, run this script again with
+NO_PRIVATE_STORAGE=1 set in the environment.
+
+EOF
   exit 1
 fi
 
