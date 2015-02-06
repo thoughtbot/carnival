@@ -10,7 +10,7 @@ get_env() {
     HALCYON_S3_BUCKET; do
 
     printf 'export %s=' "$var"
-    heroku config:get "$var" --app carnival-staging
+    heroku config:get "$var" --app carnival-staging || echo
   done
 
   cat <<EOF
