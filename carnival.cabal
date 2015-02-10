@@ -29,7 +29,6 @@ library
                      Notification
                      Helper.Auth
                      Helper.Request
-                     Helper.Heroku
                      Helper.Validation
                      Handler.Session
                      Handler.Comments
@@ -95,7 +94,7 @@ library
                  , wai
                  , blaze-markup
                  , gravatar
-                 , heroku                        >= 0.1.2
+                 , heroku-persistent             >= 0.1.0      && < 0.2
                  , clientsession                 >= 0.9.1
                  , time
                  , yesod-newsfeed                >= 1.2.1

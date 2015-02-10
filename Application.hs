@@ -24,6 +24,7 @@ import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
 import Network.Wai.Logger (clockDateCacher)
 import Data.Default (def)
 import Yesod.Core.Types (loggerSet, Logger (Logger))
+import Web.Heroku.Persist.Postgresql (postgresConf)
 
 import LoadEnv
 import System.Environment (lookupEnv)
@@ -37,7 +38,6 @@ import Handler.Embed
 import Handler.User
 import Handler.Feed
 import Handler.Unsubscribe
-import Helper.Heroku
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -78,7 +78,7 @@ makeFoundation conf = do
             then withYamlEnvironment "config/postgresql.yml" (appEnv conf)
                 Database.Persist.loadConfig >>=
                 Database.Persist.applyEnv
-            else herokuConf
+            else postgresConf 10
     p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
 
     loggerSet' <- newStdoutLoggerSet defaultBufSize
