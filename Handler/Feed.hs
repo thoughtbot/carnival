@@ -43,7 +43,9 @@ commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) =
     return FeedEntry
         { feedEntryLink = "http://robots.thoughtbot.com/" <> commentArticleURL c
         , feedEntryUpdated = commentCreated c
-        , feedEntryTitle =
-            "New comment from " <> userName u <> " on " <> commentArticleTitle c
+        , feedEntryTitle = "New comment from "
+            <> userName u
+            <> " on " <> commentArticleTitle c
+            <> " by " <> commentArticleAuthor c
         , feedEntryContent = toMarkup $ commentBody c
         }
