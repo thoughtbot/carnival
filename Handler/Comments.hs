@@ -107,6 +107,7 @@ buildComment t u req = Comment
     { commentUser = entityKey u
     , commentArticleURL = reqArticle req
     , commentArticleTitle = reqArticleTitle req
+    , commentArticleAuthor = reqArticleAuthor req
     , commentThread = reqThread req
     , commentBody = reqBody req
     , commentCreated = t

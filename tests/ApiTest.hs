@@ -40,6 +40,7 @@ apiSpecs =
             postBody CommentsR $ encode $ object
                 [ "thread" .= ("The thread" :: Text)
                 , "article_title" .= ("The article title" :: Text)
+                , "article_author" .= ("John Smith" :: Text)
                 , "article_url" .= ("The article url" :: Text)
                 , "body" .= ("The body" :: Text)
                 ]
@@ -75,6 +76,7 @@ apiSpecs =
             putBody (CommentR cid2) $ encode $ object
                 [ "thread" .= ("new thread" :: Text)
                 , "article_title" .= ("new title" :: Text)
+                , "article_author" .= ("John Smith" :: Text)
                 , "article_url" .= ("new article" :: Text)
                 , "body" .= ("new body" :: Text)
                 ]
@@ -102,6 +104,7 @@ apiSpecs =
                 [ "thread" .= ("The thread" :: Text)
                 , "article_url" .= ("The article" :: Text)
                 , "article_title" .= ("The title" :: Text)
+                , "article_author" .= ("John Smith" :: Text)
                 , "body" .= ("" :: Text)
                 ]
 

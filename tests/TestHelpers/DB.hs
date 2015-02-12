@@ -51,6 +51,7 @@ createComment uid article thread body = do
         , commentThread = thread
         , commentArticleTitle = "title"
         , commentArticleURL = article
+        , commentArticleAuthor = "John Smith"
         , commentBody = Markdown body
         , commentCreated = now
         }

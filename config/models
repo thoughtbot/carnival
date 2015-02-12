@@ -10,6 +10,7 @@ Comment
     user UserId
     articleURL Text
     articleTitle Text default=''
+    articleAuthor Text default=''
     thread Text
     body Markdown
     created UTCTime default=now()
