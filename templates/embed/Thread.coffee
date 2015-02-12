@@ -52,4 +52,10 @@ class Thread
     )
 
   commentHash: (body) ->
-    { article_url: @article.id, article_title: @article.title, thread: @currentBlock.id(), body: body }
+    {
+      article_url: @article.id,
+      article_title: @article.title,
+      article_author: @article.author,
+      thread: @currentBlock.id(),
+      body: body
+    }

@@ -19,6 +19,7 @@ import qualified Data.Text.Lazy as TL
 data CommentRequest = CommentRequest
     { reqArticle :: Text
     , reqArticleTitle :: Text
+    , reqArticleAuthor :: Text
     , reqThread :: Text
     , reqBody :: Markdown
     }
@@ -27,6 +28,7 @@ instance FromJSON CommentRequest where
     parseJSON (Object v) = CommentRequest
         <$> v .: "article_url"
         <*> v .: "article_title"
+        <*> v .: "article_author"
         <*> v .: "thread"
         <*> fmap asMarkdown (v .: "body")
 

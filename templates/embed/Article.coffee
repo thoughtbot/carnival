@@ -2,6 +2,7 @@ class Article
   constructor: (@element) ->
     @id = @element.getAttribute('data-url').replace(/\//g, '')
     @title = document.title
+    @author = CarnivalOptions.article_author
     @container = @createContainer()
     @thread = new Thread(this)
     @fetchComments()
