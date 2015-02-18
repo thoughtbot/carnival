@@ -1,0 +1,2 @@
+#!/bin/sh
+sed -i 's|^#!/usr/bin/nodejs|#!/usr/bin/env nodejs|' /app/sandbox/usr/bin/coffee
