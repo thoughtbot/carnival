@@ -7,7 +7,7 @@ private_storage_setup() {
   [ -n "$HALCYON_S3_BUCKET" ]
 }
 
-[ -f ./.env ] && source ./.env
+[ -f ./.env ] && . ./.env
 
 if [ "${NO_PRIVATE_STORAGE:-0}" -eq 0 ] && ! private_storage_setup; then
   cat >&2 <<EOF
@@ -27,17 +27,18 @@ EOF
   exit 1
 fi
 
+if [ ! -w /app ]; then
+  sudo mkdir -p /app
+  sudo chown $USER /app
+fi
+
 if [ ! -d /app/halcyon ]; then
   echo 'Installing halcyon...'
   git clone https://github.com/mietek/halcyon.git /app/halcyon
 fi
 
-# We don't care
 export HALCYON_INTERNAL_TOLERATE_GHC_USER_DB=1
 
-# Note --no-clean-private-storage ensures developers don't need to rebuild their
-# stuff if another developer builds other versions for their own use (by
-# default, halcyon keeps only one version per platform at a time).
 /app/halcyon/halcyon build \
   --no-clean-private-storage --cabal-version=1.22.0.0 "$@"
 

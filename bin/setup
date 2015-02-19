@@ -28,12 +28,6 @@ if ! command -v heroku >/dev/null; then
   exit 1
 fi
 
-if [ ! -w /app ]; then
-  echo 'Using sudo to create a user-writable /app directory for building'
-  sudo mkdir -p /app
-  sudo chown $USER /app
-fi
-
 heroku join --app carnival-staging || true
 heroku join --app carnival-production || true
 
