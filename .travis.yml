@@ -5,6 +5,7 @@ addons:
 
 env:
   global:
+    - HALCYON_CABAL_UPDATE=1
     - GITHUB_OAUTH_CLIENT_ID=x
     - GITHUB_OAUTH_CLIENT_SECRET=x
     - secure: CIZIU8utnhZ9aT+vdvRl2dWVExSL0N9ajpyg/eh4NfSHBS8DmQTX5OMutzo3dpLrauZrT8ZT4AMDu4A1XM2XZg+R5Oz6eT5FyR1Vh2v35L5USLyQaMibIPhdPeppOXr1Fosmv23/MZNaADqpT7Rxk1CjvxqK6/Itg8sy3GodkA4=
