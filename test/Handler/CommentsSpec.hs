@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module ApiTest where
+module Handler.CommentsSpec where
 
 import TestHelper
 import qualified Database.Persist as DB
@@ -9,8 +9,8 @@ main = hspec spec
 
 spec :: Spec
 spec = withApp $ do
-    describe "Comments API" $ do
-        it "allows reading of comments by article" $ do
+    describe "GET CommentsR" $ do
+        it "returns a list of comments by article" $ do
             u <- createUser "1"
             c1 <- createComment (entityKey u) "1" "1" "1"
             c2 <- createComment (entityKey u) "1" "2" "2"
@@ -31,11 +31,14 @@ spec = withApp $ do
                                , UserComment c2 u
                                ]]
 
-        it "allows authorized commenting" $ do
+    describe "POST CommentsR" $ do
+        it "does not allow unauthenticated commenting" $ do
             post CommentsR
 
             statusIs 401
 
+
+        it "allows commenting by authenticated users" $ do
             u <- createUser "1"
 
             authenticateAs u
@@ -60,11 +63,27 @@ spec = withApp $ do
             assertEqual' "The article url" $ commentArticleURL c
             assertEqual' "The body" $ commentBody c
 
-        it "forbids manipulating other users' comments" $ do
-            u1  <- createUser "1"
+        it "validates against empty comment bodies" $ do
+            u <- createUser "1"
+
+            authenticateAs u
+
+            postBody CommentsR $ encode $ object
+                [ "thread" .= ("The thread" :: Text)
+                , "article_url" .= ("The article" :: Text)
+                , "article_title" .= ("The title" :: Text)
+                , "article_author" .= ("John Smith" :: Text)
+                , "body" .= ("" :: Text)
+                ]
+
+            statusIs 400
+
+    describe "PUT CommentR" $ do
+        it "only allows manipulating your own comments" $ do
+            u1 <- createUser "1"
             u2 <- createUser "2"
-            Entity cid1 _  <- createComment (entityKey u1) "1" "1" "1"
-            Entity cid2 _  <- createComment (entityKey u2) "1" "1" "2"
+            Entity cid1 _ <- createComment (entityKey u1) "1" "1" "1"
+            Entity cid2 _ <- createComment (entityKey u2) "1" "1" "2"
 
             authenticateAs u2
 
@@ -86,29 +105,22 @@ spec = withApp $ do
 
             statusIs 200
 
-            Just c <- runDB $ DB.get cid2
+    describe "DELETE CommentR" $ do
+        it "only allows deleting your own comments" $ do
+            u1 <- createUser "1"
+            u2 <- createUser "2"
+            Entity cid1 _ <- createComment (entityKey u1) "1" "1" "1"
+            Entity cid2 _ <- createComment (entityKey u2) "1" "1" "2"
 
-            assertEqual' "new body" $ commentBody c
+            authenticateAs u2
+
+            delete $ CommentR cid1
+
+            statusIs 403
 
             delete $ CommentR cid2
 
-            mc <- runDB $ DB.get cid2
-
-            assertEqual' mc Nothing
-
             statusIs 200
 
-        it "forbids posting empty comments" $ do
-            u <- createUser "1"
-
-            authenticateAs u
-
-            postBody CommentsR $ encode $ object
-                [ "thread" .= ("The thread" :: Text)
-                , "article_url" .= ("The article" :: Text)
-                , "article_title" .= ("The title" :: Text)
-                , "article_author" .= ("John Smith" :: Text)
-                , "body" .= ("" :: Text)
-                ]
-
-            statusIs 400
+            mc <- runDB $ DB.get cid2
+            assertEqual' mc Nothing

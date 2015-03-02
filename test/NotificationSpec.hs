@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-module NotificationTest where
+module NotificationSpec where
 
 import TestHelper
 import Notification
