@@ -2,6 +2,7 @@
 {-# LANGUAGE TypeFamilies #-}
 module TestHelpers.DB
     ( runDB
+    , runDBWithApp
     , createUser
     , createComment
     , createSubscription
@@ -30,8 +31,11 @@ type Example = YesodExample App
 
 runDB :: SqlPersistM a -> Example a
 runDB query = do
-    pool <- fmap connPool getTestYesod
-    liftIO $ runSqlPersistMPool query pool
+    app <- getTestYesod
+    liftIO $ runDBWithApp app query
+
+runDBWithApp :: App -> SqlPersistM a -> IO a
+runDBWithApp app query = runSqlPersistMPool query (connPool app)
 
 createUser :: Text -> Example (Entity User)
 createUser ident =

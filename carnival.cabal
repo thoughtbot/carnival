@@ -129,7 +129,7 @@ executable         carnival
 
 test-suite test
     type:              exitcode-stdio-1.0
-    main-is:           main.hs
+    main-is:           Spec.hs
     hs-source-dirs:    tests
     ghc-options:       -Wall
 
@@ -156,3 +156,5 @@ test-suite test
                  , markdown
                  , html-conduit < 1.1.1
                  , mime-mail
+                 , mtl
+                 , shakespeare

@@ -1,15 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
-module NotificationTest (notificationSpecs) where
+module NotificationTest where
 
 import TestHelper
 import Notification
 
-notificationSpecs :: YesodSpec App
-notificationSpecs =
-    ydescribe "Notification" $ do
-        ydescribe "NewComment" $ do
-            ydescribe "notificationRecipients" $ do
-                yit "contains any users subscribed to the notification" $ do
+main :: IO ()
+main = hspec spec
+
+spec :: Spec
+spec = withApp $ do
+    describe "Notification" $ do
+        describe "NewComment" $ do
+            describe "notificationRecipients" $ do
+                it "contains any users subscribed to the notification" $ do
                     users1 <- mapM createUser ["1", "2", "3"]
                     users2 <- mapM createUser ["4", "5", "6"]
                     users3 <- mapM createUser ["7", "8", "9"]
@@ -24,7 +27,7 @@ notificationSpecs =
                         (map (userEmail . entityVal) users2)
                         (map (userEmail . recipientUser) rs)
 
-                yit "provides a valid token for unsubscribing" $ do
+                it "provides a valid token for unsubscribing" $ do
                     subscribeUser "1" "1" =<< createUser "1"
                     n <- createNotification "1" "1" =<< createUser "2"
                     (r:_) <- runDB $ notificationRecipients n

@@ -1,13 +1,16 @@
 {-# LANGUAGE OverloadedStrings #-}
-module ApiTest (apiSpecs) where
+module ApiTest where
 
 import TestHelper
 import qualified Database.Persist as DB
 
-apiSpecs :: YesodSpec App
-apiSpecs =
-    ydescribe "Comments API" $ do
-        yit "allows reading of comments by article" $ do
+main :: IO ()
+main = hspec spec
+
+spec :: Spec
+spec = withApp $ do
+    describe "Comments API" $ do
+        it "allows reading of comments by article" $ do
             u <- createUser "1"
             c1 <- createComment (entityKey u) "1" "1" "1"
             c2 <- createComment (entityKey u) "1" "2" "2"
@@ -28,7 +31,7 @@ apiSpecs =
                                , UserComment c2 u
                                ]]
 
-        yit "allows authorized commenting" $ do
+        it "allows authorized commenting" $ do
             post CommentsR
 
             statusIs 401
@@ -57,7 +60,7 @@ apiSpecs =
             assertEqual' "The article url" $ commentArticleURL c
             assertEqual' "The body" $ commentBody c
 
-        yit "forbids manipulating other users' comments" $ do
+        it "forbids manipulating other users' comments" $ do
             u1  <- createUser "1"
             u2 <- createUser "2"
             Entity cid1 _  <- createComment (entityKey u1) "1" "1" "1"
@@ -95,7 +98,7 @@ apiSpecs =
 
             statusIs 200
 
-        yit "forbids posting empty comments" $ do
+        it "forbids posting empty comments" $ do
             u <- createUser "1"
 
             authenticateAs u
