@@ -28,7 +28,7 @@ feedFromComments comments = do
         , feedDescription = "Recent comments on Carnival"
         , feedLanguage    = "en-us"
         , feedLinkSelf    = render FeedR
-        , feedLinkHome    = "http://robots.thoughtbot.com"
+        , feedLinkHome    = "https://robots.thoughtbot.com"
         , feedUpdated     = getCommentCreated $ head comments
         , feedEntries     = entries
         }
@@ -41,7 +41,8 @@ feedFromComments comments = do
 commentToRssEntry :: UserComment -> Handler (FeedEntry Text)
 commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) = 
     return FeedEntry
-        { feedEntryLink = "http://robots.thoughtbot.com/" <> commentArticleURL c
+        { feedEntryLink = "https://robots.thoughtbot.com/"
+            <> commentArticleURL c
         , feedEntryUpdated = commentCreated c
         , feedEntryTitle = "New comment from "
             <> userName u

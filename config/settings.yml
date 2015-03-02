@@ -12,9 +12,9 @@ Testing:
   <<: *defaults
 
 Staging:
-  approot: "http://carnival-staging.herokuapp.com"
+  approot: "https://carnival-staging.herokuapp.com"
   <<: *defaults
 
 Production:
-  approot: "http://carnival.thoughtbot.com"
+  approot: "https://carnival.thoughtbot.com"
   <<: *defaults

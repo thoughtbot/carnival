@@ -1,12 +1,12 @@
 # Carnival
 
-A medium/disqus-like commenting service powering http://robots.thoughtbot.com.
+A medium/disqus-like commenting service powering https://robots.thoughtbot.com.
 
 ## Credits
 
-![thoughtbot](http://thoughtbot.com/logo.png)
+![thoughtbot](https://thoughtbot.com/logo.png)
 
-Carnival is maintained and funded by [thoughtbot, inc](http://thoughtbot.com/community)
+Carnival is maintained and funded by [thoughtbot, inc](https://thoughtbot.com/community)
 
 Thank you to all [the contributors](https://github.com/thoughtbot/carnival/contributors)!
 
@@ -87,7 +87,7 @@ $ ./bin/deploy carnival-production
 
 Read more about deploying Carnival in [Ship You A Haskell][ship-you].
 
-[ship-you]: http://robots.thoughtbot.com/ship-you-a-haskell
+[ship-you]: https://robots.thoughtbot.com/ship-you-a-haskell
 
 ## Migrations
 
