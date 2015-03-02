@@ -6,10 +6,8 @@ module TestHelpers.Assertions
 
 import Yesod.Test
 import Control.Monad.IO.Class (liftIO)
-import Data.Aeson (Value(..))
-import Data.Aeson.Encode (encodeToTextBuilder)
-import Data.Text.Lazy.Builder (toLazyText)
-import qualified Data.Text.Lazy as TL
+import Data.Aeson (Value(..), eitherDecode)
+import Network.Wai.Test (simpleBody)
 import qualified Test.HUnit as HUnit
 
 -- | Assert a value is true.
@@ -34,14 +32,15 @@ assertEqual' expected actual = assertEqual msg actual expected
             , "    Actual: " ++ show actual
             ]
 
--- | Like @bodyEquals@ but taking a @'Value'@ argument and comparing its JSON
---   representation against the response body.
+-- | Like @bodyEquals@ but taking a @'Value'@ argument and comparing it against
+--   the response body decoded as JSON.
 --
 --   > valueEquals $ object ["comments" .= comments]
 --
---   N.B. We avoid @Data.Aeson.encode@ here, because that does not escape HTML
---   entities and therefore the result may not match the response body (which
---   does).
---
 valueEquals :: Value -> YesodExample site ()
-valueEquals = bodyEquals . TL.unpack . toLazyText . encodeToTextBuilder
+valueEquals v = withResponse $
+    either (const failure) (assertEqual' v) . eitherDecode . simpleBody
+
+  where
+    failure :: YesodExample site ()
+    failure = liftIO $ HUnit.assertFailure "expected JSON response"
