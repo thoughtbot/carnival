@@ -65,10 +65,10 @@ Run the tests:
 $ yesod test
 ```
 
-Do anything else:
+Open up a REPL:
 
 ```
-$ ghci Model.hs
+$ cabal exec -- ghci Model.hs
 ```
 
 ## Deployment
