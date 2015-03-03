@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
 
+_psql() { PGPASSWORD="$user" psql --username "$user" "$@"; }
+
+missing_sites() {
+  echo 'select count(*) from site;' | _psql -t --dbname "$app" | grep -Fq 0
+}
+
 app='carnival'
 user="$app"
 
@@ -24,5 +30,9 @@ psql template1 >/dev/null <<SQL
 SQL
 
 # Test connections
-PGPASSWORD="$user" psql --username "$user" --dbname "$app" </dev/null
-PGPASSWORD="$user" psql --username "$user" --dbname "${app}_test" </dev/null
+_psql --dbname "$app" </dev/null
+_psql --dbname "${app}_test" </dev/null
+
+# Create site records if needed
+_psql --dbname "$app" < migrations/create-site.psql
+missing_sites && _psql --dbname "$app" < migrations/insert-thoughtbot-sites.psql

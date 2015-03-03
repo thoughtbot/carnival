@@ -71,6 +71,30 @@ Open up a REPL:
 $ cabal exec -- ghci Model.hs
 ```
 
+## Maitre-d
+
+To use Carnival from a local instance of [maitre-d][]:
+
+- Find the id of your development Site (it'll probably be `1`):
+
+```
+% echo "select id from site where base_url LIKE '%localhost%';" | psql carnival
+ id
+----
+  1
+(1 row)
+
+```
+
+- Set `CARNIVAL_HOST` for maitre-d:
+
+```
+CARNIVAL_ENABLED=true
+CARNIVAL_HOST='localhost:3000/sites/1'
+```
+
+[maitre-d]: https://github.com/thoughtbot/maitre-d
+
 ## Deployment
 
 Staging is the default deploy target:
