@@ -15,8 +15,9 @@ spec = withApp $ do
             c1 <- createComment (entityKey u) "1" "1" "1"
             c2 <- createComment (entityKey u) "1" "2" "2"
             c3 <- createComment (entityKey u) "2" "1" "3"
+            Entity siteId _ <- createSite
 
-            get CommentsR
+            get $ CommentsR siteId
 
             valueEquals $ object
                 ["comments" .= [ UserComment c1 u
@@ -24,7 +25,7 @@ spec = withApp $ do
                                , UserComment c3 u
                                ]]
 
-            getWithParams CommentsR [("article", "1")]
+            getWithParams (CommentsR siteId) [("article", "1")]
 
             valueEquals $ object
                 ["comments" .= [ UserComment c1 u
@@ -33,17 +34,20 @@ spec = withApp $ do
 
     describe "POST CommentsR" $ do
         it "does not allow unauthenticated commenting" $ do
-            post CommentsR
+            Entity siteId _ <- createSite
+
+            post $ CommentsR siteId
 
             statusIs 401
 
 
         it "allows commenting by authenticated users" $ do
             u <- createUser "1"
+            Entity siteId _ <- createSite
 
             authenticateAs u
 
-            postBody CommentsR $ encode $ object
+            postBody (CommentsR siteId) $ encode $ object
                 [ "thread" .= ("The thread" :: Text)
                 , "article_title" .= ("The article title" :: Text)
                 , "article_author" .= ("John Smith" :: Text)
@@ -65,10 +69,11 @@ spec = withApp $ do
 
         it "validates against empty comment bodies" $ do
             u <- createUser "1"
+            Entity siteId _ <- createSite
 
             authenticateAs u
 
-            postBody CommentsR $ encode $ object
+            postBody (CommentsR siteId) $ encode $ object
                 [ "thread" .= ("The thread" :: Text)
                 , "article_url" .= ("The article" :: Text)
                 , "article_title" .= ("The title" :: Text)
@@ -84,18 +89,19 @@ spec = withApp $ do
             u2 <- createUser "2"
             Entity cid1 _ <- createComment (entityKey u1) "1" "1" "1"
             Entity cid2 _ <- createComment (entityKey u2) "1" "1" "2"
+            Entity siteId _ <- createSite
 
             authenticateAs u2
 
-            putBody (CommentR cid1) ""
+            putBody (CommentR siteId cid1) ""
 
             statusIs 403
 
-            delete $ CommentR cid1
+            delete $ CommentR siteId cid1
 
             statusIs 403
 
-            putBody (CommentR cid2) $ encode $ object
+            putBody (CommentR siteId cid2) $ encode $ object
                 [ "thread" .= ("new thread" :: Text)
                 , "article_title" .= ("new title" :: Text)
                 , "article_author" .= ("John Smith" :: Text)
@@ -111,14 +117,15 @@ spec = withApp $ do
             u2 <- createUser "2"
             Entity cid1 _ <- createComment (entityKey u1) "1" "1" "1"
             Entity cid2 _ <- createComment (entityKey u2) "1" "1" "2"
+            Entity siteId _ <- createSite
 
             authenticateAs u2
 
-            delete $ CommentR cid1
+            delete $ CommentR siteId cid1
 
             statusIs 403
 
-            delete $ CommentR cid2
+            delete $ CommentR siteId cid2
 
             statusIs 200
 

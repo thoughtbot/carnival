@@ -38,8 +38,8 @@ instance FromJSON CommentRequest where
 
     parseJSON _ = mzero
 
-postCommentsR :: Handler Value
-postCommentsR = do
+postCommentsR :: SiteId -> Handler Value
+postCommentsR _ = do
     allowCrossOrigin
 
     u <- requireAuth_
@@ -57,8 +57,8 @@ postCommentsR = do
         sendNotification notification
         sendResponseStatus status201 $ object ["comment" .= userComment]
 
-putCommentR :: CommentId -> Handler Value
-putCommentR commentId = do
+putCommentR :: SiteId -> CommentId -> Handler Value
+putCommentR _ commentId = do
     allowCrossOrigin
 
     u <- requireAuth_
@@ -74,8 +74,8 @@ putCommentR commentId = do
         sendResponseStatus status200 $ object
             ["comment" .= UserComment (Entity commentId v) u]
 
-deleteCommentR :: CommentId -> Handler ()
-deleteCommentR commentId = do
+deleteCommentR :: SiteId -> CommentId -> Handler ()
+deleteCommentR _ commentId = do
     allowCrossOrigin
 
     u <- requireAuth_
@@ -87,8 +87,8 @@ deleteCommentR commentId = do
 
     sendResponseStatus status200 ("DELETED" :: Text)
 
-getCommentsR :: Handler Value
-getCommentsR = do
+getCommentsR :: SiteId -> Handler Value
+getCommentsR _ = do
     allowCrossOrigin
 
     marticle <- lookupGetParam "article"
@@ -96,8 +96,8 @@ getCommentsR = do
 
     return $ object ["comments" .= comments]
 
-optionsCommentsR :: Handler ()
-optionsCommentsR = do
+optionsCommentsR :: SiteId -> Handler ()
+optionsCommentsR _ = do
     allowCrossOrigin
 
     sendResponseStatus status200 ()

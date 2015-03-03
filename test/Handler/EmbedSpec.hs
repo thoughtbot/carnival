@@ -9,6 +9,8 @@ spec :: Spec
 spec = withApp $
     describe "GET EmbedR" $
         it "renders successfully" $ do
-            get EmbedR
+            Entity siteId _ <- createSite
+
+            get $ EmbedR siteId
 
             statusIs 200

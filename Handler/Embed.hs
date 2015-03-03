@@ -7,8 +7,8 @@ import Text.Julius (rawJS)
 import Yesod.Auth (Route(PluginR))
 import Yesod.Default.Config (appRoot)
 
-getEmbedR :: Handler Html
-getEmbedR = do
+getEmbedR :: SiteId -> Handler Html
+getEmbedR siteId = do
     root <- fmap (rawJS . appRoot . settings) getYesod
 
     allowCrossOrigin

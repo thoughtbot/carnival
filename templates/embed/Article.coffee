@@ -28,7 +28,7 @@ class Article
         Carnival.removeClass(@element, 'commenting')
 
   fetchComments: ->
-    Carnival.get('@{CommentsR}?article=' + @id, (data) =>
+    Carnival.get('@{CommentsR siteId}?article=' + @id, (data) =>
       @commentData = data.comments
       @createBlocks()
       @insertBlocksIntoDom()

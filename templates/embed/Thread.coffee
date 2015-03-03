@@ -41,7 +41,7 @@ class Thread
 
   add: (body) ->
     Carnival.post(
-      '@{CommentsR}',
+      '@{CommentsR siteId}',
       @commentHash(body),
       (response) =>
         comment = new Comment(response.comment)
