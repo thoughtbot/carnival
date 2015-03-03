@@ -16,6 +16,7 @@ User
 
 Comment
     user UserId
+    site SiteId default=1
     articleURL Text
     articleTitle Text default=''
     articleAuthor Text default=''

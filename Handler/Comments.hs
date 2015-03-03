@@ -11,7 +11,7 @@ import Helper.Auth
 import Helper.Request
 import Helper.Validation
 
-import Control.Monad (mzero)
+import Control.Monad (mzero, void)
 import Text.Markdown
 
 import qualified Data.Text.Lazy as TL
@@ -39,12 +39,14 @@ instance FromJSON CommentRequest where
     parseJSON _ = mzero
 
 postCommentsR :: SiteId -> Handler Value
-postCommentsR _ = do
+postCommentsR siteId = do
     allowCrossOrigin
+
+    void $ runDB $ get404 siteId
 
     u <- requireAuth_
     t <- liftIO getCurrentTime
-    c <- fmap (buildComment t u) requireJsonBody
+    c <- fmap (buildComment t u siteId) requireJsonBody
 
     runValidation validateComment c $ \v -> do
         cid <- runDB $ insert v
@@ -58,15 +60,17 @@ postCommentsR _ = do
         sendResponseStatus status201 $ object ["comment" .= userComment]
 
 putCommentR :: SiteId -> CommentId -> Handler Value
-putCommentR _ commentId = do
+putCommentR siteId commentId = do
     allowCrossOrigin
+
+    void $ runDB $ get404 siteId
 
     u <- requireAuth_
     c <- runDB $ get404 commentId
 
     requireOwnComment c $ entityKey u
 
-    c' <- fmap (buildComment (commentCreated c) u) requireJsonBody
+    c' <- fmap (buildComment (commentCreated c) u siteId) requireJsonBody
 
     runValidation validateComment c' $ \v -> do
         runDB $ replace commentId v
@@ -102,9 +106,10 @@ optionsCommentsR _ = do
 
     sendResponseStatus status200 ()
 
-buildComment :: UTCTime -> Entity User -> CommentRequest -> Comment
-buildComment t u req = Comment
+buildComment :: UTCTime -> Entity User -> SiteId -> CommentRequest -> Comment
+buildComment t u siteId req = Comment
     { commentUser = entityKey u
+    , commentSite = siteId
     , commentArticleURL = reqArticle req
     , commentArticleTitle = reqArticleTitle req
     , commentArticleAuthor = reqArticleAuthor req

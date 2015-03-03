@@ -58,12 +58,13 @@ createUser ident =
         , userIdent     = ident
         }
 
-createComment :: UserId -> Text -> Text -> TL.Text -> Example (Entity Comment)
-createComment uid article thread body = do
+createComment :: UserId -> SiteId -> Text -> Text -> TL.Text -> Example (Entity Comment)
+createComment uid siteId article thread body = do
     now <- liftIO getCurrentTime
 
     insertEntity Comment
         { commentUser = uid
+        , commentSite = siteId
         , commentThread = thread
         , commentArticleTitle = "title"
         , commentArticleURL = article
@@ -75,15 +76,15 @@ createComment uid article thread body = do
 createSubscription :: Text -> Entity User -> Example ()
 createSubscription name (Entity uid _) = runDB $ subscribe name uid
 
-createNotification :: Text -> Text -> Entity User -> Example Notification
-createNotification article thread u = do
-    c <- createComment (entityKey u) article thread ""
+createNotification :: SiteId -> Text -> Text -> Entity User -> Example Notification
+createNotification siteId article thread u = do
+    c <- createComment (entityKey u) siteId article thread ""
 
     return $ NewComment $ UserComment c u
 
-subscribeUser :: Text -> Text -> Entity User -> Example ()
-subscribeUser article thread eu = do
-    notification <- createNotification article thread eu
+subscribeUser :: SiteId -> Text -> Text -> Entity User -> Example ()
+subscribeUser siteId article thread eu = do
+    notification <- createNotification siteId article thread eu
 
     createSubscription (notificationName notification) eu
 

@@ -13,13 +13,14 @@ spec = withApp $ do
         describe "NewComment" $ do
             describe "notificationRecipients" $ do
                 it "contains any users subscribed to the notification" $ do
+                    Entity siteId _ <- createSite
                     users1 <- mapM createUser ["1", "2", "3"]
                     users2 <- mapM createUser ["4", "5", "6"]
                     users3 <- mapM createUser ["7", "8", "9"]
-                    mapM_ (subscribeUser "1" "1") users1
-                    mapM_ (subscribeUser "1" "2") users2
-                    mapM_ (subscribeUser "2" "1") users3
-                    n <- createNotification "1" "2" =<< createUser "10"
+                    mapM_ (subscribeUser siteId "1" "1") users1
+                    mapM_ (subscribeUser siteId "1" "2") users2
+                    mapM_ (subscribeUser siteId "2" "1") users3
+                    n <- createNotification siteId "1" "2" =<< createUser "10"
 
                     rs <- runDB $ notificationRecipients n
 
@@ -28,8 +29,9 @@ spec = withApp $ do
                         (map (userEmail . recipientUser) rs)
 
                 it "provides a valid token for unsubscribing" $ do
-                    subscribeUser "1" "1" =<< createUser "1"
-                    n <- createNotification "1" "1" =<< createUser "2"
+                    Entity siteId _ <- createSite
+                    subscribeUser siteId "1" "1" =<< createUser "1"
+                    n <- createNotification siteId "1" "1" =<< createUser "2"
                     (r:_) <- runDB $ notificationRecipients n
 
                     get $ UnsubscribeR $ recipientToken r

@@ -11,11 +11,12 @@ spec :: Spec
 spec = withApp $ do
     describe "GET CommentsR" $ do
         it "returns a list of comments by article" $ do
-            u <- createUser "1"
-            c1 <- createComment (entityKey u) "1" "1" "1"
-            c2 <- createComment (entityKey u) "1" "2" "2"
-            c3 <- createComment (entityKey u) "2" "1" "3"
             Entity siteId _ <- createSite
+
+            u <- createUser "1"
+            c1 <- createComment (entityKey u) siteId "1" "1" "1"
+            c2 <- createComment (entityKey u) siteId "1" "2" "2"
+            c3 <- createComment (entityKey u) siteId "2" "1" "3"
 
             get $ CommentsR siteId
 
@@ -87,9 +88,9 @@ spec = withApp $ do
         it "only allows manipulating your own comments" $ do
             u1 <- createUser "1"
             u2 <- createUser "2"
-            Entity cid1 _ <- createComment (entityKey u1) "1" "1" "1"
-            Entity cid2 _ <- createComment (entityKey u2) "1" "1" "2"
             Entity siteId _ <- createSite
+            Entity cid1 _ <- createComment (entityKey u1) siteId "1" "1" "1"
+            Entity cid2 _ <- createComment (entityKey u2) siteId "1" "1" "2"
 
             authenticateAs u2
 
@@ -115,9 +116,9 @@ spec = withApp $ do
         it "only allows deleting your own comments" $ do
             u1 <- createUser "1"
             u2 <- createUser "2"
-            Entity cid1 _ <- createComment (entityKey u1) "1" "1" "1"
-            Entity cid2 _ <- createComment (entityKey u2) "1" "1" "2"
             Entity siteId _ <- createSite
+            Entity cid1 _ <- createComment (entityKey u1) siteId "1" "1" "1"
+            Entity cid2 _ <- createComment (entityKey u2) siteId "1" "1" "2"
 
             authenticateAs u2
 
