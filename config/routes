@@ -8,7 +8,7 @@
 /comments CommentsR GET POST OPTIONS
 /comments/#CommentId CommentR PUT DELETE
 
-/feed FeedR GET
+/sites/#SiteId/feed FeedR GET
 
 /session SessionR GET
 /user UserR GET

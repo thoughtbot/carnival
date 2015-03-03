@@ -9,26 +9,27 @@ import Control.Monad (when)
 import Text.Blaze.Html (toMarkup)
 import Yesod.RssFeed
 
-getFeedR :: Handler RepRss
-getFeedR = do
+getFeedR :: SiteId -> Handler RepRss
+getFeedR siteId = do
+    site <- runDB $ get404 siteId
     comments <- runDB findRecentUserComments
 
     when (null comments) notFound
 
-    feedFromComments comments
+    feedFromComments (Entity siteId site) comments
 
-feedFromComments :: [UserComment] -> Handler RepRss
-feedFromComments comments = do
-    entries <- mapM commentToRssEntry comments
+feedFromComments :: Entity Site -> [UserComment] -> Handler RepRss
+feedFromComments (Entity siteId site) comments = do
+    entries <- mapM (commentToRssEntry site) comments
     render <- getUrlRender
 
     rssFeedText Feed
-        { feedAuthor      = "thoughtbot"
-        , feedTitle       = "Carnival Comments"
-        , feedDescription = "Recent comments on Carnival"
-        , feedLanguage    = "en-us"
-        , feedLinkSelf    = render FeedR
-        , feedLinkHome    = "https://robots.thoughtbot.com"
+        { feedAuthor      = siteRssAuthor site
+        , feedTitle       = siteRssTitle site
+        , feedDescription = siteRssDescription site
+        , feedLanguage    = siteRssLanguage site
+        , feedLinkSelf    = render $ FeedR siteId
+        , feedLinkHome    = siteBaseUrl site
         , feedUpdated     = getCommentCreated $ head comments
         , feedEntries     = entries
         }
@@ -38,11 +39,10 @@ feedFromComments comments = do
         getCommentCreated (UserComment (Entity _ c) _) =
             commentCreated c
 
-commentToRssEntry :: UserComment -> Handler (FeedEntry Text)
-commentToRssEntry (UserComment (Entity _ c) (Entity _ u)) = 
+commentToRssEntry :: Site -> UserComment -> Handler (FeedEntry Text)
+commentToRssEntry site (UserComment (Entity _ c) (Entity _ u)) =
     return FeedEntry
-        { feedEntryLink = "https://robots.thoughtbot.com/"
-            <> commentArticleURL c
+        { feedEntryLink = siteBaseUrl site <> commentArticleURL c
         , feedEntryUpdated = commentCreated c
         , feedEntryTitle = "New comment from "
             <> userName u
