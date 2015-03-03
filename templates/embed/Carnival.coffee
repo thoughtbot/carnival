@@ -34,7 +34,7 @@ class Carnival
   @get: (url, callback) ->
     request = new XMLHttpRequest
     request.withCredentials = true
-    request.open('GET', 'https://' + CarnivalOptions.host + url, true)
+    request.open('GET', url, true)
     request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
       if request.status >= 200 and request.status < 400
@@ -44,7 +44,7 @@ class Carnival
   @post: (url, data, callback) ->
     request = new XMLHttpRequest()
     request.withCredentials = true
-    request.open('POST', 'https://' + CarnivalOptions.host + url, true)
+    request.open('POST', url, true)
     request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
       if request.status >= 200 and request.status < 400
@@ -67,13 +67,13 @@ class Carnival
   @getUser: ->
     request = new XMLHttpRequest
     request.withCredentials = true
-    request.open('GET', 'https://' + CarnivalOptions.host + '/user', false)
+    request.open('GET', '@{UserR}', false)
     request.send()
     if request.status is 200
       @user = JSON.parse(request.responseText).user
 
   @hasLoggedIn: (event) =>
-    if event.origin != 'https://' + CarnivalOptions.host
+    if event.origin != '%{root}'
       return
     @loginWindow.close()
     @getUser()
@@ -85,7 +85,7 @@ class Carnival
     left = (screen.width/2)-(width/2)
     top = (screen.height/2)-(height/2)
     @loginWindow = window.open(
-      'https://' + CarnivalOptions.host + '/auth/page/github/forward',
+      '@{AuthR $ PluginR "github" ["forward"]}',
       'carnivalLogin',
       'height='+height+',width='+width+',top='+top+',left='+left+',menubar=no'
     )
