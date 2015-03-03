@@ -1,3 +1,11 @@
+Site
+    name Text
+    baseUrl Text
+    rssAuthor Text
+    rssTitle Text
+    rssDescription Html
+    rssLanguage Text
+
 User
     name Text
     email Text

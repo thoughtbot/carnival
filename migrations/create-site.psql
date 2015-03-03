@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS site (
+  id                    SERIAL PRIMARY KEY UNIQUE,
+  name                  VARCHAR NOT NULL,
+  base_url              VARCHAR NOT NULL,
+  rss_author            VARCHAR NOT NULL,
+  rss_title             VARCHAR NOT NULL,
+  rss_description       VARCHAR NOT NULL,
+  rss_language          VARCHAR NOT NULL
+);
