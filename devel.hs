@@ -1,7 +1,7 @@
 {-# LANGUAGE PackageImports #-}
 import "carnival" Application (getApplicationDev)
 import Network.Wai.Handler.Warp
-    (runSettings, defaultSettings, settingsPort)
+    (runSettings, defaultSettings, setPort)
 import System.Directory (doesFileExist, removeFile)
 import System.Exit (exitSuccess)
 import Control.Concurrent (threadDelay, forkIO)
@@ -10,9 +10,7 @@ main :: IO ()
 main = do
     putStrLn "Starting devel application"
     (port, app) <- getApplicationDev
-    forkIO $ runSettings defaultSettings
-        { settingsPort = port
-        } app
+    forkIO $ runSettings (setPort port $ defaultSettings) app
     loop
 
 loop :: IO ()
