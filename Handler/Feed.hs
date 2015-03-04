@@ -36,17 +36,19 @@ feedFromComments (Entity siteId site) comments = do
 
     where
         getCommentCreated :: UserComment -> UTCTime
-        getCommentCreated (UserComment (Entity _ c) _) =
-            commentCreated c
+        getCommentCreated = commentCreated . entityVal . userCommentComment
 
 commentToRssEntry :: Site -> UserComment -> Handler (FeedEntry Text)
-commentToRssEntry site (UserComment (Entity _ c) (Entity _ u)) =
-    return FeedEntry
-        { feedEntryLink = siteBaseUrl site <> commentArticleURL c
-        , feedEntryUpdated = commentCreated c
-        , feedEntryTitle = "New comment from "
-            <> userName u
-            <> " on " <> commentArticleTitle c
-            <> " by " <> commentArticleAuthor c
-        , feedEntryContent = toMarkup $ commentBody c
-        }
+commentToRssEntry site userComment = return FeedEntry
+    { feedEntryLink = siteBaseUrl site <> commentArticleURL comment
+    , feedEntryUpdated = commentCreated comment
+    , feedEntryTitle = "New comment from "
+        <> userName user
+        <> " on " <> commentArticleTitle comment
+        <> " by " <> commentArticleAuthor comment
+    , feedEntryContent = toMarkup $ commentBody comment
+    }
+
+  where
+    comment = entityVal $ userCommentComment userComment
+    user = entityVal $ userCommentUser userComment

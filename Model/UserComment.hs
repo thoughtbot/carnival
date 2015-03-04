@@ -8,20 +8,37 @@ import Control.Monad (forM)
 import Data.List (find)
 import Data.Maybe (catMaybes)
 
-data UserComment = UserComment (Entity Comment) (Entity User)
+data UserComment = UserComment
+    { userCommentComment :: Entity Comment
+    , userCommentUser :: Entity User
+    }
 
 instance ToJSON UserComment where
-    toJSON (UserComment (Entity cid c) (Entity _ u)) = object
-        [ "id" .= (String $ toPathPiece cid)
-        , "user_id" .= String (toPathPiece $ commentUser c)
-        , "user_name" .= userName u
-        , "gravatar_url" .= userGravatar u
-        , "article_url" .= commentArticleURL c
-        , "article_title" .= commentArticleTitle c
-        , "thread" .= commentThread c
-        , "body" .= unMarkdown (commentBody c)
-        , "body_html" .= String (renderMarkdown c)
+    toJSON userComment = object
+        [ "id" .= (String $ toPathPiece commentId)
+        , "user_id" .= String (toPathPiece $ commentUser comment)
+        , "user_name" .= userName user
+        , "gravatar_url" .= userGravatar user
+        , "article_url" .= commentArticleURL comment
+        , "article_title" .= commentArticleTitle comment
+        , "thread" .= commentThread comment
+        , "body" .= unMarkdown (commentBody comment)
+        , "body_html" .= String (renderMarkdown comment)
         ]
+
+      where
+        comment = entityVal ecomment
+        commentId = entityKey ecomment
+        ecomment = userCommentComment userComment
+        user = entityVal $ userCommentUser userComment
+
+-- Note: lives in DB b/c we will soon take a SiteId and lookup the Site
+buildUserComment :: Entity Comment -> Entity User -> DB UserComment
+buildUserComment ecomment euser =
+    return UserComment
+        { userCommentComment = ecomment
+        , userCommentUser = euser
+        }
 
 findUserComments :: SiteId -> Maybe Text -> DB [UserComment]
 findUserComments siteId marticle = do
@@ -46,4 +63,4 @@ selectWithUsers filters options = do
         let userId = commentUser $ entityVal c
             muser = find ((== userId) . entityKey) users
 
-        return $ fmap (UserComment c) muser
+        maybe (return Nothing) (fmap Just . buildUserComment c) muser

@@ -49,10 +49,11 @@ postCommentsR siteId = do
     c <- fmap (buildComment t u siteId) requireJsonBody
 
     runValidation validateComment c $ \v -> do
-        cid <- runDB $ insert v
+        userComment <- runDB $ do
+            commentId <- insert v
+            buildUserComment (Entity commentId v) u
 
-        let userComment = UserComment (Entity cid v) u
-            notification = NewComment userComment
+        let notification = NewComment userComment
 
         runDB $ subscribe (notificationName notification) $ entityKey u
 
@@ -73,10 +74,11 @@ putCommentR siteId commentId = do
     c' <- fmap (buildComment (commentCreated c) u siteId) requireJsonBody
 
     runValidation validateComment c' $ \v -> do
-        runDB $ replace commentId v
+        userComment <- runDB $ do
+            replace commentId v
+            buildUserComment (Entity commentId v) u
 
-        sendResponseStatus status200 $ object
-            ["comment" .= UserComment (Entity commentId v) u]
+        sendResponseStatus status200 $ object ["comment" .= userComment]
 
 deleteCommentR :: SiteId -> CommentId -> Handler ()
 deleteCommentR _ commentId = do

@@ -42,6 +42,7 @@ import Yesod.Test as X
 -- Test helpers
 import TestHelpers.DB as X
 import TestHelpers.Request as X
+import TestHelpers.Response as X
 import TestHelpers.Assertions as X
 import TestHelpers.Auth as X
 

@@ -80,7 +80,7 @@ createNotification :: SiteId -> Text -> Text -> Entity User -> Example Notificat
 createNotification siteId article thread u = do
     c <- createComment (entityKey u) siteId article thread ""
 
-    return $ NewComment $ UserComment c u
+    fmap NewComment $ runDB $ buildUserComment c u
 
 subscribeUser :: SiteId -> Text -> Text -> Entity User -> Example ()
 subscribeUser siteId article thread eu = do

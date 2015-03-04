@@ -30,10 +30,12 @@ data Recipient = Recipient
     deriving (Eq, Show)
 
 notificationUser :: Notification -> User
-notificationUser (NewComment (UserComment _ (Entity _ u))) = u
+notificationUser (NewComment userComment) =
+    entityVal $ userCommentUser userComment
 
 notificationComment :: Notification -> Comment
-notificationComment (NewComment (UserComment (Entity _ c) _)) = c
+notificationComment (NewComment userComment) =
+    entityVal $ userCommentComment userComment
 
 recipientAddress :: Recipient -> Address
 recipientAddress r =
