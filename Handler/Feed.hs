@@ -12,7 +12,7 @@ import Yesod.RssFeed
 getFeedR :: SiteId -> Handler RepRss
 getFeedR siteId = do
     site <- runDB $ get404 siteId
-    comments <- runDB findRecentUserComments
+    comments <- runDB $ findRecentUserComments siteId
 
     when (null comments) notFound
 
@@ -20,7 +20,7 @@ getFeedR siteId = do
 
 feedFromComments :: Entity Site -> [UserComment] -> Handler RepRss
 feedFromComments (Entity siteId site) comments = do
-    entries <- mapM (commentToRssEntry site) comments
+    entries <- mapM commentToRssEntry comments
     render <- getUrlRender
 
     rssFeedText Feed
@@ -38,8 +38,8 @@ feedFromComments (Entity siteId site) comments = do
         getCommentCreated :: UserComment -> UTCTime
         getCommentCreated = commentCreated . entityVal . userCommentComment
 
-commentToRssEntry :: Site -> UserComment -> Handler (FeedEntry Text)
-commentToRssEntry site userComment = return FeedEntry
+commentToRssEntry :: UserComment -> Handler (FeedEntry Text)
+commentToRssEntry userComment = return FeedEntry
     { feedEntryLink = siteBaseUrl site <> commentArticleURL comment
     , feedEntryUpdated = commentCreated comment
     , feedEntryTitle = "New comment from "
@@ -51,4 +51,5 @@ commentToRssEntry site userComment = return FeedEntry
 
   where
     comment = entityVal $ userCommentComment userComment
+    site = entityVal $ userCommentSite userComment
     user = entityVal $ userCommentUser userComment

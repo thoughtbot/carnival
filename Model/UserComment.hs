@@ -9,7 +9,8 @@ import Data.List (find)
 import Data.Maybe (catMaybes)
 
 data UserComment = UserComment
-    { userCommentComment :: Entity Comment
+    { userCommentSite :: Entity Site
+    , userCommentComment :: Entity Comment
     , userCommentUser :: Entity User
     }
 
@@ -32,11 +33,13 @@ instance ToJSON UserComment where
         ecomment = userCommentComment userComment
         user = entityVal $ userCommentUser userComment
 
--- Note: lives in DB b/c we will soon take a SiteId and lookup the Site
-buildUserComment :: Entity Comment -> Entity User -> DB UserComment
-buildUserComment ecomment euser =
+buildUserComment :: SiteId -> Entity Comment -> Entity User -> DB UserComment
+buildUserComment siteId ecomment euser = do
+    site <- get404 siteId
+
     return UserComment
-        { userCommentComment = ecomment
+        { userCommentSite = Entity siteId site
+        , userCommentComment = ecomment
         , userCommentUser = euser
         }
 
@@ -47,13 +50,17 @@ findUserComments siteId marticle = do
             , fmap (CommentArticleURL ==.) marticle
             ]
 
-    selectWithUsers filters []
+    selectWithUsers siteId filters []
 
-findRecentUserComments :: DB [UserComment]
-findRecentUserComments = selectWithUsers [] [Desc CommentCreated, LimitTo 20]
+findRecentUserComments :: SiteId -> DB [UserComment]
+findRecentUserComments siteId =
+    selectWithUsers siteId [] [Desc CommentCreated, LimitTo 20]
 
-selectWithUsers :: [Filter Comment] -> [SelectOpt Comment] -> DB [UserComment]
-selectWithUsers filters options = do
+selectWithUsers :: SiteId
+                -> [Filter Comment]
+                -> [SelectOpt Comment]
+                -> DB [UserComment]
+selectWithUsers siteId filters options = do
     comments <- selectList filters options
     users <- selectList
         [ UserId <-. map (commentUser . entityVal) comments
@@ -63,4 +70,4 @@ selectWithUsers filters options = do
         let userId = commentUser $ entityVal c
             muser = find ((== userId) . entityKey) users
 
-        maybe (return Nothing) (fmap Just . buildUserComment c) muser
+        maybe (return Nothing) (fmap Just . buildUserComment siteId c) muser

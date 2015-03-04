@@ -17,7 +17,6 @@ import SendMail
 import Control.Monad ((<=<), forM)
 import Data.List (find)
 import Data.Maybe (catMaybes)
-import Data.Text.Lazy (fromStrict)
 import Data.Text.Lazy.Builder (toLazyText)
 import Network.Mail.Mime (simpleMail')
 
@@ -32,6 +31,10 @@ data Recipient = Recipient
 notificationUser :: Notification -> User
 notificationUser (NewComment userComment) =
     entityVal $ userCommentUser userComment
+
+notificationSite :: Notification -> Site
+notificationSite (NewComment userComment) =
+    entityVal $ userCommentSite userComment
 
 notificationComment :: Notification -> Comment
 notificationComment (NewComment userComment) =
@@ -75,7 +78,8 @@ notificationToMail n r = do
     let c = notificationComment n
         subject = "New comment on " <> commentArticleTitle c
         comment = unMarkdown $ commentBody c
-        articleUrl = fromStrict $ commentArticleURL c
+        baseUrl = siteBaseUrl $ notificationSite n
+        articleUrl = commentArticleURL c
         unsubscribeRoute = UnsubscribeR $ recipientToken r
 
     body <- toLazyText <$> withUrlRenderer $(textFile "mail/new_comment")

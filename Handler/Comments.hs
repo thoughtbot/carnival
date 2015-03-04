@@ -11,7 +11,7 @@ import Helper.Auth
 import Helper.Request
 import Helper.Validation
 
-import Control.Monad (mzero, void)
+import Control.Monad (mzero)
 import Text.Markdown
 
 import qualified Data.Text.Lazy as TL
@@ -42,8 +42,6 @@ postCommentsR :: SiteId -> Handler Value
 postCommentsR siteId = do
     allowCrossOrigin
 
-    void $ runDB $ get404 siteId
-
     u <- requireAuth_
     t <- liftIO getCurrentTime
     c <- fmap (buildComment t u siteId) requireJsonBody
@@ -51,7 +49,7 @@ postCommentsR siteId = do
     runValidation validateComment c $ \v -> do
         userComment <- runDB $ do
             commentId <- insert v
-            buildUserComment (Entity commentId v) u
+            buildUserComment siteId (Entity commentId v) u
 
         let notification = NewComment userComment
 
@@ -64,8 +62,6 @@ putCommentR :: SiteId -> CommentId -> Handler Value
 putCommentR siteId commentId = do
     allowCrossOrigin
 
-    void $ runDB $ get404 siteId
-
     u <- requireAuth_
     c <- runDB $ get404 commentId
 
@@ -76,7 +72,7 @@ putCommentR siteId commentId = do
     runValidation validateComment c' $ \v -> do
         userComment <- runDB $ do
             replace commentId v
-            buildUserComment (Entity commentId v) u
+            buildUserComment siteId (Entity commentId v) u
 
         sendResponseStatus status200 $ object ["comment" .= userComment]
 

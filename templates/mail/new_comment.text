@@ -1,5 +1,5 @@
 #{comment}
 
 -- 
-View this comment: https://robots.thoughtbot.com/#{articleUrl}
+View this comment: #{baseUrl}/#{articleUrl}
 Unsubscribe: @{unsubscribeRoute}

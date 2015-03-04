@@ -14,9 +14,12 @@ import Data.Aeson (Value, object, (.=))
 import Database.Persist
 import Yesod.Test
 
-commentsResponse :: Entity User -> [Entity Comment] -> YesodExample App Value
-commentsResponse user comments = runDB $ do
+commentsResponse :: SiteId
+                 -> Entity User
+                 -> [Entity Comment]
+                 -> YesodExample App Value
+commentsResponse siteId user comments = runDB $ do
     userComments <- forM comments $ \comment ->
-        buildUserComment comment user
+        buildUserComment siteId comment user
 
     return $ object ["comments" .= userComments]
