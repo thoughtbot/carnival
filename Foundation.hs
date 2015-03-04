@@ -57,6 +57,9 @@ instance Yesod App where
     makeSessionBackend _ = fmap Just $ envClientSessionBackend 120 "SESSION_KEY"
 
     defaultLayout widget = do
+        master <- getYesod
+        mmsg <- getMessage
+
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
         -- default-layout-wrapper is the entire page. Since the final
@@ -113,6 +116,12 @@ embedLayout widget = do
     pc <- widgetToPageContent widget
     withUrlRenderer $(hamletFile "templates/embed-layout-wrapper.hamlet")
 
+embedExample :: Maybe SiteId -> Widget
+embedExample msiteId = do
+    root <- fmap (appRoot . settings) getYesod
+
+    $(widgetFile "embed-example")
+
 -- How to run database actions.
 instance YesodPersist App where
     type YesodPersistBackend App = SqlBackend
@@ -124,10 +133,10 @@ instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
-    loginDest _ = SessionR
+    loginDest _ = RootR
 
     -- Where to send a user after logout
-    logoutDest _ = SessionR
+    logoutDest _ = RootR
 
     getAuthId creds = runDB $ do
         muser <- getBy $ UniqueUser (credsPlugin creds) (credsIdent creds)

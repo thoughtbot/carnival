@@ -14,6 +14,11 @@ User
     UniqueUser plugin ident
     deriving Eq Show Typeable
 
+Membership
+    site SiteId
+    user UserId
+    UniqueMembership site user
+
 Comment
     user UserId
     site SiteId default=1

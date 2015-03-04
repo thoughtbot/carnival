@@ -1,0 +1,17 @@
+<h1>#{siteName site}
+
+<p>
+  <a href=@{SitesR}>&larr; Back to sites
+
+<p>
+  Embeddable with the following JavaScript:
+
+^{embedExample $ Just siteId}
+
+<div #edit-site>
+  <form method=post action=@{SiteR siteId} enctype=#{enctype}>
+    ^{widget}
+    <button>Update
+
+<p>
+  <a href=@{DeleteSiteR siteId}>Delete

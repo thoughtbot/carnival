@@ -1,8 +1,13 @@
 $doctype 5
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>#{pageTitle pc}
-        ^{pageHead pc}
-    <body>
-        ^{pageBody pc}
+  <head>
+    <meta charset="UTF-8">
+    <title>#{pageTitle pc}
+    ^{pageHead pc}
+  <body>
+    <div .container>
+      ^{pageBody pc}
+      <footer>
+        <p>
+          #{extraCopyright $ appExtra $ settings master} -
+          <a href="https://github.com/thoughtbot/carnival">source

@@ -2,13 +2,16 @@ module Helper.Auth
     ( requireAuth_
     , requireAuthId_
     , requireOwnComment
+    , requireMemberSite
     , module Yesod.Auth
     ) where
 
 import Import
-import Yesod.Auth
+import Model.Site
+import Helper.Request
 
 import Control.Monad (when)
+import Yesod.Auth
 
 -- | Like @'requireAuth'@ except that it may respond
 --   @'notAuthenticated'@ instead of redirecting to login.
@@ -26,6 +29,11 @@ requireOwnComment comment userId = do
 
     when (userId /= commentUserId) $
         permissionDenied "Action only appropriate for your own comments"
+
+requireMemberSite :: SiteId -> Handler Site
+requireMemberSite siteId = do
+    userId <- requireAuthId
+    fromMaybe404 $ runDB $ findMemberSite siteId userId
 
 -- N.B. This should be equivalent to liftM fromMaybe, but that form is
 -- evaluating the first argument regardless of the second's Just-ness,

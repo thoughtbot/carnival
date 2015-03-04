@@ -4,6 +4,10 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
+/sites SitesR GET POST
+/sites/#SiteId SiteR GET POST
+/sites/#SiteId/delete DeleteSiteR GET POST
+
 /sites/#SiteId/init.js InitR GET
 /sites/#SiteId/embed EmbedR GET
 /sites/#SiteId/feed FeedR GET
@@ -11,6 +15,6 @@
 /sites/#SiteId/comments CommentsR GET POST OPTIONS
 /sites/#SiteId/comments/#CommentId CommentR PUT DELETE
 
-/session SessionR GET
+/ RootR GET
 /user UserR GET
 /unsubscribe/#Token UnsubscribeR GET

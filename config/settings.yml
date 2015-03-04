@@ -2,7 +2,7 @@ Default: &defaults
   host: "*4" # any IPv4 host
   port: 3000
   approot: "http://localhost:3000"
-  copyright: "thoughtbot, inc. 2014"
+  copyright: "thoughtbot, inc. 2015"
   #analytics: UA-YOURCODE
 
 Development:

@@ -22,6 +22,7 @@ library
                      Model.Subscription
                      Model.User
                      Model.UserComment
+                     Model.Site
                      Settings
                      Settings.StaticFiles
                      Settings.Development
@@ -30,13 +31,14 @@ library
                      Helper.Auth
                      Helper.Request
                      Helper.Validation
-                     Handler.Session
+                     Handler.Root
                      Handler.Comments
                      Handler.Init
                      Handler.Embed
                      Handler.User
                      Handler.Feed
                      Handler.Unsubscribe
+                     Handler.Sites
                      Network.Mail.SendGrid
                      Network.Mail.RecipientOverride
 

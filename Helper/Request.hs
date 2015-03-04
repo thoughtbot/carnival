@@ -1,4 +1,7 @@
-module Helper.Request (allowCrossOrigin) where
+module Helper.Request
+    ( allowCrossOrigin
+    , fromMaybe404
+    ) where
 
 import Import
 import Network.HTTP.Types (HeaderName)
@@ -22,3 +25,6 @@ allowCrossOrigin = do
 
     addHeader "Access-Control-Allow-Methods" "POST, GET, OPTIONS"
     addHeader "Access-Control-Allow-Credentials" "true"
+
+fromMaybe404 :: Handler (Maybe a) -> Handler a
+fromMaybe404 f = maybe notFound return =<< f
