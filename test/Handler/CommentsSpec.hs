@@ -41,7 +41,6 @@ spec = withApp $ do
 
             statusIs 401
 
-
         it "allows commenting by authenticated users" $ do
             u <- createUser "1"
             Entity siteId _ <- createSite
