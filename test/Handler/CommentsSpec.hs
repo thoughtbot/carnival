@@ -33,6 +33,30 @@ spec = withApp $ do
                                , UserComment c2 u
                                ]]
 
+        it "returns comments for the correct site" $ do
+            Entity sid1 _ <- createSite
+            Entity sid2 _ <- createSite
+
+            u <- createUser "1"
+            c1 <- createComment (entityKey u) sid1 "1" "1" "1"
+            c2 <- createComment (entityKey u) sid2 "1" "1" "1"
+            c3 <- createComment (entityKey u) sid1 "1" "1" "2"
+            c4 <- createComment (entityKey u) sid2 "1" "1" "2"
+
+            get $ CommentsR sid1
+
+            valueEquals $ object
+                ["comments" .= [ UserComment c1 u
+                               , UserComment c3 u
+                               ]]
+
+            get $ CommentsR sid2
+
+            valueEquals $ object
+                ["comments" .= [ UserComment c2 u
+                               , UserComment c4 u
+                               ]]
+
     describe "POST CommentsR" $ do
         it "does not allow unauthenticated commenting" $ do
             Entity siteId _ <- createSite

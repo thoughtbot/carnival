@@ -92,11 +92,11 @@ deleteCommentR _ commentId = do
     sendResponseStatus status200 ("DELETED" :: Text)
 
 getCommentsR :: SiteId -> Handler Value
-getCommentsR _ = do
+getCommentsR siteId = do
     allowCrossOrigin
 
     marticle <- lookupGetParam "article"
-    comments <- runDB $ findUserComments marticle
+    comments <- runDB $ findUserComments siteId marticle
 
     return $ object ["comments" .= comments]
 

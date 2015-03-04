@@ -6,7 +6,7 @@ import Model.User
 
 import Control.Monad (forM)
 import Data.List (find)
-import Data.Maybe (catMaybes, maybeToList)
+import Data.Maybe (catMaybes)
 
 data UserComment = UserComment (Entity Comment) (Entity User)
 
@@ -23,9 +23,12 @@ instance ToJSON UserComment where
         , "body_html" .= String (renderMarkdown c)
         ]
 
-findUserComments :: Maybe Text -> DB [UserComment]
-findUserComments marticle = do
-    let filters = maybeToList $ fmap (CommentArticleURL ==.) marticle
+findUserComments :: SiteId -> Maybe Text -> DB [UserComment]
+findUserComments siteId marticle = do
+    let filters = catMaybes
+            [ Just $ CommentSite ==. siteId
+            , fmap (CommentArticleURL ==.) marticle
+            ]
 
     selectWithUsers filters []
 
