@@ -3,6 +3,7 @@
 module TestHelpers.DB
     ( runDB
     , runDBWithApp
+    , buildSite
     , createSite
     , createUser
     , createComment
@@ -38,16 +39,18 @@ runDB query = do
 runDBWithApp :: App -> SqlPersistM a -> IO a
 runDBWithApp app query = runSqlPersistMPool query (connPool app)
 
+buildSite :: Site
+buildSite = Site
+    { siteName = "site-name"
+    , siteBaseUrl = "http://localhost:4000"
+    , siteRssAuthor = "Rss Author"
+    , siteRssTitle = "Rss Feed"
+    , siteRssDescription = "Rss Feed"
+    , siteRssLanguage = "en-us"
+    }
+
 createSite :: Example (Entity Site)
-createSite =
-    insertEntity Site
-        { siteName = "site-name"
-        , siteBaseUrl = "http://localhost:4000"
-        , siteRssAuthor = "Rss Author"
-        , siteRssTitle = "Rss Feed"
-        , siteRssDescription = "Rss Feed"
-        , siteRssLanguage = "en-us"
-        }
+createSite = insertEntity buildSite
 
 createUser :: Text -> Example (Entity User)
 createUser ident =
