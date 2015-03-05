@@ -5,6 +5,8 @@ import Model.Site
 import Helper.Auth
 
 import Control.Monad (void)
+import Yesod.Default.Config
+import Yesod.Form.Bootstrap3
 
 getSitesR :: Handler Html
 getSitesR = do
@@ -25,9 +27,9 @@ postSitesR = do
     ((result, widget), enctype) <- runFormPost $ siteForm Nothing
 
     onFormSuccess result $ \site -> do
-        void $ runDB $ createSite userId site
+        Entity siteId _ <- runDB $ createSite userId site
         setMessage "Site created!"
-        redirect $ SitesR
+        redirect $ SiteR siteId
 
     sites <- runDB $ findSites userId
 
@@ -75,14 +77,25 @@ postDeleteSiteR siteId = do
     setMessage "Site deleted!"
     redirect SitesR
 
+embedExample :: Maybe SiteId -> Widget
+embedExample msiteId = do
+    root <- fmap (appRoot . settings) getYesod
+
+    $(widgetFile "embed-example")
+
 siteForm :: Maybe Site -> Form Site
-siteForm msite = renderDivs $ Site
-    <$> areq textField "Name" (siteName <$> msite)
-    <*> areq textField "Base URL" (siteBaseUrl <$> msite)
-    <*> areq textField "RSS Author" (siteRssAuthor <$> msite)
-    <*> areq textField "RSS Title" (siteRssTitle <$> msite)
-    <*> areq htmlField "RSS Description" (siteRssDescription <$> msite)
-    <*> areq textField "RSS Language" (siteRssLanguage <$> msite)
+siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
+    <$> areq textField (bfl "Name") (siteName <$> msite)
+    <*> areq textField (bfl "Base URL") (siteBaseUrl <$> msite)
+    <*> areq textField (bfl "RSS Author") (siteRssAuthor <$> msite)
+    <*> areq textField (bfl "RSS Title") (siteRssTitle <$> msite)
+    <*> areq htmlField (bfl "RSS Description") (siteRssDescription <$> msite)
+    <*> areq textField (bfl "RSS Language") (siteRssLanguage <$> msite)
+
+  where
+    -- Used only to disambiguate multiple IsString instances
+    bfl :: Text -> FieldSettings site
+    bfl = bfs
 
 onFormSuccess :: Monad m => FormResult a -> (a -> m ()) -> m ()
 onFormSuccess (FormSuccess x) f = f x

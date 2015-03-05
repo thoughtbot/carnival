@@ -1,27 +1,16 @@
-<h1>Carnival
+<div .jumbotron>
+  <h1>Carnival
 
-<p>
-  A comment service by thoughtbot.
+  <p>
+    A comment service by thoughtbot.
 
-<p>
-  This service is <strong>Beta</strong>. Feel free to try it on your site, but
-  know that there may be bugs and we are not responsible for the loss of any
-  data you create through this service.
+  <p>
+    This service is <strong>Beta</strong>. Feel free to try it on your site, but
+    know that there may be bugs and we are not responsible for the loss of any
+    data you create through this service.
 
-$maybe _ <- muser
-  <a href=@{SitesR}>Manage your Sites
-
-$nothing
-  <h3>Get started
-
-  <ul>
-    <li>
-      <a href=@{AuthR LoginR}>Sign up or Sign in
-
-    <li>
-      <a href=@{SitesR}>Create a Site
-
-    <li>
-      <p>Add JavaScript where you want comments:
-
-      ^{embedExample Nothing}
+  <p>
+    $maybe Entity _ _ <- muser
+      <a .btn.btn-primary.btn-lrg href=@{SitesR}>Get Started
+    $nothing
+      <a .btn.btn-primary.btn-lrg href=@{AuthR LoginR}>Sign in / Sign up

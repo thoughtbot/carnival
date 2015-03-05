@@ -1,19 +1,18 @@
-<h1>All Sites
+<div .col-md-4>
+  <h2>My Sites
 
-<h3>New site
+  $if null sites
+    <p>
+      You don't have any Sites yet!
+  $else
+    <ul>
+      $forall Entity siteId site <- sites
+        <li>
+          <a href=@{SiteR siteId}>#{siteName site}
 
-<div #create-site>
+<div .well.col-md-8>
+  <h3>Create a new site
+
   <form method=post action=@{SitesR} enctype=#{enctype}>
     ^{widget}
-    <button>Create
-
-<h3>Existing sites
-
-$if null sites
-  <p>
-    You don't have any Sites yet!
-$else
-  <ul #sites>
-    $forall Entity siteId site <- sites
-      <li>
-        <a href=@{SiteR siteId}>#{siteName site}
+    <button type="submit" .btn.btn-primary>Create

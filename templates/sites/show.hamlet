@@ -1,17 +1,17 @@
-<h1>#{siteName site}
+<div .page-header>
+  <a .btn.btn-danger.pull-right href=@{DeleteSiteR siteId}>Delete
+  <h1>#{siteName site}
 
-<p>
-  <a href=@{SitesR}>&larr; Back to sites
+<h2>Modify site properties:
 
-<p>
-  Embeddable with the following JavaScript:
+<div .well.col-md-8>
+  <form role=form method=post action=@{SiteR siteId} enctype=#{enctype}>
+    ^{widget}
+    <button type="submit" .btn.btn-default>Update
+
+<div .clearfix>
+
+<h2>
+  Embed with the following JavaScript:
 
 ^{embedExample $ Just siteId}
-
-<div #edit-site>
-  <form method=post action=@{SiteR siteId} enctype=#{enctype}>
-    ^{widget}
-    <button>Update
-
-<p>
-  <a href=@{DeleteSiteR siteId}>Delete

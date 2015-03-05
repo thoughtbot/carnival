@@ -59,6 +59,7 @@ instance Yesod App where
     defaultLayout widget = do
         master <- getYesod
         mmsg <- getMessage
+        muser <- maybeAuth
 
         -- We break up the default layout into two components:
         -- default-layout is the contents of the body tag, and
@@ -115,12 +116,6 @@ embedLayout widget = do
 
     pc <- widgetToPageContent widget
     withUrlRenderer $(hamletFile "templates/embed-layout-wrapper.hamlet")
-
-embedExample :: Maybe SiteId -> Widget
-embedExample msiteId = do
-    root <- fmap (appRoot . settings) getYesod
-
-    $(widgetFile "embed-example")
 
 -- How to run database actions.
 instance YesodPersist App where

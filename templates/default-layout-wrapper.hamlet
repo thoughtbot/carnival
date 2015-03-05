@@ -5,9 +5,23 @@ $doctype 5
     <title>#{pageTitle pc}
     ^{pageHead pc}
   <body>
+    <nav .navbar.navbar-inverse>
+      <div .container>
+        <div .navbar-header>
+          <a .navbar-brand href=@{RootR}>Carnival
+
+        <div .navbar-form .navbar-right>
+          $maybe Entity _ _ <- muser
+            <a .btn.btn-primary href=@{SitesR}>My sites
+            <a .btn.btn-default href=@{AuthR LogoutR}>Log out
+          $nothing
+            <a .btn.btn-default href=@{AuthR LoginR}>Sign in / Sign up
+
+    ^{pageBody pc}
+
     <div .container>
-      ^{pageBody pc}
+      <hr>
       <footer>
         <p>
-          #{extraCopyright $ appExtra $ settings master} -
+          © #{extraCopyright $ appExtra $ settings master} -
           <a href="https://github.com/thoughtbot/carnival">source

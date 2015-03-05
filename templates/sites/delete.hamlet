@@ -1,14 +1,10 @@
-<h1>Delete #{siteName site}?
+<div .page-header>
+  <h1>Delete #{siteName site}?
 
 <p>
-  This will delete <strong>all</strong> data associated with this Site.
-
-<p>
-  This action cannot be undone!
-
-<p>
-  <a href=@{SiteR siteId}>No, go back!
+  This action <strong>cannot be undone</strong> and will delete
+  <strong>all data</strong> associated with #{siteName site}.
 
 <form method=post action=@{DeleteSiteR siteId}>
-  $# TODO: input/js to confirm name like GitHub/Heroku
-  <button .delete>Yes, do it!
+  <button .btn.btn-danger type="submit">Yes, do it!
+  <a .btn.btn-default href=@{SiteR siteId}>No, go back!
