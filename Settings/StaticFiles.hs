@@ -1,6 +1,6 @@
 module Settings.StaticFiles where
 
-import Prelude (IO)
+import Prelude (Bool(..), IO)
 import Yesod.Static
 import qualified Yesod.Static as Static
 import Settings (staticDir)
@@ -29,7 +29,7 @@ combineSettings = def
 -- > $(combineStylesheets 'StaticR [style1_css, style2_css])
 
 combineStylesheets :: Name -> [Route Static] -> Q Exp
-combineStylesheets = combineStylesheets' development combineSettings
+combineStylesheets = combineStylesheets' False combineSettings
 
 combineScripts :: Name -> [Route Static] -> Q Exp
 combineScripts = combineScripts' development combineSettings
