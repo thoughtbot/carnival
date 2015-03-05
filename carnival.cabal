@@ -32,6 +32,7 @@ library
                      Helper.Validation
                      Handler.Session
                      Handler.Comments
+                     Handler.Init
                      Handler.Embed
                      Handler.User
                      Handler.Feed

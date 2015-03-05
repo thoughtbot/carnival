@@ -4,6 +4,7 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
+/sites/#SiteId/init.js InitR GET
 /sites/#SiteId/embed EmbedR GET
 /sites/#SiteId/feed FeedR GET
 

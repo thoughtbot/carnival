@@ -1,21 +1,9 @@
 class Carnival
   constructor: () ->
-    @setOptionsFromDefaults()
     if(CarnivalOptions.enabled)
       @elements = document.querySelectorAll(CarnivalOptions.article_selector)
       @articles = [].slice.call(@elements).map (articleElement) ->
         new Article(articleElement)
-
-  @defaults:
-    article_selector: 'article'
-    block_selector: ':scope > p, :scope > pre'
-    enabled: true
-    onNewComment: (comment) ->
-
-  setOptionsFromDefaults: ->
-    for property of Carnival.defaults
-      unless property of CarnivalOptions
-        CarnivalOptions[property] = Carnival.defaults[property]
 
   @hasClass: (elem, className) ->
     new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ')
