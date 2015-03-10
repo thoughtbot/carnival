@@ -2,7 +2,6 @@
 module Handler.CommentsSpec where
 
 import TestHelper
-import qualified Database.Persist as DB
 
 main :: IO ()
 main = hspec spec
@@ -94,52 +93,3 @@ spec = withApp $ do
                 ]
 
             statusIs 400
-
-    describe "PUT CommentR" $ do
-        it "only allows manipulating your own comments" $ do
-            u1 <- createUser "1"
-            u2 <- createUser "2"
-            Entity siteId _ <- createSite
-            Entity cid1 _ <- createComment (entityKey u1) siteId "1" "1" "1"
-            Entity cid2 _ <- createComment (entityKey u2) siteId "1" "1" "2"
-
-            authenticateAs u2
-
-            putBody (CommentR siteId cid1) ""
-
-            statusIs 403
-
-            delete $ CommentR siteId cid1
-
-            statusIs 403
-
-            putBody (CommentR siteId cid2) $ encode $ object
-                [ "thread" .= ("new thread" :: Text)
-                , "article_title" .= ("new title" :: Text)
-                , "article_author" .= ("John Smith" :: Text)
-                , "article_url" .= ("new article" :: Text)
-                , "body" .= ("new body" :: Text)
-                ]
-
-            statusIs 200
-
-    describe "DELETE CommentR" $ do
-        it "only allows deleting your own comments" $ do
-            u1 <- createUser "1"
-            u2 <- createUser "2"
-            Entity siteId _ <- createSite
-            Entity cid1 _ <- createComment (entityKey u1) siteId "1" "1" "1"
-            Entity cid2 _ <- createComment (entityKey u2) siteId "1" "1" "2"
-
-            authenticateAs u2
-
-            delete $ CommentR siteId cid1
-
-            statusIs 403
-
-            delete $ CommentR siteId cid2
-
-            statusIs 200
-
-            mc <- runDB $ DB.get cid2
-            assertEqual' mc Nothing

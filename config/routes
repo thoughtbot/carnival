@@ -13,7 +13,6 @@
 /sites/#SiteId/feed FeedR GET
 
 /sites/#SiteId/comments CommentsR GET POST OPTIONS
-/sites/#SiteId/comments/#CommentId CommentR PUT DELETE
 
 / RootR GET
 /user UserR GET

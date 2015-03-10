@@ -21,7 +21,7 @@ import Control.Monad as X
 import Data.Text as X (Text)
 import Data.Aeson as X
 import Data.Monoid as X
-import Database.Persist as X hiding (get, delete)
+import Database.Persist as X hiding (get)
 
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Reader (ReaderT, ask)

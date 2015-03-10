@@ -58,37 +58,6 @@ postCommentsR siteId = do
         sendNotification notification
         sendResponseStatus status201 $ object ["comment" .= userComment]
 
-putCommentR :: SiteId -> CommentId -> Handler Value
-putCommentR siteId commentId = do
-    allowCrossOrigin
-
-    u <- requireAuth_
-    c <- runDB $ get404 commentId
-
-    requireOwnComment c $ entityKey u
-
-    c' <- fmap (buildComment (commentCreated c) u siteId) requireJsonBody
-
-    runValidation validateComment c' $ \v -> do
-        userComment <- runDB $ do
-            replace commentId v
-            buildUserComment siteId (Entity commentId v) u
-
-        sendResponseStatus status200 $ object ["comment" .= userComment]
-
-deleteCommentR :: SiteId -> CommentId -> Handler ()
-deleteCommentR _ commentId = do
-    allowCrossOrigin
-
-    u <- requireAuth_
-    c <- runDB $ get404 commentId
-
-    requireOwnComment c $ entityKey u
-
-    runDB $ delete commentId
-
-    sendResponseStatus status200 ("DELETED" :: Text)
-
 getCommentsR :: SiteId -> Handler Value
 getCommentsR siteId = do
     allowCrossOrigin

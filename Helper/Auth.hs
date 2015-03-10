@@ -1,7 +1,5 @@
 module Helper.Auth
     ( requireAuth_
-    , requireAuthId_
-    , requireOwnComment
     , requireMemberSite
     , module Yesod.Auth
     ) where
@@ -10,25 +8,12 @@ import Import
 import Model.Site
 import Helper.Request
 
-import Control.Monad (when)
 import Yesod.Auth
 
 -- | Like @'requireAuth'@ except that it may respond
 --   @'notAuthenticated'@ instead of redirecting to login.
 requireAuth_ :: Handler (Entity User)
 requireAuth_ = fromMaybeM notAuthenticated maybeAuth
-
--- | Like @'requireAuthId'@ except that it may respond
---   @'notAuthenticated'@ instead of redirecting to login.
-requireAuthId_ :: Handler UserId
-requireAuthId_ = fromMaybeM notAuthenticated maybeAuthId
-
-requireOwnComment :: Comment -> UserId -> Handler ()
-requireOwnComment comment userId = do
-    let commentUserId = commentUser comment
-
-    when (userId /= commentUserId) $
-        permissionDenied "Action only appropriate for your own comments"
 
 requireMemberSite :: SiteId -> Handler Site
 requireMemberSite siteId = do
