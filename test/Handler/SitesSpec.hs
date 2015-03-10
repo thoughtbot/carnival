@@ -1,7 +1,10 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Handler.SitesSpec where
+module Handler.SitesSpec
+    ( main
+    , spec
+    ) where
 
-import TestHelper hiding (createSite)
+import TestImport
 import Model.Site
 import qualified Database.Persist as DB
 
@@ -12,9 +15,9 @@ spec :: Spec
 spec = withApp $ do
     describe "SitesR" $ do
         it "shows a list of sites for the correct user" $ do
-            user1 <- createUser "1"
-            user2 <- createUser "2"
-            runDB $ mapM_ (createSite $ entityKey user1) $
+            user1 <- runDB $ createUser "1"
+            user2 <- runDB $ createUser "2"
+            runDB $ mapM_ (createSite $ entityKey user1)
                 [ buildSite { siteName = "Site 1" }
                 , buildSite { siteName = "Site 2" }
                 ]
@@ -32,7 +35,7 @@ spec = withApp $ do
             htmlNoneContain "li" "Site 2"
 
         it "allows for creation of a site" $ do
-            user <- createUser "1"
+            user <- runDB $ createUser "1"
             authenticateAs user
 
             postForm SitesR $ do
@@ -46,8 +49,8 @@ spec = withApp $ do
             statusIs 303 -- redirect
 
             Just (Entity siteId site) <- runDB $ selectFirst [] []
-            assertEqual' "test-site" $ siteName site
-            assertEqual' "http://example.com" $ siteBaseUrl site
+            siteName site `shouldBe` "test-site"
+            siteBaseUrl site `shouldBe` "http://example.com"
 
             get $ SiteR siteId
 
@@ -55,7 +58,7 @@ spec = withApp $ do
 
     describe "SiteR" $ do
         it "allows updating the site" $ do
-            user <- createUser "1"
+            user <- runDB $ createUser "1"
             site <- runDB $ createSite (entityKey user) $ buildSite
                 { siteName = "site-name"
                 , siteBaseUrl = "http://example.com"
@@ -74,13 +77,13 @@ spec = withApp $ do
             statusIs 303 -- redirect
 
             Just site' <- runDB $ DB.get $ entityKey site
-            assertEqual' "new-name" $ siteName site'
-            assertEqual' "http://new.example.com" $ siteBaseUrl site'
+            siteName site' `shouldBe` "new-name"
+            siteBaseUrl site' `shouldBe` "http://new.example.com"
 
         it "does not allow access to other users' sites" $ do
-            user1 <- createUser "1"
-            user2 <- createUser "2"
-            site <- runDB $ createSite (entityKey user1) $ buildSite
+            user1 <- runDB $ createUser "1"
+            user2 <- runDB $ createUser "2"
+            site <- runDB $ createSite (entityKey user1) buildSite
 
             authenticateAs user2
             get $ SiteR $ entityKey site

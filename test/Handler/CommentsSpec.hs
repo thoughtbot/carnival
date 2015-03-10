@@ -1,7 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Handler.CommentsSpec where
+module Handler.CommentsSpec
+    ( main
+    , spec
+    ) where
 
-import TestHelper
+import TestImport
+import Model.UserComment
+import Control.Monad (forM)
+import Data.Aeson (Value, (.=), encode, object)
 
 main :: IO ()
 main = hspec spec
@@ -10,12 +16,12 @@ spec :: Spec
 spec = withApp $ do
     describe "GET CommentsR" $ do
         it "returns a list of comments by article" $ do
-            Entity siteId _ <- createSite
+            siteId <- runDB $ insert buildSite
 
-            u <- createUser "1"
-            c1 <- createComment (entityKey u) siteId "1" "1" "1"
-            c2 <- createComment (entityKey u) siteId "1" "2" "2"
-            c3 <- createComment (entityKey u) siteId "2" "1" "3"
+            u <- runDB $ createUser "1"
+            c1 <- runDB $ createComment (entityKey u) siteId "1" "1" "1"
+            c2 <- runDB $ createComment (entityKey u) siteId "1" "2" "2"
+            c3 <- runDB $ createComment (entityKey u) siteId "2" "1" "3"
 
             get $ CommentsR siteId
 
@@ -26,14 +32,14 @@ spec = withApp $ do
             valueEquals =<< commentsResponse siteId u [c1, c2]
 
         it "returns comments for the correct site" $ do
-            Entity sid1 _ <- createSite
-            Entity sid2 _ <- createSite
+            sid1 <- runDB $ insert buildSite
+            sid2 <- runDB $ insert buildSite
 
-            u <- createUser "1"
-            c1 <- createComment (entityKey u) sid1 "1" "1" "1"
-            c2 <- createComment (entityKey u) sid2 "1" "1" "1"
-            c3 <- createComment (entityKey u) sid1 "1" "1" "2"
-            c4 <- createComment (entityKey u) sid2 "1" "1" "2"
+            u <- runDB $ createUser "1"
+            c1 <- runDB $ createComment (entityKey u) sid1 "1" "1" "1"
+            c2 <- runDB $ createComment (entityKey u) sid2 "1" "1" "1"
+            c3 <- runDB $ createComment (entityKey u) sid1 "1" "1" "2"
+            c4 <- runDB $ createComment (entityKey u) sid2 "1" "1" "2"
 
             get $ CommentsR sid1
 
@@ -45,15 +51,15 @@ spec = withApp $ do
 
     describe "POST CommentsR" $ do
         it "does not allow unauthenticated commenting" $ do
-            Entity siteId _ <- createSite
+            siteId <- runDB $ insert buildSite
 
             post $ CommentsR siteId
 
             statusIs 401
 
         it "allows commenting by authenticated users" $ do
-            u <- createUser "1"
-            Entity siteId _ <- createSite
+            u <- runDB $ createUser "1"
+            siteId <- runDB $ insert buildSite
 
             authenticateAs u
 
@@ -72,15 +78,15 @@ spec = withApp $ do
 
             valueEquals $ object ["comment" .= userComment]
 
-            assertEqual' (entityKey u) $ commentUser c
-            assertEqual' "The thread" $ commentThread c
-            assertEqual' "The article title" $ commentArticleTitle c
-            assertEqual' "The article url" $ commentArticleURL c
-            assertEqual' "The body" $ commentBody c
+            commentUser c `shouldBe` entityKey u
+            commentThread c `shouldBe` "The thread"
+            commentArticleTitle c `shouldBe` "The article title"
+            commentArticleURL c `shouldBe` "The article url"
+            commentBody c `shouldBe` "The body"
 
         it "validates against empty comment bodies" $ do
-            u <- createUser "1"
-            Entity siteId _ <- createSite
+            u <- runDB $ createUser "1"
+            siteId <- runDB $ insert buildSite
 
             authenticateAs u
 
@@ -93,3 +99,13 @@ spec = withApp $ do
                 ]
 
             statusIs 400
+
+commentsResponse :: SiteId
+                 -> Entity User
+                 -> [Entity Comment]
+                 -> YesodExample App Value
+commentsResponse siteId user comments = runDB $ do
+    userComments <- forM comments $ \comment ->
+        buildUserComment siteId comment user
+
+    return $ object ["comments" .= userComments]

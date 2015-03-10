@@ -1,12 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
-module TestHelpers.Request
+module Yesod.Test.Extension
     ( getWithParams
     , postForm
+    , valueEquals
+    , module Yesod.Test
     ) where
 
 import Yesod.Test
+import Test.Hspec.Expectations.Lifted
 import Yesod (Yesod, RedirectUrl)
+import Data.Aeson (Value, eitherDecode)
 import Data.Text (Text)
+import Data.ByteString.Lazy (ByteString)
+import Network.Wai.Test (simpleBody)
 
 -- | Perform a GET request with query params present
 getWithParams :: (RedirectUrl site url, Yesod site)
@@ -32,3 +38,16 @@ postForm url fill = do
 
         setMethod "POST"
         setUrl url
+
+-- | Like @bodyEquals@ but taking a @'Value'@ argument and comparing it against
+--   the response body decoded as JSON.
+--
+--   > valueEquals $ object ["comments" .= comments]
+--
+valueEquals :: Value -> YesodExample site ()
+valueEquals v = withResponse $
+    either (const failure) (v `shouldBe`) . eitherDecode . simpleBody
+
+  where
+    failure :: YesodExample site ()
+    failure = expectationFailure "expected JSON response"

@@ -1,6 +1,9 @@
-module Handler.EmbedSpec where
+module Handler.EmbedSpec
+    ( main
+    , spec
+    ) where
 
-import TestHelper
+import TestImport
 
 main :: IO ()
 main = hspec spec
@@ -9,7 +12,7 @@ spec :: Spec
 spec = withApp $
     describe "GET EmbedR" $
         it "renders successfully" $ do
-            Entity siteId _ <- createSite
+            siteId <- runDB $ insert buildSite
 
             get $ EmbedR siteId
 

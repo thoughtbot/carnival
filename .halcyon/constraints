@@ -1,4 +1,6 @@
 HTTP-4000.2.19
+HUnit-1.2.5.2
+QuickCheck-2.7.6
 aeson-0.8.0.2
 ansi-terminal-0.6.2.1
 ansi-wl-pprint-0.6.7.1
@@ -69,6 +71,12 @@ heroku-persistent-0.1.0
 hjsmin-0.1.4.7
 hoauth2-0.4.3
 hourglass-0.2.6
+hspec-2.1.4
+hspec-core-2.1.4
+hspec-discover-2.1.4
+hspec-expectations-0.6.1.1
+hspec-expectations-lifted-0.5.0
+html-conduit-1.1.0.6
 http-client-0.4.6.2
 http-client-tls-0.2.2
 http-conduit-2.1.5
@@ -108,6 +116,7 @@ primitive-0.5.4.0
 process-1.2.0.0
 publicsuffixlist-0.1
 pureMD5-2.1.2.1
+quickcheck-io-0.1.1
 random-1.1
 resourcet-1.1.3.3
 resource-pool-0.2.3.2
@@ -118,6 +127,7 @@ securemem-0.1.4
 semigroups-0.16.0.1
 setenv-0.1.1.1
 shakespeare-2.0.2.1
+shakespeare-text-1.1.0
 silently-1.2.4.1
 simple-sendfile-0.2.18
 skein-1.0.9.2
@@ -135,6 +145,7 @@ tagsoup-0.13.3
 tagstream-conduit-0.5.5.3
 template-haskell-2.9.0.0
 text-1.2.0.3
+tf-random-0.5
 time-1.4.2
 tls-1.2.13
 transformers-0.3.0.0
@@ -171,5 +182,6 @@ yesod-form-1.4.3.1
 yesod-newsfeed-1.4.0.1
 yesod-persistent-1.4.0.2
 yesod-static-1.4.0.4
+yesod-test-1.4.3.1
 yesod-text-markdown-0.1.7
 zlib-0.5.4.2

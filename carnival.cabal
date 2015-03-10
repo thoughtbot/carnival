@@ -147,6 +147,7 @@ test-suite test
                  , monad-logger
                  , transformers
                  , hspec >= 2.0.0
+                 , hspec-expectations-lifted
                  , text
                  , bytestring
                  , shakespeare-text
