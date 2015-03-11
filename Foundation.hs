@@ -19,6 +19,7 @@ import Model
 import Text.Jasmine (minifym)
 import Text.Hamlet (hamletFile)
 import Yesod.Core.Types (Logger)
+import Data.Text (Text)
 import Control.Applicative ((<$>), (<*>), pure)
 
 -- | The site argument for your application. This can be a good place to
@@ -189,3 +190,6 @@ getExtra = fmap (appExtra . settings) getYesod
 -- wiki:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
+
+getAppRoot :: Handler Text
+getAppRoot = fmap (appRoot . settings) getYesod

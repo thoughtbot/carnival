@@ -2,11 +2,9 @@ module Handler.Demo where
 
 import Import
 
-import Yesod.Default.Config
-
 getDemoR :: Handler Html
 getDemoR = do
-    root <- fmap (appRoot . settings) getYesod
+    root <- getAppRoot
     Entity siteId _ <- runDB $ upsert (demoSite root) []
 
     defaultLayout $ do

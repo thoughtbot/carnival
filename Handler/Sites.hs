@@ -5,7 +5,6 @@ import Model.Site
 import Helper.Auth
 
 import Control.Monad (void)
-import Yesod.Default.Config
 import Yesod.Form.Bootstrap3
 
 getSitesR :: Handler Html
@@ -79,7 +78,7 @@ postDeleteSiteR siteId = do
 
 embedExample :: Maybe SiteId -> Widget
 embedExample msiteId = do
-    root <- fmap (appRoot . settings) getYesod
+    root <- handlerToWidget getAppRoot
 
     $(widgetFile "embed-example")
 
