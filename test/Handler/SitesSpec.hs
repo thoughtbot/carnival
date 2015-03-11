@@ -18,8 +18,14 @@ spec = withApp $ do
             user1 <- runDB $ createUser "1"
             user2 <- runDB $ createUser "2"
             runDB $ mapM_ (createSite $ entityKey user1)
-                [ buildSite { siteName = "Site 1" }
-                , buildSite { siteName = "Site 2" }
+                [ buildSite
+                    { siteName = "Site 1"
+                    , siteBaseUrl = "http://ex1.com"
+                    }
+                , buildSite
+                    { siteName = "Site 2"
+                    , siteBaseUrl = "http://ex2.com"
+                    }
                 ]
 
             authenticateAs user1

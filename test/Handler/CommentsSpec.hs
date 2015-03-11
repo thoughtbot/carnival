@@ -32,8 +32,8 @@ spec = withApp $ do
             valueEquals =<< commentsResponse siteId u [c1, c2]
 
         it "returns comments for the correct site" $ do
-            sid1 <- runDB $ insert buildSite
-            sid2 <- runDB $ insert buildSite
+            sid1 <- runDB $ insert buildSite { siteBaseUrl = "http://ex1.com" }
+            sid2 <- runDB $ insert buildSite { siteBaseUrl = "http://ex2.com" }
 
             u <- runDB $ createUser "1"
             c1 <- runDB $ createComment (entityKey u) sid1 "1" "1" "1"
