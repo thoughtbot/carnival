@@ -14,9 +14,11 @@ Flag library-only
     Default:       False
 
 library
+    hs-source-dirs:  ., app
     exposed-modules: Application
                      Foundation
                      Import
+                     Import.NoFoundation
                      Model
                      Model.Comment
                      Model.Subscription
@@ -25,12 +27,7 @@ library
                      Model.Site
                      Settings
                      Settings.StaticFiles
-                     Settings.Development
-                     SendMail
-                     Notification
-                     Helper.Auth
-                     Helper.Request
-                     Helper.Validation
+                     Handler.Common
                      Handler.Root
                      Handler.Comments
                      Handler.Init
@@ -40,6 +37,11 @@ library
                      Handler.Unsubscribe
                      Handler.Sites
                      Handler.Demo
+                     Helper.Auth
+                     Helper.Request
+                     Helper.Validation
+                     SendMail
+                     Notification
                      Network.Mail.SendGrid
                      Network.Mail.RecipientOverride
 
@@ -62,26 +64,31 @@ library
                 EmptyDataDecls
                 NoMonomorphismRestriction
                 DeriveDataTypeable
-                FlexibleInstances
-                StandaloneDeriving
                 ViewPatterns
+                TupleSections
+                RecordWildCards
+
+                FlexibleInstances
                 RankNTypes
 
     build-depends: base                          >= 4          && < 5
-                 , yesod                         >= 1.4.0      && < 1.5
-                 , yesod-core                    >= 1.4.0      && < 1.5
+                 , yesod                         >= 1.4.1      && < 1.5
+                 , yesod-core                    >= 1.4.6      && < 1.5
                  , yesod-auth                    >= 1.4.0      && < 1.5
-                 , yesod-static                  >= 1.4.0      && < 1.5
+                 , yesod-static                  >= 1.4.0.3    && < 1.5
                  , yesod-form                    >= 1.4.0      && < 1.5
+                 , classy-prelude                >= 0.10.2
+                 , classy-prelude-conduit        >= 0.10.2
+                 , classy-prelude-yesod          >= 0.10.2
                  , bytestring                    >= 0.9        && < 0.11
                  , text                          >= 0.11       && < 2.0
                  , persistent                    >= 2.0        && < 2.2
-                 , persistent-postgresql         >= 2.0        && < 2.2
+                 , persistent-postgresql         >= 2.1.1      && < 2.2
                  , persistent-template           >= 2.0        && < 2.2
                  , template-haskell
                  , shakespeare                   >= 2.0        && < 2.1
                  , hjsmin                        >= 0.1        && < 0.2
-                 , monad-control                 >= 0.3        && < 0.4
+                 , monad-control                 >= 0.3        && < 1.1
                  , wai-extra                     >= 3.0        && < 3.1
                  , yaml                          >= 0.8        && < 0.9
                  , http-conduit                  >= 2.1        && < 2.2
@@ -91,33 +98,33 @@ library
                  , aeson                         >= 0.6        && < 0.9
                  , conduit                       >= 1.0        && < 2.0
                  , monad-logger                  >= 0.3        && < 0.4
-                 , fast-logger                   >= 2.2        && < 2.3
+                 , fast-logger                   >= 2.2        && < 2.4
                  , wai-logger                    >= 2.2        && < 2.3
-                 , yesod-auth-oauth2             >= 0.0.4
-                 , http-types
-                 , wai
+                 , file-embed
+                 , safe
+                 , unordered-containers
+                 , containers
+                 , vector
+                 , time
+
+                 , blaze-html
                  , blaze-markup
                  , gravatar
                  , heroku-persistent             >= 0.1.0      && < 0.2
-                 , clientsession                 >= 0.9.1
-                 , time
-                 , yesod-newsfeed                >= 1.2.1
-                 , containers
-                 , blaze-html
-                 , xml-conduit
+                 , http-types
                  , load-env                      >= 0.0.4
                  , markdown
-                 , yesod-text-markdown
-                 , transformers
-                 , mtl
-                 , smtp-mail                     >= 0.1.4.5 && < 0.2
-                 , network
                  , mime-mail
+                 , mtl
+                 , network
                  , random
-
-    -- see https://github.com/yesodweb/yesod/issues/814
-    if !os(windows)
-        build-depends: unix
+                 , smtp-mail                     >= 0.1.4.5 && < 0.2
+                 , transformers
+                 , wai
+                 , xml-conduit
+                 , yesod-auth-oauth2             >= 0.0.4
+                 , yesod-newsfeed                >= 1.2.1
+                 , yesod-text-markdown
 
 executable         carnival
     if flag(library-only)
@@ -125,9 +132,7 @@ executable         carnival
 
     main-is:           main.hs
     hs-source-dirs:    app
-    build-depends:     base
-                     , carnival
-                     , yesod
+    build-depends:     base, carnival
 
     ghc-options:       -threaded -O2 -rtsopts -with-rtsopts=-N
 
@@ -137,9 +142,27 @@ test-suite test
     hs-source-dirs:    test
     ghc-options:       -Wall
 
+    extensions: TemplateHaskell
+                QuasiQuotes
+                OverloadedStrings
+                NoImplicitPrelude
+                CPP
+                MultiParamTypeClasses
+                TypeFamilies
+                GADTs
+                GeneralizedNewtypeDeriving
+                FlexibleContexts
+                EmptyDataDecls
+                NoMonomorphismRestriction
+                DeriveDataTypeable
+                ViewPatterns
+                TupleSections
+
+                RankNTypes
+
     build-depends: base
                  , carnival
-                 , yesod-test >= 1.4 && < 1.5
+                 , yesod-test >= 1.4.3 && < 1.5
                  , yesod-core
                  , yesod
                  , persistent
@@ -148,19 +171,20 @@ test-suite test
                  , monad-logger
                  , transformers
                  , hspec >= 2.0.0
-                 , hspec-expectations-lifted
-                 , text
-                 , bytestring
-                 , shakespeare-text
-                 , containers
-                 , case-insensitive
+                 , classy-prelude
+                 , classy-prelude-yesod
+
                  , aeson
-                 , HUnit
-                 , yesod-auth
-                 , time
+                 , bytestring
+                 , case-insensitive
+                 , containers
+                 , hspec-expectations-lifted
                  , markdown
-                 , html-conduit < 1.1.1
                  , mime-mail
                  , mtl
                  , shakespeare
+                 , shakespeare-text
+                 , text
+                 , time
                  , wai-extra
+                 , yesod-auth

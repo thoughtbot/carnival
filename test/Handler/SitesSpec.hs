@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Handler.SitesSpec
     ( main
     , spec
@@ -17,7 +16,7 @@ spec = withApp $ do
         it "shows a list of sites for the correct user" $ do
             user1 <- runDB $ createUser "1"
             user2 <- runDB $ createUser "2"
-            runDB $ mapM_ (createSite $ entityKey user1)
+            runDB $ mapM_ (createSite_ $ entityKey user1)
                 [ buildSite
                     { siteName = "Site 1"
                     , siteBaseUrl = "http://ex1.com"
@@ -89,3 +88,6 @@ spec = withApp $ do
             get $ SiteR $ entityKey site
 
             statusIs 404
+
+createSite_ :: UserId -> Site -> DB ()
+createSite_ userId = void . createSite userId

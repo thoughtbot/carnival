@@ -4,8 +4,6 @@ module Helper.Request
     ) where
 
 import Import
-import Network.HTTP.Types (HeaderName)
-import Data.Text.Encoding (decodeUtf8)
 
 lookupUtf8Header :: HeaderName -> Handler (Maybe Text)
 lookupUtf8Header headerName = return . fmap decodeUtf8 =<< lookupHeader headerName

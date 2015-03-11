@@ -3,6 +3,7 @@ Site
     baseUrl Text
     language Text
     UniqueSite baseUrl
+    deriving Show
 
 User
     name Text
@@ -16,6 +17,7 @@ Membership
     site SiteId
     user UserId
     UniqueMembership site user
+    deriving Show
 
 Comment
     user UserId
@@ -34,3 +36,4 @@ Subscription
     token Token
     active Bool
     UniqueSubscription token
+    deriving Show

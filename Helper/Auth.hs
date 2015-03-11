@@ -1,14 +1,11 @@
 module Helper.Auth
     ( requireAuth_
     , requireMemberSite
-    , module Yesod.Auth
     ) where
 
 import Import
 import Model.Site
 import Helper.Request
-
-import Yesod.Auth
 
 -- | Like @'requireAuth'@ except that it may respond
 --   @'notAuthenticated'@ instead of redirecting to login.

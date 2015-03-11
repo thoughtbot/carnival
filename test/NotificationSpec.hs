@@ -1,12 +1,9 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
 module NotificationSpec
     ( main
     , spec
     ) where
 
 import TestImport
-import Control.Applicative ((<$>))
 import Model.Subscription
 import Model.UserComment
 import Notification

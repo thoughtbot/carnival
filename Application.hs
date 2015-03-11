@@ -1,38 +1,41 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 module Application
-    ( makeApplication
-    , getApplicationDev
+    ( getApplicationDev
+    , appMain
+    , develMain
     , makeFoundation
+    -- * for DevelMain
+    , getApplicationRepl
+    , shutdownApp
+    -- * for GHCI
+    , handler
+    , db
     ) where
 
+import Control.Monad.Logger                 (liftLoc, runLoggingT)
+import Database.Persist.Postgresql          (createPostgresqlPool, pgConnStr,
+                                             pgPoolSize, runSqlPool)
 import Import
-import Settings
-import Yesod.Auth
-import Yesod.Default.Config
-import Yesod.Default.Main
-import Yesod.Default.Handlers
-import Network.Wai.Middleware.RequestLogger
-    ( mkRequestLogger, outputFormat, OutputFormat (..), IPAddrSource (..), destination
-    )
-import qualified Network.Wai.Middleware.RequestLogger as RequestLogger
-import qualified Database.Persist
-import Database.Persist.Sql (runMigration)
-import Network.HTTP.Conduit (newManager, conduitManagerSettings)
-import Control.Monad.Logger (runLoggingT)
-import Control.Concurrent (forkIO, threadDelay)
-import System.Log.FastLogger (newStdoutLoggerSet, defaultBufSize)
-import Network.Wai.Logger (clockDateCacher)
-import Data.Default (def)
-import Yesod.Core.Types (loggerSet, Logger (Logger))
-import Web.Heroku.Persist.Postgresql (postgresConf)
+import Language.Haskell.TH.Syntax           (qLocation)
+import Network.Wai.Handler.Warp             (Settings, defaultSettings,
+                                             defaultShouldDisplayException,
+                                             runSettings, setHost,
+                                             setOnException, setPort, getPort)
+import Network.Wai.Middleware.RequestLogger (Destination (Logger),
+                                             IPAddrSource (..),
+                                             OutputFormat (..), destination,
+                                             mkRequestLogger, outputFormat)
+import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet,
+                                             toLogStr)
 
 import LoadEnv
 import System.Environment (lookupEnv)
-import qualified Data.Text as T
+import Web.Heroku.Persist.Postgresql (postgresConf)
 
 -- Import all relevant handler modules here.
 -- Don't forget to add new modules to your cabal file!
 import Handler.Root
+import Handler.Common
 import Handler.Comments
 import Handler.Init
 import Handler.Embed
@@ -47,92 +50,160 @@ import Handler.Demo
 -- comments there for more details.
 mkYesodDispatch "App" resourcesApp
 
--- This function allocates resources (such as a database connection pool),
--- performs initialization and creates a WAI application. This is also the
--- place to put your migrate statements to have automatic database
+-- | This function allocates resources (such as a database connection pool),
+-- performs initialization and return a foundation datatype value. This is also
+-- the place to put your migrate statements to have automatic database
 -- migrations handled by Yesod.
-makeApplication :: AppConfig DefaultEnv Extra -> IO Application
-makeApplication conf = do
-    foundation <- makeFoundation conf
+makeFoundation :: AppSettings -> IO App
+makeFoundation appSettings = do
+    loadEnv
 
-    -- Initialize the logging middleware
+    dbconf <- if appDatabaseUrl appSettings
+        then postgresConf $ pgPoolSize $ appDatabaseConf appSettings
+        else return $ appDatabaseConf appSettings
+
+    -- Some basic initializations: HTTP connection manager, logger, and static
+    -- subsite.
+    appHttpManager <- newManager
+    appLogger <- newStdoutLoggerSet defaultBufSize >>= makeYesodLogger
+    appStatic <-
+        (if appMutableStatic appSettings then staticDevel else static)
+        (appStaticDir appSettings)
+    appGithubOAuthKeys <- getOAuthKeys "GITHUB"
+
+    -- We need a log function to create a connection pool. We need a connection
+    -- pool to create our foundation. And we need our foundation to get a
+    -- logging function. To get out of this loop, we initially create a
+    -- temporary foundation without a real connection pool, get a log function
+    -- from there, and then create the real foundation.
+    let mkFoundation appConnPool = App {..}
+        tempFoundation = mkFoundation $ error "connPool forced in tempFoundation"
+        logFunc = messageLoggerSource tempFoundation appLogger
+
+    -- Create the database connection pool
+    pool <- flip runLoggingT logFunc $ createPostgresqlPool
+        (pgConnStr dbconf)
+        (pgPoolSize dbconf)
+
+    -- Perform database migration using our application's logging settings.
+    runLoggingT (runSqlPool (runMigration migrateAll) pool) logFunc
+
+    -- Return the foundation
+    return $ mkFoundation pool
+
+  where
+    getOAuthKeys :: String -> IO OAuthKeys
+    getOAuthKeys plugin = do
+        envClientId     <- lookupEnv $ plugin <> "_OAUTH_CLIENT_ID"
+        envClientSecret <- lookupEnv $ plugin <> "_OAUTH_CLIENT_SECRET"
+
+        case (envClientId, envClientSecret) of
+            (Just clientId, Just clientSecret) ->
+                return OAuthKeys
+                    { oauthKeysClientId     = pack clientId
+                    , oauthKeysClientSecret = pack clientSecret
+                    }
+
+            _ -> error
+                    $  plugin
+                    <> "_OAUTH_CLIENT_ID or "
+                    <> plugin
+                    <> "_OAUTH_CLIENT_SECRET not set"
+
+-- | Convert our foundation to a WAI Application by calling @toWaiAppPlain@ and
+-- applyng some additional middlewares.
+makeApplication :: App -> IO Application
+makeApplication foundation = do
     logWare <- mkRequestLogger def
         { outputFormat =
-            if development
+            if appDetailedRequestLogging $ appSettings foundation
                 then Detailed True
-                else Apache FromSocket
-        , destination = RequestLogger.Logger $ loggerSet $ appLogger foundation
+                else Apache
+                        (if appIpFromHeader $ appSettings foundation
+                            then FromFallback
+                            else FromSocket)
+        , destination = Logger $ loggerSet $ appLogger foundation
         }
 
     -- Create the WAI application and apply middlewares
-    app <- toWaiAppPlain foundation
-    return $ logWare app
+    appPlain <- toWaiAppPlain foundation
+    return $ logWare $ defaultMiddlewaresNoLogging appPlain
 
--- | Loads up any necessary settings, creates your foundation datatype, and
--- performs some initialization.
-makeFoundation :: AppConfig DefaultEnv Extra -> IO App
-makeFoundation conf = do
-    loadEnv
+-- | Warp settings for the given foundation value.
+warpSettings :: App -> Settings
+warpSettings foundation =
+      setPort (appPort $ appSettings foundation)
+    $ setHost (appHost $ appSettings foundation)
+    $ setOnException (\_req e ->
+        when (defaultShouldDisplayException e) $ messageLoggerSource
+            foundation
+            (appLogger foundation)
+            $(qLocation >>= liftLoc)
+            "yesod"
+            LevelError
+            (toLogStr $ "Exception from Warp: " ++ show e))
+      defaultSettings
 
-    manager <- newManager conduitManagerSettings
-    s <- staticSite
-    dbconf <-
-        if development
-            then withYamlEnvironment "config/postgresql.yml" (appEnv conf)
-                Database.Persist.loadConfig >>=
-                Database.Persist.applyEnv
-            else postgresConf 10
-    p <- Database.Persist.createPoolConfig (dbconf :: Settings.PersistConf)
+-- | For yesod devel, return the Warp settings and WAI Application.
+getApplicationDev :: IO (Settings, Application)
+getApplicationDev = do
+    settings <- getAppSettings
+    foundation <- makeFoundation settings
+    wsettings <- getDevSettings $ warpSettings foundation
+    app <- makeApplication foundation
+    return (wsettings, app)
 
-    loggerSet' <- newStdoutLoggerSet defaultBufSize
-    (getter, updater) <- clockDateCacher
+getAppSettings :: IO AppSettings
+getAppSettings = loadAppSettings [configSettingsYml] [] useEnv
 
-    -- If the Yesod logger (as opposed to the request logger middleware) is
-    -- used less than once a second on average, you may prefer to omit this
-    -- thread and use "(updater >> getter)" in place of "getter" below.  That
-    -- would update the cache every time it is used, instead of every second.
-    let updateLoop = do
-            threadDelay 1000000
-            updater
-            updateLoop
-    _ <- forkIO updateLoop
+-- | main function for use by yesod devel
+develMain :: IO ()
+develMain = develMainHelper getApplicationDev
 
-    keys <- getOAuthKeys "GITHUB"
+-- | The @main@ function for an executable running this site.
+appMain :: IO ()
+appMain = do
+    -- Get the settings from all relevant sources
+    settings <- loadAppSettingsArgs
+        -- fall back to compile-time values, set to [] to require values at runtime
+        [configSettingsYmlValue]
 
-    let logger = Yesod.Core.Types.Logger loggerSet' getter
-        foundation = App conf s p manager dbconf logger keys
+        -- allow environment variables to override
+        useEnv
 
-    -- Perform database migration using our application's logging settings.
-    runLoggingT
-        (Database.Persist.runPool dbconf (runMigration migrateAll) p)
-        (messageLoggerSource foundation logger)
+    -- Generate the foundation from the settings
+    foundation <- makeFoundation settings
 
-    return foundation
+    -- Generate a WAI Application from the foundation
+    app <- makeApplication foundation
 
-    where
-        getOAuthKeys :: String -> IO OAuthKeys
-        getOAuthKeys plugin = do
-            envClientId     <- lookupEnv $ plugin <> "_OAUTH_CLIENT_ID"
-            envClientSecret <- lookupEnv $ plugin <> "_OAUTH_CLIENT_SECRET"
+    -- Run the application with Warp
+    runSettings (warpSettings foundation) app
 
-            case (envClientId, envClientSecret) of
-                (Just clientId, Just clientSecret) ->
-                    return OAuthKeys
-                        { oauthKeysClientId     = T.pack clientId
-                        , oauthKeysClientSecret = T.pack clientSecret
-                        }
 
-                _ -> error
-                        $  plugin
-                        <> "_OAUTH_CLIENT_ID or "
-                        <> plugin
-                        <> "_OAUTH_CLIENT_SECRET not set"
+--------------------------------------------------------------
+-- Functions for DevelMain.hs (a way to run the app from GHCi)
+--------------------------------------------------------------
+getApplicationRepl :: IO (Int, App, Application)
+getApplicationRepl = do
+    settings <- getAppSettings
+    foundation <- makeFoundation settings
+    wsettings <- getDevSettings $ warpSettings foundation
+    app1 <- makeApplication foundation
+    return (getPort wsettings, foundation, app1)
 
--- for yesod devel
-getApplicationDev :: IO (Int, Application)
-getApplicationDev =
-    defaultDevelApp loader makeApplication
-  where
-    loader = Yesod.Default.Config.loadConfig (configSettings Development)
-        { csParseExtra = parseExtra
-        }
+shutdownApp :: App -> IO ()
+shutdownApp _ = return ()
+
+
+---------------------------------------------
+-- Functions for use in development with GHCi
+---------------------------------------------
+
+-- | Run a handler
+handler :: Handler a -> IO a
+handler h = getAppSettings >>= makeFoundation >>= flip unsafeHandler h
+
+-- | Run DB queries
+db :: ReaderT SqlBackend (HandlerT App IO) a -> IO a
+db = handler . runDB

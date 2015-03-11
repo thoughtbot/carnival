@@ -14,9 +14,6 @@ import Model.UserComment
 import Model.Subscription
 import SendMail
 
-import Control.Monad ((<=<), forM)
-import Data.List (find)
-import Data.Maybe (catMaybes)
 import Data.Text.Lazy.Builder (toLazyText)
 import Network.Mail.Mime (simpleMail')
 

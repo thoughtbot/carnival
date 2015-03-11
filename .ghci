@@ -1,7 +1,21 @@
 :set -i.:config:dist/build/autogen
 :set -DDEVELOPMENT
-:set -XCPP -XTemplateHaskell -XQuasiQuotes -XTypeFamilies -XFlexibleContexts -XGADTs -XOverloadedStrings -XMultiParamTypeClasses -XGeneralizedNewtypeDeriving -XEmptyDataDecls -XDeriveDataTypeable
-:set -XFlexibleInstances
-:set -XStandaloneDeriving
+:set -XCPP
+:set -XDeriveDataTypeable
+:set -XEmptyDataDecls
+:set -XFlexibleContexts
+:set -XGADTs
+:set -XGeneralizedNewtypeDeriving
+:set -XMultiParamTypeClasses
+:set -XNoImplicitPrelude
+:set -XNoMonomorphismRestriction
+:set -XOverloadedStrings
+:set -XQuasiQuotes
+:set -XRecordWildCards
+:set -XTemplateHaskell
+:set -XTupleSections
+:set -XTypeFamilies
 :set -XViewPatterns
+
+:set -XFlexibleInstances
 :set -XRankNTypes

@@ -1,11 +1,8 @@
 module Model where
 
-import Prelude
-import Yesod
-import Data.Text (Text)
-import Data.Time (UTCTime)
+import ClassyPrelude.Yesod
 import Database.Persist.Quasi
-import Data.Typeable (Typeable)
+
 import System.Random (newStdGen, randomRs)
 import Text.Markdown (Markdown(..))
 import Yesod.Text.Markdown ()

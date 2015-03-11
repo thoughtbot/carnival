@@ -4,7 +4,6 @@ import Import
 import Helper.Request
 
 import Text.Julius (rawJS)
-import Yesod.Auth (Route(PluginR))
 
 getEmbedR :: SiteId -> Handler Html
 getEmbedR siteId = do

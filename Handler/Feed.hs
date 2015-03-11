@@ -3,9 +3,6 @@ module Handler.Feed where
 import Import
 import Model.UserComment
 
-import Prelude (head)
-
-import Control.Monad (when)
 import Text.Blaze.Html (toMarkup)
 import Yesod.RssFeed
 
@@ -30,7 +27,7 @@ feedFromComments (Entity siteId site) comments = do
         , feedLanguage    = siteLanguage site
         , feedLinkSelf    = render $ FeedR siteId
         , feedLinkHome    = siteBaseUrl site
-        , feedUpdated     = getCommentCreated $ head comments
+        , feedUpdated     = getCommentCreated $ unsafeHead comments
         , feedEntries     = entries
         }
 

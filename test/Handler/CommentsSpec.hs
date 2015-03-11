@@ -1,4 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Handler.CommentsSpec
     ( main
     , spec
@@ -6,7 +5,6 @@ module Handler.CommentsSpec
 
 import TestImport
 import Model.UserComment
-import Control.Monad (forM)
 import Data.Aeson (Value, (.=), encode, object)
 
 main :: IO ()

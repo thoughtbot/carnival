@@ -4,10 +4,6 @@ import Import
 import Model.Comment
 import Model.User
 
-import Control.Monad (forM)
-import Data.List (find)
-import Data.Maybe (catMaybes)
-
 data UserComment = UserComment
     { userCommentSite :: Entity Site
     , userCommentComment :: Entity Comment

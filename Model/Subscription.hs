@@ -7,8 +7,6 @@ module Model.Subscription
 
 import Import
 
-import Control.Monad (void)
-
 activeSubscriptions :: Text -> DB [Entity Subscription]
 activeSubscriptions name = selectList
     [ SubscriptionName ==. name

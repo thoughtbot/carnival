@@ -7,8 +7,6 @@ module Model.Site
 
 import Import
 
-import Control.Monad (void)
-
 findSites :: UserId -> DB [Entity Site]
 findSites userId = do
     memberships <- selectList [MembershipUser ==. userId] []

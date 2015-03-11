@@ -1,12 +1,3 @@
-$if development
-  <div .well>
-    <form method=post action=@{AuthR $ PluginR "dummy" []}>
-      <p><em>Only available in development</em>
-      <div .form-group>
-        <label for="ident">User Identifier
-        <input .form-control name="ident">
-      <button type="Submit" .btn .btn-default>Log in
-
 <p>
   <a .btn .btn-success href=@{AuthR $ PluginR "github" ["forward"]}>
     Login via GitHub

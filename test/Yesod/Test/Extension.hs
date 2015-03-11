@@ -1,10 +1,11 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Yesod.Test.Extension
     ( getWithParams
     , postForm
     , valueEquals
     , module Yesod.Test
     ) where
+
+import Prelude
 
 import Yesod.Test
 import Test.Hspec.Expectations.Lifted

@@ -1,43 +1,31 @@
 module Foundation where
 
-import Prelude
-import Yesod
-import Yesod.Static
-import Yesod.Auth
+import Import.NoFoundation
+import Database.Persist.Sql (ConnectionPool, runSqlPool)
+import Text.Hamlet          (hamletFile)
+import Text.Jasmine         (minifym)
+import Yesod.Default.Util   (addStaticContentExternal)
+import Yesod.Core.Types     (Logger)
+import qualified Yesod.Core.Unsafe as Unsafe
+
 import Yesod.Auth.Dummy
 import Yesod.Auth.OAuth2.Github
-import Yesod.Default.Config
-import Yesod.Default.Util (addStaticContentExternal)
-import Network.HTTP.Conduit (Manager)
-import qualified Settings
-import Settings.Development (development)
-import qualified Database.Persist
-import Database.Persist.Sql (SqlBackend)
-import Settings.StaticFiles
-import Settings (widgetFile, Extra (..), OAuthKeys (..))
-import Model
-import Text.Jasmine (minifym)
-import Text.Hamlet (hamletFile)
-import Yesod.Core.Types (Logger)
-import Data.Text (Text)
-import Control.Applicative ((<$>), (<*>), pure)
 
--- | The site argument for your application. This can be a good place to
+-- | The foundation datatype for your application. This can be a good place to
 -- keep settings and values requiring initialization before your application
 -- starts running, such as database connections. Every handler will have
 -- access to the data present here.
 data App = App
-    { settings :: AppConfig DefaultEnv Extra
-    , getStatic :: Static -- ^ Settings for static file serving.
-    , connPool :: Database.Persist.PersistConfigPool Settings.PersistConf -- ^ Database connection pool.
-    , httpManager :: Manager
-    , persistConfig :: Settings.PersistConf
-    , appLogger :: Logger
-    , githubOAuthKeys :: OAuthKeys
+    { appSettings    :: AppSettings
+    , appStatic      :: Static -- ^ Settings for static file serving.
+    , appConnPool    :: ConnectionPool -- ^ Database connection pool.
+    , appHttpManager :: Manager
+    , appLogger      :: Logger
+    , appGithubOAuthKeys :: OAuthKeys
     }
 
--- Set up i18n messages. See the message folder.
-mkMessage "App" "messages" "en"
+instance HasHttpManager App where
+    getHttpManager = appHttpManager
 
 -- This is where we define all of the routes in our application. For a full
 -- explanation of the syntax, please see:
@@ -48,13 +36,18 @@ mkMessage "App" "messages" "en"
 -- explanation for this split.
 mkYesodData "App" $(parseRoutesFile "config/routes")
 
+-- | A convenient synonym for creating forms.
 type Form x = Html -> MForm (HandlerT App IO) (FormResult x, Widget)
 
 -- Please see the documentation for the Yesod typeclass. There are a number
 -- of settings which can be configured by overriding methods here.
 instance Yesod App where
-    approot = ApprootMaster $ appRoot . settings
+    -- Controls the base of generated URLs. For more information on modifying,
+    -- see: https://github.com/yesodweb/yesod/wiki/Overriding-approot
+    approot = ApprootMaster $ appRoot . appSettings
 
+    -- Store session data on the client in encrypted cookies,
+    -- default session idle timeout is 120 minutes
     makeSessionBackend _ = fmap Just $ envClientSessionBackend 120 "SESSION_KEY"
 
     defaultLayout widget = do
@@ -69,70 +62,71 @@ instance Yesod App where
         -- you to use normal widget features in default-layout.
 
         pc <- widgetToPageContent $ do
-            $(combineStylesheets 'StaticR
-                [ css_normalize_css
-                , css_bootstrap_css
-                ])
+            addStylesheet $ StaticR css_bootstrap_css
             $(widgetFile "default-layout")
         withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 
-    -- This is done to provide an optimization for serving static files from
-    -- a separate domain. Please see the staticRoot setting in Settings.hs
-    urlRenderOverride y (StaticR s) =
-        Just $ uncurry (joinPath y (Settings.staticRoot $ settings y)) $ renderRoute s
-    urlRenderOverride _ _ = Nothing
-
     -- The page to be redirected to when authentication is required.
     authRoute _ = Just $ AuthR LoginR
+
+    -- Routes not requiring authentication.
+    -- isAuthorized (AuthR _) _ = return Authorized
+    -- isAuthorized FaviconR _ = return Authorized
+    -- isAuthorized RobotsR _ = return Authorized
+    -- -- Default to Authorized for now.
+    -- isAuthorized _ _ = return Authorized
 
     -- This function creates static content files in the static folder
     -- and names them based on a hash of their content. This allows
     -- expiration dates to be set far in the future without worry of
     -- users receiving stale content.
-    addStaticContent =
-        addStaticContentExternal minifym genFileName Settings.staticDir (StaticR . flip StaticRoute [])
+    addStaticContent ext mime content = do
+        master <- getYesod
+        let staticDir = appStaticDir $ appSettings master
+        addStaticContentExternal
+            minifym
+            genFileName
+            staticDir
+            (StaticR . flip StaticRoute [])
+            ext
+            mime
+            content
       where
         -- Generate a unique filename based on the content itself
-        genFileName lbs
-            | development = "autogen-" ++ base64md5 lbs
-            | otherwise   = base64md5 lbs
-
-    -- Place Javascript at bottom of the body tag so the rest of the page loads first
-    jsLoader _ = BottomOfBody
+        genFileName lbs = "autogen-" ++ base64md5 lbs
 
     -- What messages should be logged. The following includes all messages when
     -- in development, and warnings and errors in production.
-    shouldLog _ _source level =
-        development || level == LevelWarn || level == LevelError
+    shouldLog app _source level =
+        appShouldLogAll (appSettings app)
+            || level == LevelWarn
+            || level == LevelError
 
     makeLogger = return . appLogger
 
 embedLayout :: Widget -> Handler Html
 embedLayout widget = do
-    -- We break up the default layout into two components:
-    -- default-layout is the contents of the body tag, and
-    -- default-layout-wrapper is the entire page. Since the final
-    -- value passed to hamletToRepHtml cannot be a widget, this allows
-    -- you to use normal widget features in default-layout.
-
     pc <- widgetToPageContent widget
     withUrlRenderer $(hamletFile "templates/embed-layout-wrapper.hamlet")
 
 -- How to run database actions.
 instance YesodPersist App where
     type YesodPersistBackend App = SqlBackend
-    runDB = defaultRunDB persistConfig connPool
+    runDB action = do
+        master <- getYesod
+        runSqlPool action $ appConnPool master
 instance YesodPersistRunner App where
-    getDBRunner = defaultGetDBRunner connPool
+    getDBRunner = defaultGetDBRunner appConnPool
 
 instance YesodAuth App where
     type AuthId App = UserId
 
     -- Where to send a user after successful login
     loginDest _ = RootR
-
     -- Where to send a user after logout
     logoutDest _ = RootR
+    -- Override the above two destinations when a Referer: header is present
+    redirectToReferer _ = True
 
     getAuthId creds = runDB $ do
         muser <- getBy $ UniqueUser (credsPlugin creds) (credsIdent creds)
@@ -143,13 +137,14 @@ instance YesodAuth App where
             Just (Entity uid _) -> fmap Just $ replaceUser uid newUser
             _                   -> insertUser newUser
 
-    authPlugins m = addAuthBackDoor
+    -- You can add other plugins like BrowserID, email or OAuth here
+    authPlugins m = addAuthBackDoor m
         [ oauth2Github
-            (oauthKeysClientId $ githubOAuthKeys m)
-            (oauthKeysClientSecret $ githubOAuthKeys m)
+            (oauthKeysClientId $ appGithubOAuthKeys m)
+            (oauthKeysClientSecret $ appGithubOAuthKeys m)
         ]
 
-    authHttpManager = httpManager
+    authHttpManager = getHttpManager
 
     loginHandler = lift $ defaultLayout $ do
         setTitle "Carnival - Login"
@@ -170,8 +165,9 @@ insertUser :: Maybe User -> YesodDB App (Maybe UserId)
 insertUser (Just u) = fmap Just $ insert u
 insertUser _        = return Nothing
 
-addAuthBackDoor :: [AuthPlugin App] -> [AuthPlugin App]
-addAuthBackDoor = if development then (authDummy :) else id
+addAuthBackDoor :: App -> [AuthPlugin App] -> [AuthPlugin App]
+addAuthBackDoor app =
+    if appAllowDummyAuth (appSettings app) then (authDummy :) else id
 
 instance YesodAuthPersist App
 
@@ -180,16 +176,16 @@ instance YesodAuthPersist App
 instance RenderMessage App FormMessage where
     renderMessage _ _ = defaultFormMessage
 
--- | Get the 'Extra' value, used to hold data from the settings.yml file.
-getExtra :: Handler Extra
-getExtra = fmap (appExtra . settings) getYesod
+unsafeHandler :: App -> Handler a -> IO a
+unsafeHandler = Unsafe.fakeHandlerGetLogger appLogger
 
--- Note: previous versions of the scaffolding included a deliver function to
--- send emails. Unfortunately, there are too many different options for us to
--- give a reasonable default. Instead, the information is available on the
--- wiki:
+-- Note: Some functionality previously present in the scaffolding has been
+-- moved to documentation in the Wiki. Following are some hopefully helpful
+-- links:
 --
 -- https://github.com/yesodweb/yesod/wiki/Sending-email
+-- https://github.com/yesodweb/yesod/wiki/Serve-static-files-from-a-separate-domain
+-- https://github.com/yesodweb/yesod/wiki/i18n-messages-in-the-scaffolding
 
 getAppRoot :: Handler Text
-getAppRoot = fmap (appRoot . settings) getYesod
+getAppRoot = fmap (appRoot . appSettings) getYesod

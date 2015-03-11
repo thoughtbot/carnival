@@ -9,9 +9,6 @@ module SendMail
 import Import
 
 import Control.Concurrent (forkIO)
-import Control.Monad (void)
-import Data.Text.Lazy (toStrict)
-import Data.Text.Lazy.Encoding (decodeUtf8)
 import Network.Mail.Mime (Address(..), Mail(..), renderMail')
 import Network.Mail.RecipientOverride (overrideRecipients)
 import Network.Mail.SendGrid (sendMailWithSendGridEnv)
@@ -20,7 +17,9 @@ sendMail :: Mail -> Handler ()
 sendMail m = send =<< liftIO (overrideRecipients m)
 
   where
-    send = if development then sendToLog else sendViaSendGrid
+    send = if appSendMail compileTimeAppSettings
+        then sendViaSendGrid
+        else sendToLog
 
 sendViaSendGrid :: Mail -> Handler ()
 sendViaSendGrid = void . liftIO . forkIO . sendMailWithSendGridEnv

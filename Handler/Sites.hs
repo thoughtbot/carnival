@@ -4,7 +4,6 @@ import Import
 import Model.Site
 import Helper.Auth
 
-import Control.Monad (void)
 import Yesod.Form.Bootstrap3
 
 getSitesR :: Handler Html

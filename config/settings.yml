@@ -1,20 +1,33 @@
-Default: &defaults
-  host: "*4" # any IPv4 host
-  port: 3000
-  approot: "http://localhost:3000"
-  copyright: "thoughtbot, inc. 2015"
-  #analytics: UA-YOURCODE
+# Values formatted like "_env:ENV_VAR_NAME:default_value" can be overridden by the specified environment variable.
+# See https://github.com/yesodweb/yesod/wiki/Configuration#overriding-configuration-values-with-environment-variables
 
-Development:
-  <<: *defaults
+static-dir:     "_env:STATIC_DIR:static"
+host:           "_env:HOST:*4" # any IPv4 host
+port:           "_env:PORT:3000"
+approot:        "_env:APPROOT:http://localhost:3000"
+ip-from-header: "_env:IP_FROM_HEADER:false"
 
-Testing:
-  <<: *defaults
+# Optional values with the following production defaults.
+# In development, they default to the inverse.
+#
+# development: false
+# detailed-logging: false
+# should-log-all: false
+# reload-templates: false
+# mutable-static: false
+# skip-combining: false
+#
+# send-mail: true
+# database-url: true
+# allow-dummy-auth: false
 
-Staging:
-  approot: "https://carnival-staging.herokuapp.com"
-  <<: *defaults
+database:
+  user:     "_env:PGUSER:carnival"
+  password: "_env:PGPASS:carnival"
+  host:     "_env:PGHOST:localhost"
+  port:     "_env:PGPORT:5432"
+  database: "_env:PGDATABASE:carnival"
+  poolsize: "_env:PGPOOLSIZE:10"
 
-Production:
-  approot: "https://carnival.thoughtbot.com"
-  <<: *defaults
+copyright: "thoughtbot, inc. 2015"
+#analytics: UA-YOURCODE

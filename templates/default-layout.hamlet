@@ -1,5 +1,4 @@
 <div .container>
   $maybe msg <- mmsg
     <div #message .alert.alert-info>#{msg}
-
   ^{widget}

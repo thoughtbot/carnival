@@ -11,7 +11,6 @@ import Helper.Auth
 import Helper.Request
 import Helper.Validation
 
-import Control.Monad (mzero)
 import Text.Markdown
 
 import qualified Data.Text.Lazy as TL
