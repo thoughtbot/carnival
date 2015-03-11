@@ -1,6 +1,6 @@
 window.Carnival =
   init: (options) ->
-    @setOptions(options)
+    Carnival.setOptions(options)
 
     xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = () =>
@@ -9,7 +9,7 @@ window.Carnival =
         n.innerHTML = xmlhttp.responseText
         document.body.appendChild(n)
 
-        @replaceScriptsRecurse(n)
+        Carnival.replaceScriptsRecurse(n)
 
     xmlhttp.open('GET', '@{EmbedR siteId}?t=' + Math.random(), true);
     xmlhttp.send();
@@ -29,13 +29,13 @@ window.Carnival =
         CarnivalOptions[property] = defaults[property]
 
   replaceScriptsRecurse: (node) ->
-    if @isScriptNode(node)
+    if Carnival.isScriptNode(node)
       script = document.createElement('script')
       script.src = node.src
 
       node.parentNode.replaceChild(script, node)
     else
-      @replaceScriptsRecurse(child) for child in node.childNodes
+      Carnival.replaceScriptsRecurse(child) for child in node.childNodes
 
     node;
 
