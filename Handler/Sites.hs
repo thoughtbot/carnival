@@ -72,7 +72,7 @@ getDeleteSiteR siteId = do
 postDeleteSiteR :: SiteId -> Handler ()
 postDeleteSiteR siteId = do
     void $ requireMemberSite siteId
-    runDB $ destroySite $ siteId
+    runDB $ destroySite siteId
     setMessage "Site deleted!"
     redirect SitesR
 
@@ -91,7 +91,7 @@ siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
   where
     fs :: Text -> Text -> FieldSettings site
     fs msg placeholder = FieldSettings
-        { fsLabel = (SomeMessage msg)
+        { fsLabel = SomeMessage msg
         , fsTooltip = Nothing
         , fsId = Nothing
         , fsName = Nothing
