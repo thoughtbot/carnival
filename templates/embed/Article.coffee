@@ -1,6 +1,6 @@
 class Article
   constructor: (@element) ->
-    @id = location.pathname
+    @id = location.pathname.replace(/\//g, '')
     @title = document.title
     @author = CarnivalOptions.article_author
     @container = @createContainer()
