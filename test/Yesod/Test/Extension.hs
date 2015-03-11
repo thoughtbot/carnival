@@ -11,7 +11,6 @@ import Test.Hspec.Expectations.Lifted
 import Yesod (Yesod, RedirectUrl)
 import Data.Aeson (Value, eitherDecode)
 import Data.Text (Text)
-import Data.ByteString.Lazy (ByteString)
 import Network.Wai.Test (simpleBody)
 
 -- | Perform a GET request with query params present
