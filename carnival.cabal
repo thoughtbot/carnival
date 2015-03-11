@@ -39,6 +39,7 @@ library
                      Handler.Feed
                      Handler.Unsubscribe
                      Handler.Sites
+                     Handler.Demo
                      Network.Mail.SendGrid
                      Network.Mail.RecipientOverride
 

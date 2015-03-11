@@ -17,3 +17,4 @@
 / RootR GET
 /user UserR GET
 /unsubscribe/#Token UnsubscribeR GET
+/demo DemoR GET

@@ -5,6 +5,7 @@ Site
     rssTitle Text
     rssDescription Html
     rssLanguage Text
+    UniqueSite baseUrl
 
 User
     name Text

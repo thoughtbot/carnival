@@ -1,0 +1,21 @@
+<h1>Carnival Demo
+
+<article>
+  <p>
+    This is a demo of an article with Carnival loaded. Each paragraph can be
+    commented on individually.
+
+  <p>
+    This is a second paragraph. Try adding comments to both.
+
+  <p>
+    View the page source to see how simple it was to install.
+
+  <pre>
+    \ def message
+    \   "You can even comment on code"
+    \ end
+
+<script src=@{InitR siteId}>
+<script>
+  document.addEventListener("DOMContentLoaded", Carnival.init);

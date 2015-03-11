@@ -86,7 +86,7 @@ embedExample msiteId = do
 siteForm :: Maybe Site -> Form Site
 siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
     <$> areq textField (bfl "Name") (siteName <$> msite)
-    <*> areq textField (bfl "Base URL") (siteBaseUrl <$> msite)
+    <*> areq baseUrlField (bfl "Base URL") (siteBaseUrl <$> msite)
     <*> areq textField (bfl "RSS Author") (siteRssAuthor <$> msite)
     <*> areq textField (bfl "RSS Title") (siteRssTitle <$> msite)
     <*> areq htmlField (bfl "RSS Description") (siteRssDescription <$> msite)
@@ -96,6 +96,14 @@ siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
     -- Used only to disambiguate multiple IsString instances
     bfl :: Text -> FieldSettings site
     bfl = bfs
+
+    baseUrlField :: Field Handler Text
+    baseUrlField = flip checkM textField $ \url -> do
+        n <- runDB $ count [SiteBaseUrl ==. url]
+
+        return $ case n of
+            0 -> Right url
+            _ -> Left ("This URL is already in use" :: Text)
 
 onFormSuccess :: Monad m => FormResult a -> (a -> m ()) -> m ()
 onFormSuccess (FormSuccess x) f = f x
