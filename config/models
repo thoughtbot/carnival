@@ -1,10 +1,7 @@
 Site
     name Text
     baseUrl Text
-    rssAuthor Text
-    rssTitle Text
-    rssDescription Html
-    rssLanguage Text
+    language Text
     UniqueSite baseUrl
 
 User

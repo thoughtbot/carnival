@@ -15,3 +15,6 @@
   Embed with the following JavaScript:
 
 ^{embedExample $ Just siteId}
+
+<p>
+  <a href=@{FeedR siteId}>Comments Feed

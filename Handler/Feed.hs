@@ -24,10 +24,10 @@ feedFromComments (Entity siteId site) comments = do
     render <- getUrlRender
 
     rssFeedText Feed
-        { feedAuthor      = siteRssAuthor site
-        , feedTitle       = siteRssTitle site
-        , feedDescription = siteRssDescription site
-        , feedLanguage    = siteRssLanguage site
+        { feedAuthor      = siteName site
+        , feedTitle       = "Comments on " <> siteName site
+        , feedDescription = toHtml $ "Comments on " <> siteName site
+        , feedLanguage    = siteLanguage site
         , feedLinkSelf    = render $ FeedR siteId
         , feedLinkHome    = siteBaseUrl site
         , feedUpdated     = getCommentCreated $ head comments

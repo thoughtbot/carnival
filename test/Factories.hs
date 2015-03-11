@@ -27,10 +27,7 @@ buildSite :: Site
 buildSite = Site
     { siteName = "test-site-name"
     , siteBaseUrl = "http://localhost:4000"
-    , siteRssAuthor = "Rss Author"
-    , siteRssTitle = "Rss Title"
-    , siteRssDescription = "Rss Description"
-    , siteRssLanguage = "en-us"
+    , siteLanguage = "en-us"
     }
 
 createUser :: Text -> DB (Entity User)

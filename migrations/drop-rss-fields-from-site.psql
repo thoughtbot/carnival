@@ -1,0 +1,7 @@
+ALTER TABLE "site"
+  RENAME COLUMN "rss_language" TO "language";
+
+ALTER TABLE "site"
+  DROP COLUMN "rss_author",
+  DROP COLUMN "rss_title",
+  DROP COLUMN "rss_description";

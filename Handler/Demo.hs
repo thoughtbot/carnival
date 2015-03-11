@@ -15,8 +15,5 @@ demoSite :: Text -> Site
 demoSite root = Site
     { siteName = "carnival-demo"
     , siteBaseUrl = root
-    , siteRssAuthor = "Carnival Demo"
-    , siteRssTitle = "Comments on Carnival Demo"
-    , siteRssDescription = "Comments on Carnival Demo"
-    , siteRssLanguage = "en-us"
+    , siteLanguage = "en-us"
     }

@@ -47,10 +47,7 @@ spec = withApp $ do
             postForm SitesR $ do
                 byLabel "Name" "test-site"
                 byLabel "Base URL" "http://example.com"
-                byLabel "RSS Author" "Author"
-                byLabel "RSS Title" "Title"
-                byLabel "RSS Description" "Description"
-                byLabel "RSS Language" "en-us"
+                byLabel "Language" "en-us"
 
             statusIs 303 -- redirect
 
@@ -75,10 +72,7 @@ spec = withApp $ do
             postForm (SiteR $ entityKey site) $ do
                 byLabel "Name" "new-name"
                 byLabel "Base URL" "http://new.example.com"
-                byLabel "RSS Author" "untested"
-                byLabel "RSS Title" "untested"
-                byLabel "RSS Description" "untested"
-                byLabel "RSS Language" "untested"
+                byLabel "Language" "untested"
 
             statusIs 303 -- redirect
 

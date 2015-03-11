@@ -84,17 +84,22 @@ embedExample msiteId = do
 
 siteForm :: Maybe Site -> Form Site
 siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
-    <$> areq textField (bfl "Name") (siteName <$> msite)
-    <*> areq baseUrlField (bfl "Base URL") (siteBaseUrl <$> msite)
-    <*> areq textField (bfl "RSS Author") (siteRssAuthor <$> msite)
-    <*> areq textField (bfl "RSS Title") (siteRssTitle <$> msite)
-    <*> areq htmlField (bfl "RSS Description") (siteRssDescription <$> msite)
-    <*> areq textField (bfl "RSS Language") (siteRssLanguage <$> msite)
+    <$> areq textField (fs "Name" "my-site") (siteName <$> msite)
+    <*> areq baseUrlField (fs "Base URL" "https://example.com") (siteBaseUrl <$> msite)
+    <*> areq textField (fs "Language" "en-us") (siteLanguage <$> msite)
 
   where
-    -- Used only to disambiguate multiple IsString instances
-    bfl :: Text -> FieldSettings site
-    bfl = bfs
+    fs :: Text -> Text -> FieldSettings site
+    fs msg placeholder = FieldSettings
+        { fsLabel = (SomeMessage msg)
+        , fsTooltip = Nothing
+        , fsId = Nothing
+        , fsName = Nothing
+        , fsAttrs =
+            [ ("class", "form-control")
+            , ("placeholder", placeholder)
+            ]
+        }
 
     baseUrlField :: Field Handler Text
     baseUrlField = flip checkM textField $ \url -> do
