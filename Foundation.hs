@@ -150,6 +150,10 @@ instance YesodAuth App where
 
     authHttpManager = httpManager
 
+    loginHandler = lift $ defaultLayout $ do
+        setTitle "Carnival - Login"
+        $(widgetFile "login")
+
 buildUser :: Creds m -> Maybe User
 buildUser (Creds csPlugin csIdent csExtra) =
     User <$> lookup "name" csExtra
