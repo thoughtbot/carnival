@@ -49,7 +49,7 @@ findUserComments siteId marticle = do
             , fmap (CommentArticleURL ==.) marticle
             ]
 
-    selectWithUsers filters []
+    selectWithUsers filters [Asc CommentCreated]
 
 findRecentUserComments :: SiteId -> DB [UserComment]
 findRecentUserComments siteId =
