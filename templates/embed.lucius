@@ -1,7 +1,7 @@
 .carnival {
   display: none;
   position: absolute;
-  right: 0;
+  right: -178px;
   width: 180px;
 }
 
@@ -107,7 +107,6 @@
 
   form {
     display: none;
-    float: right;
     width: 170px;
 
     textarea {
@@ -175,7 +174,7 @@
   }
 
   .carnival-comment-indicator {
-    right: 150px;
+    right: -30px;
   }
 
   .carnival-comment-form {

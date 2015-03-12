@@ -7,6 +7,7 @@ class Article
     @thread = new Thread(this)
     @fetchComments()
     @bindEvents()
+    @element.style.position = 'relative'
 
   createBlocks: ->
     @blocks = [].slice.call(@element.querySelectorAll(CarnivalOptions.block_selector)).map (blockElement, index) =>
@@ -22,10 +23,12 @@ class Article
   bindEvents: ->
     @element.addEventListener 'commenting', (event) =>
       Carnival.addClass(@element, 'commenting')
+      @shiftArticle()
       @thread.displayForBlock(event.detail)
     @element.addEventListener 'doneCommenting', =>
       if @element.querySelectorAll('.commenting').length is 0
         Carnival.removeClass(@element, 'commenting')
+        @restoreArticle()
 
   fetchComments: ->
     Carnival.get('@{CommentsR siteId}?article=' + @id, (data) =>
@@ -39,3 +42,16 @@ class Article
     container.className = 'carnival'
     @element.insertBefore(container, @element.firstChild)
     container
+
+  shiftArticle: =>
+    if @wideScreen()
+      @prevLeft = @element.style.left
+      newLeft = (parseInt(@prevLeft) || 0) - 150
+      @element.style.left = newLeft + 'px'
+
+  restoreArticle: =>
+    if @wideScreen()
+      @element.style.left = @prevLeft
+
+  wideScreen: =>
+    window.matchMedia('only screen and (min-width: 640px)').matches
