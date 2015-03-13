@@ -6,7 +6,6 @@ module Handler.CommentsSpec
 import TestImport
 import Model.UserComment
 import Data.Aeson (Value, (.=), encode, object)
-import Data.Time (getCurrentTime)
 
 main :: IO ()
 main = hspec spec
@@ -34,16 +33,13 @@ spec = withApp $ do
             siteId <- runDB $ insert buildSite
 
             u <- runDB $ createUser "1"
-            c1 <- runDB $ createComment (entityKey u) siteId "1" "1" "1"
-            c2 <- runDB $ createComment (entityKey u) siteId "1" "1" "2"
-            c3 <- runDB $ createComment (entityKey u) siteId "1" "1" "3"
-
-            now <- liftIO $ getCurrentTime
-            runDB $ update (entityKey c1) [CommentCreated =. now]
+            c2 <- runDB $ insertEntity $ buildComment { commentUser = (entityKey u), commentSite = siteId, commentBody = "second", commentCreated = 2 `daysAfter` sometime }
+            c1 <- runDB $ insertEntity $ buildComment { commentUser = (entityKey u), commentSite = siteId, commentBody = "first", commentCreated = 1 `daysAfter` sometime }
+            c3 <- runDB $ insertEntity $ buildComment { commentUser = (entityKey u), commentSite = siteId, commentBody = "third", commentCreated = 3 `daysAfter` sometime }
 
             get $ CommentsR siteId
 
-            valueEquals =<< commentsResponse siteId u [c2, c3, c1]
+            valueEquals =<< commentsResponse siteId u [c1, c2, c3]
 
         it "returns comments for the correct site" $ do
             sid1 <- runDB $ insert buildSite { siteBaseUrl = "http://ex1.com" }
