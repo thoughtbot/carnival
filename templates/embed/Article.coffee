@@ -22,8 +22,10 @@ class Article
 
   bindEvents: ->
     @element.addEventListener 'commenting', (event) =>
-      Carnival.addClass(@element, 'commenting')
-      @shiftArticle()
+      unless @element.classList.contains('commenting')
+        Carnival.addClass(@element, 'commenting')
+        @shiftArticle()
+
       @thread.displayForBlock(event.detail)
     @element.addEventListener 'doneCommenting', =>
       if @element.querySelectorAll('.commenting').length is 0
