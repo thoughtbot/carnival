@@ -48,7 +48,7 @@ postCommentsR siteId = do
     runValidation validateComment c $ \v -> do
         userComment <- runDB $ do
             commentId <- insert v
-            buildUserComment siteId (Entity commentId v) u
+            buildUserComment (Entity commentId v) u
 
         let notification = NewComment userComment
 

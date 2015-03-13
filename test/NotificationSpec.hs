@@ -52,7 +52,7 @@ createNotification :: SiteId -> Text -> Text -> Entity User -> DB Notification
 createNotification siteId article thread u = do
     c <- createComment (entityKey u) siteId article thread ""
 
-    NewComment <$> buildUserComment siteId c u
+    NewComment <$> buildUserComment c u
 
 subscribeUser :: SiteId -> Text -> Text -> Entity User -> DB ()
 subscribeUser siteId article thread eu = do

@@ -29,8 +29,8 @@ instance ToJSON UserComment where
         ecomment = userCommentComment userComment
         user = entityVal $ userCommentUser userComment
 
-buildUserComment :: SiteId -> Entity Comment -> Entity User -> DB UserComment
-buildUserComment siteId ecomment euser = do
+buildUserComment :: Entity Comment -> Entity User -> DB UserComment
+buildUserComment ecomment euser = do
     site <- get404 siteId
 
     return UserComment
@@ -39,6 +39,9 @@ buildUserComment siteId ecomment euser = do
         , userCommentUser = euser
         }
 
+  where
+    siteId = commentSite $ entityVal ecomment
+
 findUserComments :: SiteId -> Maybe Text -> DB [UserComment]
 findUserComments siteId marticle = do
     let filters = catMaybes
@@ -46,17 +49,14 @@ findUserComments siteId marticle = do
             , fmap (CommentArticleURL ==.) marticle
             ]
 
-    selectWithUsers siteId filters []
+    selectWithUsers filters []
 
 findRecentUserComments :: SiteId -> DB [UserComment]
 findRecentUserComments siteId =
-    selectWithUsers siteId [] [Desc CommentCreated, LimitTo 20]
+    selectWithUsers [] [Desc CommentCreated, LimitTo 20]
 
-selectWithUsers :: SiteId
-                -> [Filter Comment]
-                -> [SelectOpt Comment]
-                -> DB [UserComment]
-selectWithUsers siteId filters options = do
+selectWithUsers :: [Filter Comment] -> [SelectOpt Comment] -> DB [UserComment]
+selectWithUsers filters options = do
     comments <- selectList filters options
     users <- selectList
         [ UserId <-. map (commentUser . entityVal) comments
@@ -66,4 +66,4 @@ selectWithUsers siteId filters options = do
         let userId = commentUser $ entityVal c
             muser = find ((== userId) . entityKey) users
 
-        maybe (return Nothing) (fmap Just . buildUserComment siteId c) muser
+        maybe (return Nothing) (fmap Just . buildUserComment c) muser

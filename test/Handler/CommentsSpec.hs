@@ -23,11 +23,11 @@ spec = withApp $ do
 
             get $ CommentsR siteId
 
-            valueEquals =<< commentsResponse siteId u [c1, c2, c3]
+            valueEquals =<< commentsResponse u [c1, c2, c3]
 
             getWithParams (CommentsR siteId) [("article", "1")]
 
-            valueEquals =<< commentsResponse siteId u [c1, c2]
+            valueEquals =<< commentsResponse u [c1, c2]
 
         it "returns comments for the correct site" $ do
             sid1 <- runDB $ insert buildSite { siteBaseUrl = "http://ex1.com" }
@@ -41,11 +41,11 @@ spec = withApp $ do
 
             get $ CommentsR sid1
 
-            valueEquals =<< commentsResponse sid1 u [c1, c3]
+            valueEquals =<< commentsResponse u [c1, c3]
 
             get $ CommentsR sid2
 
-            valueEquals =<< commentsResponse sid2 u [c2, c4]
+            valueEquals =<< commentsResponse u [c2, c4]
 
     describe "POST CommentsR" $ do
         it "does not allow unauthenticated commenting" $ do
@@ -72,7 +72,7 @@ spec = withApp $ do
             statusIs 201
 
             (e@(Entity _ c):_) <- runDB $ selectList [] []
-            userComment <- runDB $ buildUserComment siteId e u
+            userComment <- runDB $ buildUserComment e u
 
             valueEquals $ object ["comment" .= userComment]
 
@@ -98,12 +98,9 @@ spec = withApp $ do
 
             statusIs 400
 
-commentsResponse :: SiteId
-                 -> Entity User
-                 -> [Entity Comment]
-                 -> YesodExample App Value
-commentsResponse siteId user comments = runDB $ do
+commentsResponse :: Entity User -> [Entity Comment] -> YesodExample App Value
+commentsResponse user comments = runDB $ do
     userComments <- forM comments $ \comment ->
-        buildUserComment siteId comment user
+        buildUserComment comment user
 
     return $ object ["comments" .= userComments]
