@@ -6,7 +6,6 @@ module Handler.CommentsSpec
 import TestImport
 import Model.UserComment
 import Data.Aeson (Value, (.=), encode, object)
-import Data.Time (getCurrentTime)
 
 main :: IO ()
 main = hspec spec
@@ -43,7 +42,7 @@ spec = withApp $ do
 
             get $ CommentsR siteId
 
-            valueEquals =<< commentsResponse siteId u [c2, c3, c1]
+            valueEquals =<< commentsResponse u [c2, c3, c1]
 
         it "returns comments for the correct site" $ do
             sid1 <- runDB $ insert buildSite { siteBaseUrl = "http://ex1.com" }
