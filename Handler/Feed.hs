@@ -37,7 +37,7 @@ feedFromComments (Entity siteId site) comments = do
 
 commentToRssEntry :: UserComment -> Handler (FeedEntry Text)
 commentToRssEntry userComment = return FeedEntry
-    { feedEntryLink = siteBaseUrl site <> commentArticleURL comment
+    { feedEntryLink = siteBaseUrl site <> "/" <> commentArticleURL comment
     , feedEntryUpdated = commentCreated comment
     , feedEntryTitle = "New comment from "
         <> userName user
