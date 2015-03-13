@@ -53,7 +53,7 @@ findUserComments siteId marticle = do
 
 findRecentUserComments :: SiteId -> DB [UserComment]
 findRecentUserComments siteId =
-    selectWithUsers [] [Desc CommentCreated, LimitTo 20]
+    selectWithUsers [CommentSite ==. siteId] [Desc CommentCreated, LimitTo 20]
 
 selectWithUsers :: [Filter Comment] -> [SelectOpt Comment] -> DB [UserComment]
 selectWithUsers filters options = do
