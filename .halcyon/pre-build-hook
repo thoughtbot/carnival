@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Ensure Settings/StaticFiles.hs is always compiled. This is overly-aggressive
+# but is known to work. Coming changes in Halcyon will make this better.
+#
+# Related: https://github.com/mietek/halcyon/issues/53#issuecomment-82392022
+#
+###
+build_dir=$3
+
+touch "$build_dir/Settings/StaticFiles.hs"
