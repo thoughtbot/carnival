@@ -29,7 +29,7 @@ import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet,
                                              toLogStr)
 
 import LoadEnv
-import System.Environment (lookupEnv)
+import System.Environment (getEnv)
 import Web.Heroku.Persist.Postgresql (postgresConf)
 
 -- Import all relevant handler modules here.
@@ -93,22 +93,12 @@ makeFoundation appSettings = do
 
   where
     getOAuthKeys :: String -> IO OAuthKeys
-    getOAuthKeys plugin = do
-        envClientId     <- lookupEnv $ plugin <> "_OAUTH_CLIENT_ID"
-        envClientSecret <- lookupEnv $ plugin <> "_OAUTH_CLIENT_SECRET"
+    getOAuthKeys plugin = OAuthKeys
+        <$> getEnvText (plugin ++ "_OAUTH_CLIENT_ID")
+        <*> getEnvText (plugin ++ "_OAUTH_CLIENT_SECRET")
 
-        case (envClientId, envClientSecret) of
-            (Just clientId, Just clientSecret) ->
-                return OAuthKeys
-                    { oauthKeysClientId     = pack clientId
-                    , oauthKeysClientSecret = pack clientSecret
-                    }
-
-            _ -> error
-                    $  plugin
-                    <> "_OAUTH_CLIENT_ID or "
-                    <> plugin
-                    <> "_OAUTH_CLIENT_SECRET not set"
+    getEnvText :: String -> IO Text
+    getEnvText = fmap pack . getEnv
 
 -- | Convert our foundation to a WAI Application by calling @toWaiAppPlain@ and
 -- applyng some additional middlewares.
