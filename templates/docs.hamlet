@@ -1,9 +1,158 @@
-<h1>Carnival Documentation
+<h1>Carnival User Guide
 
 <article>
   <p>
-    TODO
 
+    Carnival is an unobtrusive, developer-friendly way to add comments to any
+    web site.
+
+  <p>
+
+    Installation is easy. Once you've 
+    <a href=@{SitesR}>created a Site
+    , just add the following HTML snippet to the bottom of your page:
+
+  <pre>
+    <code>
+      \&lt;script src='#{root}/YOUR-SITE-ID/init.js'&gt;&lt;/script&gt;
+      \&lt;script&gt;
+      \  document.addEventListener("DOMContentLoaded", Carnival.init);
+      \&lt;/script&gt;
+
+  <p>
+
+    By default, a hidden sidebar will be added to any 
+    <code>article
+    elements. Within these elements, each 
+    <code>p
+    and 
+    <code>pre
+    element will receive a small indicator, visible on hover. When clicked, the
+    sidebar will expand, allowing visitors to comment on that specific portion
+    of your article.
+
+  <p>
+
+    Carnival also sends email notifications on replies and provides an RSS feed
+    of recent comments on your Site.
+
+  <p>
+
+    This page itself has Carnival loaded. Feel free to add comments and 
+    <a href=view-source:@{DocsR}>view-source
+    to see how it works.
+
+  <h2>Options
+
+  <p>
+    <code>Carnival.init
+    accepts an options object with any of the following keys:
+
+  <table .table>
+    <tr>
+      <th>Option
+      <th>Default Value
+      <th>Description
+    <tr>
+      <td><code>enabled</code>
+      <td><code>true</code>
+      <td>Add Carnival on this page?
+    <tr>
+      <td><code>article_author</code>
+      <td><code>""</code>
+      <td>The Article author. Used in the Comments Feed.
+    <tr>
+      <td><code>article_selector</code>
+      <td><code>"article"</code>
+      <td>The CSS selector used to find the Article element.
+    <tr>
+      <td><code>block_selector</code>
+      <td><code>":scope > p, :scope > pre"</code>
+      <td>
+        The CSS selector used to find elements within the Article on which to
+        add comment Threads. When this selector is used, 
+        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:scope">
+          <code>:scope
+        will refer to your Article element.
+    <tr>
+      <td><code>onNewComment</code>
+      <td><code>function(comment) { };</code>
+      <td>A callback invoked whenever comments are inserted in the DOM.
+
+  <p>
+    To pass options, you'll need to modify your event handler like so:
+
+  <pre>
+    <code>
+      \document.addEventListener("DOMContentLoaded", function() {
+      \  Carnival.init({
+      \    enabled: true,
+      \    article_author: '',
+      \    article_selector: 'article',
+      \    block_selector: ':scope > p, :scope > pre',
+      \    onNewComment: function(comment) { };
+      \  });
+      \});
+
+  <h2>Impact on the DOM
+
+  <p>
+
+    Carnival will insert an element to contain the comment threads and form.
+    This new element will be the first child of your Article element and have
+    the class 
+    <code>carnival
+    . To support the positioning of this element, Carnival must ensure that
+    your Article element is 
+    <code>position: relative
+    .
+
+  <p>
+
+    Carnival will add sibling elements after each commentable block to hold the
+    comment indicator and count. These elements will have the class 
+    <code>carnival-comment-indicator
+    .
+
+  <p>
+
+    When comments are opened, Carnival will add a 
+    <code>commenting
+    class to your Article element. To make room for itself, Carnival will shift
+    your Article element 
+    <code>150
+    pixels to the left. It does this by taking the element's current 
+    <code>style.left
+    value and setting a new one 150 pixels less. (Soon, you will be able to
+    disable this shift if you want to handle the positioning yourself.)
+
+  <h2>Comments Feed
+
+  <p>
+
+    Each Site comes with a Comments Feed of the 20 most recent comments for that
+    Site. You can find it at 
+    <code>#{root}/sites/YOUR-SITE-ID/feed
+    . This is provided so you can implement automation via 
+    <a href="https://zapier.com/">Zapier
+    or 
+    <a href="https://ifttt.com/">IFTTT
+
+  <h2>Support
+
+  <p>
+    Carnival is open-source software. You can directly add issues and track its
+    development on 
+    <a href="https://github.com/thoughtbot/carnival">GitHub
+    .
+
+  <p>
+    You can also email questions and comments to 
+    <a href="mailto:support@carnivalapp.io">
+      support@carnivalapp.io
+    .
+
+<!-- Hey, look how easy this is! -->
 <script src=@{InitR siteId}>
 <script>
   document.addEventListener("DOMContentLoaded", Carnival.init);
