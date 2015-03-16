@@ -10,6 +10,10 @@ $doctype 5
         <div .navbar-header>
           <a .navbar-brand href=@{RootR}>Carnival
 
+        <ul .nav.navbar-nav>
+          <li>
+            <a href=@{DocsR}>Docs
+
         <div .navbar-form .navbar-right>
           $maybe Entity _ _ <- muser
             <a .btn.btn-primary href=@{SitesR}>My sites
