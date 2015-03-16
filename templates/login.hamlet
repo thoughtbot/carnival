@@ -1,3 +1,2 @@
-<p>
-  <a .btn .btn-success href=@{AuthR $ PluginR "github" ["forward"]}>
-    Login via GitHub
+<a .button.button--github href=@{AuthR $ PluginR "github" ["forward"]}>
+  Login with GitHub

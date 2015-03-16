@@ -5,29 +5,29 @@ $doctype 5
     <title>#{pageTitle pc}
     ^{pageHead pc}
   <body>
-    <nav .navbar.navbar-inverse>
-      <div .container>
-        <div .navbar-header>
-          <a .navbar-brand href=@{RootR}>Carnival
-
-        <ul .nav.navbar-nav>
-          <li>
-            <a href=@{DocsR}>Docs
-
-        <div .navbar-form .navbar-right>
+    <header>
+      <nav .nav.container>
+        <ul .clearfix>
+          <li .nav-item>
+            <a .nav-logo href=@{RootR}>Carnival
           $maybe Entity _ _ <- muser
-            <a .btn.btn-primary href=@{SitesR}>My sites
-            <a .btn.btn-default href=@{AuthR LogoutR}>Log out
+            <li .nav-item>
+              <a href=@{DocsR}>Guide
+            <li .nav-item>
+              <a href=@{SitesR}>Sites
+            <li .nav-item.nav-item--button>
+              <a .button.button--light href=@{AuthR LogoutR}>Log out
           $nothing
-            <a .btn.btn-default href=@{AuthR LoginR}>Sign in / Sign up
+            <li .nav-item.nav-item--button>
+              <a .button.button--light href=@{AuthR LoginR}>Sign in
 
     ^{pageBody pc}
 
-    <div .container>
-      <hr>
-      <footer>
-        <p>
-          © #{appCopyright $ appSettings master} -
+    <footer .footer>
+      <div .container.clearfix>
+        <p .footer-copy>
+          © #{appCopyright $ appSettings master}
+        <p .footer-source>
           <a href="https://github.com/thoughtbot/carnival">source
 
     $maybe analytics <- appAnalytics $ appSettings master

@@ -1,0 +1,120 @@
+@linkcolor: #E74C3D;
+@linkbordercolor: #F7C4BF;
+@lightgray: #D7D7D7;
+@mediumgray: #615E5F;
+@darkgray: #221E1F;
+
+body {
+  color: #{mediumgray};
+  font-family: "Lato", "Gill Sans", "Gill Sans MT", sans-serif;
+  font-size: 16px;
+}
+
+a {
+  color: #{linkcolor};
+  text-decoration: none;
+}
+
+a:hover {
+  border-bottom: 2px solid #{linkbordercolor};
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #{darkgray};
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+  background: #{linkcolor};
+  border-radius: 1.125em;
+  color: #fff;
+  display: inline-block;
+  line-height: 1;
+  padding: 8px 1.5em 9px;
+}
+
+.button:hover {
+  border-bottom: 0;
+}
+
+.button--github {
+  background: #{linkcolor} url(@{StaticR img_github_svg}) no-repeat 1em center;
+  padding-left: 2.75em;
+}
+
+.button--light {
+  background-color: #fff;
+  border: 2px solid #{linkbordercolor};
+  color: #{linkcolor};
+}
+
+.button--light:hover {
+  border-bottom: 2px solid #{linkbordercolor};
+}
+
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 68.75em;
+  width: 90%;
+}
+
+.nav {
+  padding: 3em 0;
+}
+
+.nav-item {
+  float: left;
+  line-height: 4em;
+  list-style: none;
+  margin: 0 4em 0 0;
+}
+
+.nav-item:last-child {
+  margin-right: 0;
+}
+
+.nav-item--button {
+  float: right;
+}
+
+.nav-logo {
+  background: url(@{StaticR img_logo_png}) no-repeat left center / 4em;
+  display: block;
+  height: 4em;
+  line-height: 4em;
+  padding: 0 0 0 6em;
+}
+
+.nav-logo:hover {
+  border: 0;
+}
+
+.footer {
+  background-color: #{lightgray};
+  color: #{mediumgray};
+  padding: 3em 0;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-copy {
+  float: left;
+}
+
+.footer-source {
+  float: right;
+}

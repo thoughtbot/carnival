@@ -15,4 +15,4 @@
 
   <form method=post action=@{SitesR} enctype=#{enctype}>
     ^{widget}
-    <button type="submit" .btn.btn-primary>Create
+    <button type="submit" .btn.btn-default>Create

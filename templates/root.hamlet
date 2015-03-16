@@ -1,16 +1,15 @@
-<div .jumbotron>
-  <h1>Carnival
+<div .hero>
+  <h1 .hero-headline>
 
-  <p>
-    A comment service by thoughtbot.
+    Carnival is an unobtrusive, developer-friendly way to add comments to any
+    web site.
 
-  <p>
-    This service is <strong>Beta</strong>. Feel free to try it on your site, but
-    know that there may be bugs and we are not responsible for the loss of any
-    data you create through this service.
+  <p .hero-disclaimer>
 
-  <p>
-    $maybe Entity _ _ <- muser
-      <a .btn.btn-primary.btn-lrg href=@{SitesR}>Get Started
-    $nothing
-      <a .btn.btn-primary.btn-lrg href=@{AuthR LoginR}>Sign in / Sign up
+    This service is <strong>Beta</strong>. There may be bugs and we are not
+    responsible for the loss of data you create through this service.
+
+  <a .button.button--github href=@{AuthR $ PluginR "github" ["forward"]}>
+    Sign up with GitHub
+
+  <img .hero-image src=@{StaticR img_browser_svg}>
