@@ -1,15 +1,15 @@
-module Handler.Demo where
+module Handler.Docs where
 
 import Import
 
-getDemoR :: Handler Html
-getDemoR = do
+getDocsR :: Handler Html
+getDocsR = do
     root <- getAppRoot
     Entity siteId _ <- runDB $ upsert (demoSite root) []
 
     defaultLayout $ do
-        setTitle "Carnival Demo"
-        $(widgetFile "demo")
+        setTitle "Carnival - Documentation"
+        $(widgetFile "docs")
 
 demoSite :: Text -> Site
 demoSite root = Site

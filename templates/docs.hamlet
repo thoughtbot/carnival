@@ -1,0 +1,9 @@
+<h1>Carnival Documentation
+
+<article>
+  <p>
+    TODO
+
+<script src=@{InitR siteId}>
+<script>
+  document.addEventListener("DOMContentLoaded", Carnival.init);
