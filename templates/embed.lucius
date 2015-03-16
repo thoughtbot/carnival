@@ -143,6 +143,7 @@
   right: -35px;
   width: 170px;
   margin: 0;
+  padding: 0;
 
   li:first-child {
     border-top: 0;
