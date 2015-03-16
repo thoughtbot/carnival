@@ -8,6 +8,8 @@
 /sites/#SiteId SiteR GET POST
 /sites/#SiteId/delete DeleteSiteR GET POST
 
+/sites/#SiteId/carnival.js CarnivalR GET
+/sites/#SiteId/carnival.css CarnivalCssR GET
 /sites/#SiteId/init.js InitR GET
 /sites/#SiteId/embed EmbedR GET
 /sites/#SiteId/feed FeedR GET

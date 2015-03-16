@@ -29,6 +29,7 @@ library
                      Settings.StaticFiles
                      Handler.Common
                      Handler.Root
+                     Handler.Carnival
                      Handler.Comments
                      Handler.Init
                      Handler.Embed

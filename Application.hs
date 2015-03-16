@@ -36,6 +36,7 @@ import Web.Heroku.Persist.Postgresql (postgresConf)
 -- Don't forget to add new modules to your cabal file!
 import Handler.Root
 import Handler.Common
+import Handler.Carnival
 import Handler.Comments
 import Handler.Init
 import Handler.Embed
