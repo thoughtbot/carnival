@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Ensure Settings/StaticFiles.hs is always compiled
+#
+###
+source_dir=$2
+
+touch "$source_dir/Settings/StaticFiles.hs"
