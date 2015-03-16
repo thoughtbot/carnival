@@ -1,19 +1,20 @@
 <pre>
-  $maybe siteId <- msiteId
-    &lt;script src='@{InitR siteId}'&gt;&lt;/script&gt;
-  $nothing
-    &lt;script src='#{root}/sites/YOUR-SITE-ID/init.js'&gt;&lt;/script&gt;
+  <code>
+    $maybe siteId <- msiteId
+      &lt;script src='@{InitR siteId}'&gt;&lt;/script&gt;
+    $nothing
+      &lt;script src='#{root}/sites/YOUR-SITE-ID/init.js'&gt;&lt;/script&gt;
 
-  \
-  \&lt;script&gt;
-  \  document.addEventListener("DOMContentLoaded", function() {
-  \    // Options not required, defaults shown
-  \    Carnival.init({
-  \      enabled: true,
-  \      article_author: '',
-  \      article_selector: 'article',
-  \      block_selector: ':scope > p, :scope > pre',
-  \      onNewComment: function(comment) { };
-  \    });
-  \  });
-  \&lt;/script&gt;
+    \
+    \&lt;script&gt;
+    \  document.addEventListener("DOMContentLoaded", function() {
+    \    // Options not required, defaults shown
+    \    Carnival.init({
+    \      enabled: true,
+    \      article_author: '',
+    \      article_selector: 'article',
+    \      block_selector: ':scope > p, :scope > pre',
+    \      onNewComment: function(comment) { };
+    \    });
+    \  });
+    \&lt;/script&gt;
