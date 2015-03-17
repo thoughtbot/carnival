@@ -9,7 +9,9 @@
     This service is <strong>Beta</strong>. There may be bugs and we are not
     responsible for the loss of data you create through this service.
 
-  <a .button.button--github href=@{AuthR $ PluginR "github" ["forward"]}>
-    Sign up with GitHub
+  $maybe Entity _ _ <- muser
+  $nothing
+    <a .button.button--github href=@{AuthR $ PluginR "github" ["forward"]}>
+      Sign up with GitHub
 
   <img .hero-image src=@{StaticR img_browser_svg}>
