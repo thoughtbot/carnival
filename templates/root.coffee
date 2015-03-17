@@ -1,1 +1,1 @@
-window.opener.postMessage("hasLoggedIn", '*')
+window.opener?.postMessage("hasLoggedIn", '*')
