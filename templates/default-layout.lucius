@@ -83,6 +83,12 @@ ul {
   margin: 0 4em 0 0;
 }
 
+.nav-item.active a {
+  border-bottom: 2px solid #{linkbordercolor};
+  cursor: default;
+  pointer-events: none;
+}
+
 .nav-item:last-child {
   margin-right: 0;
 }

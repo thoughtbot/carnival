@@ -10,10 +10,10 @@ $doctype 5
         <ul .clearfix>
           <li .nav-item>
             <a .nav-logo href=@{RootR}>Carnival
-          $maybe Entity _ _ <- muser
-            <li .nav-item>
+            <li .nav-item :isRoute DocsR:.active>
               <a href=@{DocsR}>Guide
-            <li .nav-item>
+          $maybe Entity _ _ <- muser
+            <li .nav-item :isRoute SitesR:.active>
               <a href=@{SitesR}>Sites
             <li .nav-item.nav-item--button>
               <a .button.button--light href=@{AuthR LogoutR}>Log out
