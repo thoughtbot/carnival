@@ -30,4 +30,4 @@ database:
   poolsize: "_env:PGPOOLSIZE:10"
 
 copyright: "thoughtbot, inc. 2015"
-#analytics: UA-YOURCODE
+analytics: "nMWJWvFASCtQm0dr3nIZLDszgHvm7vhx"

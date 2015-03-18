@@ -71,7 +71,7 @@ data AppSettings = AppSettings
     , appCopyright              :: Text
     -- ^ Copyright text to appear in the footer of the page
     , appAnalytics              :: Maybe Text
-    -- ^ Google Analytics code
+    -- ^ Segment Analytics code
     , appSendMail               :: Bool
     -- ^ Actually send e-mail (via SendGrid)?
     , appDatabaseUrl            :: Bool
