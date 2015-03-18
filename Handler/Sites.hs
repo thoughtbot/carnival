@@ -75,12 +75,6 @@ postDeleteSiteR siteId = do
     setMessage "Site deleted!"
     redirect SitesR
 
-embedExample :: Maybe SiteId -> Widget
-embedExample msiteId = do
-    root <- handlerToWidget getAppRoot
-
-    $(widgetFile "embed-example")
-
 siteForm :: Maybe Site -> Form Site
 siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
     <$> areq textField (fs "Name" "my-site") (siteName <$> msite)

@@ -14,7 +14,12 @@
 <h2>
   Embed with the following JavaScript:
 
-^{embedExample $ Just siteId}
+<pre>
+  <code>
+    \&lt;script src='@{InitR siteId}'&gt;&lt;/script&gt;
+    \&lt;script&gt;
+    \  document.addEventListener("DOMContentLoaded", Carnival.init);
+    \&lt;/script&gt;
 
 <p>
   <a href=@{FeedR siteId}>Comments Feed
