@@ -11,6 +11,15 @@ main = hspec spec
 spec :: Spec
 spec = withApp $
     describe "GET FeedR" $ do
+        it "returns a feed of no items when there are no comments" $ do
+            siteId <- runDB $ insert buildSite
+
+            get $ FeedR siteId
+
+            statusIs 200
+            items <- htmlQuery "item"
+            items `shouldHaveLength` 0
+
         it "includes at most 20 comments" $ do
             siteId <- runDB $ insert buildSite
             runDB $ do

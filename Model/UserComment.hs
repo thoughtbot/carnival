@@ -10,6 +10,9 @@ data UserComment = UserComment
     , userCommentUser :: Entity User
     }
 
+userCommentCreated :: UserComment -> UTCTime
+userCommentCreated = commentCreated . entityVal . userCommentComment
+
 instance ToJSON UserComment where
     toJSON userComment = object
         [ "id" .= (String $ toPathPiece commentId)

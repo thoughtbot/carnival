@@ -11,12 +11,11 @@ getFeedR siteId = do
     site <- runDB $ get404 siteId
     comments <- runDB $ findRecentUserComments siteId
 
-    when (null comments) notFound
-
     feedFromComments (Entity siteId site) comments
 
 feedFromComments :: Entity Site -> [UserComment] -> Handler RepRss
 feedFromComments (Entity siteId site) comments = do
+    updated <- getUpdated comments
     entries <- mapM commentToRssEntry comments
     render <- getUrlRender
 
@@ -27,13 +26,14 @@ feedFromComments (Entity siteId site) comments = do
         , feedLanguage    = siteLanguage site
         , feedLinkSelf    = render $ FeedR siteId
         , feedLinkHome    = siteBaseUrl site
-        , feedUpdated     = getCommentCreated $ unsafeHead comments
+        , feedUpdated     = updated
         , feedEntries     = entries
         }
 
     where
-        getCommentCreated :: UserComment -> UTCTime
-        getCommentCreated = commentCreated . entityVal . userCommentComment
+        getUpdated :: [UserComment] -> Handler UTCTime
+        getUpdated [] = liftIO $ getCurrentTime
+        getUpdated (userComment:_) = return $ userCommentCreated $ userComment
 
 commentToRssEntry :: UserComment -> Handler (FeedEntry Text)
 commentToRssEntry userComment = return FeedEntry
