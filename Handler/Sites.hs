@@ -102,11 +102,19 @@ siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
 
     baseUrlField :: Field Handler Text
     baseUrlField = flip checkM textField $ \url -> do
-        n <- runDB $ count [SiteBaseUrl ==. url]
+        if unchanged url
+            then return $ Right url
+            else ensureUnique url
 
-        return $ case n of
-            0 -> Right url
-            _ -> Left ("This URL is already in use" :: Text)
+      where
+        unchanged url = fmap siteBaseUrl msite == Just url
+
+        ensureUnique url = do
+            n <- runDB $ count [SiteBaseUrl ==. url]
+
+            return $ case n of
+                0 -> Right url
+                _ -> Left ("This URL is already in use" :: Text)
 
 onFormSuccess :: Monad m => FormResult a -> (a -> m ()) -> m ()
 onFormSuccess (FormSuccess x) f = f x

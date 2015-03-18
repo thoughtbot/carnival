@@ -79,6 +79,23 @@ spec = withApp $ do
             siteName site' `shouldBe` "new-name"
             siteBaseUrl site' `shouldBe` "http://new.example.com"
 
+        it "does not fail validation when the URL is not changed" $ do
+            user <- runDB $ createUser "1"
+            site <- runDB $ createSite (entityKey user) $ buildSite
+                { siteName = "site-name" }
+
+            authenticateAs user
+
+            postForm (SiteR $ entityKey site) $ do
+                byLabel "Name" "new-name"
+                byLabel "Base URL" $ siteBaseUrl $ entityVal site
+                byLabel "Language" $ siteLanguage $ entityVal site
+
+            statusIs 303 -- redirect
+
+            Just site' <- runDB $ DB.get $ entityKey site
+            siteName site' `shouldBe` "new-name"
+
         it "does not allow access to other users' sites" $ do
             user1 <- runDB $ createUser "1"
             user2 <- runDB $ createUser "2"
