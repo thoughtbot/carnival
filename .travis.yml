@@ -22,6 +22,8 @@ script:
 
 notifications:
   email: false
+  slack:
+    secure: A+eCONhbofvAmdVTqJvsw8j8PLzSVVqNxsxmInVMscEUjjXXjEuFxngnBPXf2p0X+Qx+TvU/tgM2ukXeQ5nhELH3qxYN0Rl5uE2fjwBw1w0WyStVvVx1h1/ERgN8uftDVfhLo4qszAJxsfvV90Etd1EXqnulsm7Y+iIyRyDqMtk=
 
 branches:
   only:
