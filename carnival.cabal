@@ -41,6 +41,7 @@ library
                      Helper.Validation
                      SendMail
                      Notification
+                     Language
                      Network.Mail.SendGrid
                      Network.Mail.RecipientOverride
 

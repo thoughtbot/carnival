@@ -1,6 +1,7 @@
 module Handler.Sites where
 
 import Import
+import Language
 import Model.Site
 import Helper.Request
 
@@ -83,7 +84,7 @@ siteForm :: Maybe Site -> Form Site
 siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
     <$> areq textField (fs "Name" "my-site") (siteName <$> msite)
     <*> areq baseUrlField (fs "Base URL" "https://example.com") (siteBaseUrl <$> msite)
-    <*> areq textField (fs "Language" "en-us") (siteLanguage <$> msite)
+    <*> areq languageField (fs "Language" "") (siteLanguage <$> msite <|> Just "en-us")
 
   where
     fs :: Text -> Text -> FieldSettings site

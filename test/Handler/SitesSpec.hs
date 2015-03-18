@@ -4,7 +4,9 @@ module Handler.SitesSpec
     ) where
 
 import TestImport
+import Language
 import Model.Site
+import Data.List (findIndex)
 import qualified Database.Persist as DB
 
 main :: IO ()
@@ -46,7 +48,7 @@ spec = withApp $ do
             postForm SitesR $ do
                 byLabel "Name" "test-site"
                 byLabel "Base URL" "http://example.com"
-                byLabel "Language" "en-us"
+                selectLanguage "en-us"
 
             statusIs 303 -- redirect
 
@@ -71,13 +73,14 @@ spec = withApp $ do
             postForm (SiteR $ entityKey site) $ do
                 byLabel "Name" "new-name"
                 byLabel "Base URL" "http://new.example.com"
-                byLabel "Language" "untested"
+                selectLanguage $ "en-us"
 
             statusIs 303 -- redirect
 
             Just site' <- runDB $ DB.get $ entityKey site
             siteName site' `shouldBe` "new-name"
             siteBaseUrl site' `shouldBe` "http://new.example.com"
+            siteLanguage site' `shouldBe` "en-us"
 
         it "does not fail validation when the URL is not changed" $ do
             user <- runDB $ createUser "1"
@@ -89,7 +92,7 @@ spec = withApp $ do
             postForm (SiteR $ entityKey site) $ do
                 byLabel "Name" "new-name"
                 byLabel "Base URL" $ siteBaseUrl $ entityVal site
-                byLabel "Language" $ siteLanguage $ entityVal site
+                selectLanguage $ siteLanguage $ entityVal site
 
             statusIs 303 -- redirect
 
@@ -108,3 +111,9 @@ spec = withApp $ do
 
 createSite_ :: UserId -> Site -> DB ()
 createSite_ userId = void . createSite userId
+
+selectLanguage :: Text -> RequestBuilder m ()
+selectLanguage lang = do
+    case findIndex ((== lang) . snd) languageList of
+        Just i -> byLabel "Language" $ pack $ show $ i + 1
+        Nothing -> error $ "Invalid language: " ++ unpack lang
