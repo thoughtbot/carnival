@@ -1,5 +1,6 @@
 module Yesod.Test.Extension
     ( getWithParams
+    , postForJSON
     , postForm
     , valueEquals
     , module Yesod.Test
@@ -12,6 +13,7 @@ import Test.Hspec.Expectations.Lifted
 import Yesod (Yesod, RedirectUrl)
 import Data.Aeson (Value, eitherDecode)
 import Data.Text (Text)
+import Network.HTTP.Types (hAccept)
 import Network.Wai.Test (simpleBody)
 
 -- | Perform a GET request with query params present
@@ -22,6 +24,15 @@ getWithParams :: (RedirectUrl site url, Yesod site)
 getWithParams url params = request $ do
     setMethod  "GET"
     mapM_ (uncurry addGetParam) params
+    setUrl url
+
+-- | Perform a POST request with an Accept header of "application/json"
+postForJSON :: (Yesod site, RedirectUrl site url)
+            => url
+            -> YesodExample site ()
+postForJSON url = request $ do
+    addRequestHeader (hAccept, "application/json")
+    setMethod "POST"
     setUrl url
 
 postForm :: (Yesod site, RedirectUrl site url)

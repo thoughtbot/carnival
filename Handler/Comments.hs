@@ -7,7 +7,6 @@ import Model.Subscription
 import Model.UserComment
 import Notification
 
-import Helper.Auth
 import Helper.Request
 import Helper.Validation
 
@@ -41,7 +40,7 @@ postCommentsR :: SiteId -> Handler Value
 postCommentsR siteId = do
     allowCrossOrigin
 
-    u <- requireAuth_
+    u <- requireAuth
     t <- liftIO getCurrentTime
     c <- fmap (buildComment t u siteId) requireJsonBody
 

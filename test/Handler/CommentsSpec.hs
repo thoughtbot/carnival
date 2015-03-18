@@ -66,7 +66,7 @@ spec = withApp $ do
         it "does not allow unauthenticated commenting" $ do
             siteId <- runDB $ insert buildSite
 
-            post $ CommentsR siteId
+            postForJSON $ CommentsR siteId
 
             statusIs 401
 

@@ -37,7 +37,6 @@ library
                      Handler.Unsubscribe
                      Handler.Sites
                      Handler.Docs
-                     Helper.Auth
                      Helper.Request
                      Helper.Validation
                      SendMail
@@ -179,6 +178,7 @@ test-suite test
                  , case-insensitive
                  , containers
                  , hspec-expectations-lifted
+                 , http-types
                  , markdown
                  , mime-mail
                  , mtl

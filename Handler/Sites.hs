@@ -2,7 +2,7 @@ module Handler.Sites where
 
 import Import
 import Model.Site
-import Helper.Auth
+import Helper.Request
 
 import Yesod.Form.Bootstrap3
 
@@ -117,3 +117,8 @@ siteForm msite = renderBootstrap3 BootstrapBasicForm $ Site
 onFormSuccess :: Monad m => FormResult a -> (a -> m ()) -> m ()
 onFormSuccess (FormSuccess x) f = f x
 onFormSuccess _ _ = return ()
+
+requireMemberSite :: SiteId -> Handler Site
+requireMemberSite siteId = do
+    userId <- requireAuthId
+    fromMaybe404 $ runDB $ findMemberSite siteId userId
