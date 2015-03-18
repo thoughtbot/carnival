@@ -8,6 +8,7 @@ import Yesod.Default.Util   (addStaticContentExternal)
 import Yesod.Core.Types     (Logger)
 import qualified Yesod.Core.Unsafe as Unsafe
 
+import Model.User
 import Yesod.Auth.Dummy
 import Yesod.Auth.OAuth2.Github
 
@@ -130,14 +131,7 @@ instance YesodAuth App where
     -- Override the above two destinations when a Referer: header is present
     redirectToReferer _ = True
 
-    getAuthId creds = runDB $ do
-        muser <- getBy $ UniqueUser (credsPlugin creds) (credsIdent creds)
-
-        let newUser = buildUser creds
-
-        case muser of
-            Just (Entity uid _) -> fmap Just $ replaceUser uid newUser
-            _                   -> insertUser newUser
+    getAuthId = runDB . authenticateUser
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins m = addAuthBackDoor m
@@ -151,21 +145,6 @@ instance YesodAuth App where
     loginHandler = lift $ defaultLayout $ do
         setTitle "Carnival - Login"
         $(widgetFile "login")
-
-buildUser :: Creds m -> Maybe User
-buildUser (Creds csPlugin csIdent csExtra) =
-    User <$> lookup "name" csExtra
-         <*> lookup "email" csExtra
-         <*> pure csPlugin
-         <*> pure csIdent
-
-replaceUser :: UserId -> Maybe User -> YesodDB App UserId
-replaceUser uid (Just u) = replace uid u >> return uid
-replaceUser uid _        = return uid
-
-insertUser :: Maybe User -> YesodDB App (Maybe UserId)
-insertUser (Just u) = fmap Just $ insert u
-insertUser _        = return Nothing
 
 addAuthBackDoor :: App -> [AuthPlugin App] -> [AuthPlugin App]
 addAuthBackDoor app =

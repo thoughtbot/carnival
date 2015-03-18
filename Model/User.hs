@@ -4,9 +4,10 @@ module Model.User
     , userGravatar
     , findUsers
     , findUsers'
+    , authenticateUser
     ) where
 
-import Import
+import Import.NoFoundation
 
 import Network.Gravatar
 
@@ -29,3 +30,20 @@ findUsers userIds = selectList [UserId <-. userIds] []
 -- | Same as @findUsers@, but discards the @entityKey@
 findUsers' :: [UserId] -> DB [User]
 findUsers' = fmap (map entityVal) . findUsers
+
+authenticateUser :: Creds m -> DB (Maybe UserId)
+authenticateUser Creds{..} = do
+    muser <- getBy $ UniqueUser credsPlugin credsIdent
+
+    let user = User
+            <$> lookup "name" credsExtra
+            <*> lookup "email" credsExtra
+            <*> pure credsPlugin
+            <*> pure credsIdent
+
+    maybe (mapM insert user) (updateProfile user) muser
+
+updateProfile :: Maybe User -> Entity User -> DB (Maybe UserId)
+updateProfile muser (Entity uid _) = do
+    mapM_ (replace uid) muser
+    return $ Just uid
