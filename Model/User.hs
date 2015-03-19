@@ -32,18 +32,17 @@ findUsers' :: [UserId] -> DB [User]
 findUsers' = fmap (map entityVal) . findUsers
 
 authenticateUser :: Creds m -> DB (Maybe UserId)
-authenticateUser Creds{..} = do
-    muser <- getBy $ UniqueUser credsPlugin credsIdent
+authenticateUser = mapM upsertUser . credsToUser
 
-    let user = User
-            <$> lookup "name" credsExtra
-            <*> lookup "email" credsExtra
-            <*> pure credsPlugin
-            <*> pure credsIdent
+upsertUser :: User -> DB UserId
+upsertUser user = entityKey <$> upsert user
+    [ UserName =. userName user
+    , UserEmail =. userEmail user
+    ]
 
-    maybe (mapM insert user) (updateProfile user) muser
-
-updateProfile :: Maybe User -> Entity User -> DB (Maybe UserId)
-updateProfile muser (Entity uid _) = do
-    mapM_ (replace uid) muser
-    return $ Just uid
+credsToUser :: Creds m -> Maybe User
+credsToUser Creds{..} = User
+    <$> lookup "name" credsExtra
+    <*> lookup "email" credsExtra
+    <*> pure credsPlugin
+    <*> pure credsIdent
