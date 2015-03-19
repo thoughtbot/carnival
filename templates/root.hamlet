@@ -6,8 +6,9 @@
 
   <p .hero-disclaimer>
 
-    This service is <strong>Beta</strong>. There may be bugs and we are not
-    responsible for the loss of data you create through this service.
+    This service is currently <strong>Beta</strong>. We'd love for you to sign
+    up, try it out, and help us find and fix bugs before we launch it as a paid
+    service.
 
   $maybe Entity _ _ <- muser
   $nothing
