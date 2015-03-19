@@ -4,9 +4,10 @@ module Model.User
     , userGravatar
     , findUsers
     , findUsers'
+    , authenticateUser
     ) where
 
-import Import
+import Import.NoFoundation
 
 import Network.Gravatar
 
@@ -29,3 +30,19 @@ findUsers userIds = selectList [UserId <-. userIds] []
 -- | Same as @findUsers@, but discards the @entityKey@
 findUsers' :: [UserId] -> DB [User]
 findUsers' = fmap (map entityVal) . findUsers
+
+authenticateUser :: Creds m -> DB (Maybe UserId)
+authenticateUser = mapM upsertUser . credsToUser
+
+upsertUser :: User -> DB UserId
+upsertUser user = entityKey <$> upsert user
+    [ UserName =. userName user
+    , UserEmail =. userEmail user
+    ]
+
+credsToUser :: Creds m -> Maybe User
+credsToUser Creds{..} = User
+    <$> lookup "name" credsExtra
+    <*> lookup "email" credsExtra
+    <*> pure credsPlugin
+    <*> pure credsIdent
