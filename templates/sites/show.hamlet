@@ -16,7 +16,7 @@
 
 <pre>
   <code>
-    \&lt;script src='@{InitR siteId}'&gt;&lt;/script&gt;
+    \&lt;script src="@{InitR siteId}"&gt;&lt;/script&gt;
     \&lt;script&gt;
     \  document.addEventListener("DOMContentLoaded", Carnival.init);
     \&lt;/script&gt;

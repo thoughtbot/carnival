@@ -14,7 +14,7 @@
 
   <pre>
     <code>
-      \&lt;script src='#{root}/sites/YOUR-SITE-ID/init.js'&gt;&lt;/script&gt;
+      \&lt;script src="#{root}/sites/YOUR-SITE-ID/init.js"&gt;&lt;/script&gt;
       \&lt;script&gt;
       \  document.addEventListener("DOMContentLoaded", Carnival.init);
       \&lt;/script&gt;
@@ -87,9 +87,9 @@
       \document.addEventListener("DOMContentLoaded", function() {
       \  Carnival.init({
       \    enabled: true,
-      \    article_author: '',
-      \    article_selector: 'article',
-      \    block_selector: ':scope > p, :scope > pre',
+      \    article_author: "",
+      \    article_selector: "article",
+      \    block_selector: ":scope > p, :scope > pre",
       \    onNewComment: function(comment) { };
       \  });
       \});
