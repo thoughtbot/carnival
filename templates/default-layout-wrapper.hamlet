@@ -19,7 +19,7 @@ $doctype 5
               <a .button.button--light href=@{AuthR LogoutR}>Log out
           $nothing
             <li .nav-item.nav-item--button>
-              <a .button.button--light href=@{AuthR LoginR}>Sign in
+              <a .button.button--light href=@{AuthR $ PluginR "github" ["forward"]}>Sign in
 
     ^{pageBody pc}
 
