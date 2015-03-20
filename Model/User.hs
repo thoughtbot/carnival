@@ -33,4 +33,4 @@ findUsers' :: [UserId] -> DB [User]
 findUsers' = fmap (map entityVal) . findUsers
 
 disableCreateSite :: Int -> User -> Bool
-disableCreateSite siteCount = (>= siteCount) . planSiteCount . userPlan
+disableCreateSite siteCount = (siteCount >=) . planSiteCount . userPlan
