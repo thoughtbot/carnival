@@ -2,6 +2,6 @@
   <li>
     <em>Coming Soon
 
-  <li>5 Sites
-  <li>100 Comments per month
+  <li>#{planSiteCount Business} Sites
+  <li>#{planCommentCount Business} Comments per month
   <li .price>$49 per month

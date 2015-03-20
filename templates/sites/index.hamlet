@@ -15,4 +15,9 @@
 
   <form method=post action=@{SitesR} enctype=#{enctype}>
     ^{widget}
-    <button type="submit" .btn.btn-default>Create
+    $if disableCreateSite (length sites) user
+      <button type="submit" .btn.btn-default>Create
+      Additional Sites are free during Beta, but will soon require a 
+      <a href=@{PlansR}>Business Plan
+    $else
+      <button type="submit" .btn.btn-default>Create

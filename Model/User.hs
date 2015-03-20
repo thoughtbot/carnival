@@ -4,9 +4,11 @@ module Model.User
     , userGravatar
     , findUsers
     , findUsers'
+    , disableCreateSite
     ) where
 
 import Import
+import Plan
 
 import Network.Gravatar
 
@@ -29,3 +31,6 @@ findUsers userIds = selectList [UserId <-. userIds] []
 -- | Same as @findUsers@, but discards the @entityKey@
 findUsers' :: [UserId] -> DB [User]
 findUsers' = fmap (map entityVal) . findUsers
+
+disableCreateSite :: Int -> User -> Bool
+disableCreateSite siteCount = (>= siteCount) . planSiteCount . userPlan
