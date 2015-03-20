@@ -7,6 +7,7 @@ module Factories
 
 import Model
 import Settings
+import Plan
 
 import Database.Persist
 import Database.Persist.Sql
@@ -32,6 +33,7 @@ createUser ident =
     insertEntity User
         { userName = "John Smith (" <> ident <> ")"
         , userEmail = "john-" <> ident <> "@gmail.com"
+        , userPlan = Personal
         , userPlugin = "dummy"
         , userIdent = ident
         }
