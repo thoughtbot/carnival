@@ -10,7 +10,7 @@ User
     email Text
     plugin Text
     ident Text
-    plan PlanName default='Personal'
+    plan Plan default='Personal'
     UniqueUser plugin ident
     deriving Eq Show Typeable
 
