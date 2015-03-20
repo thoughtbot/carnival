@@ -12,6 +12,8 @@ $doctype 5
             <a .nav-logo href=@{RootR}>Carnival
             <li .nav-item :isRoute DocsR:.active>
               <a href=@{DocsR}>Guide
+            <li .nav-item :isRoute PlansR:.active>
+              <a href=@{PlansR}>Plans
           $maybe Entity _ _ <- muser
             <li .nav-item :isRoute SitesR:.active>
               <a href=@{SitesR}>Sites

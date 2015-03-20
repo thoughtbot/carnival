@@ -1,0 +1,7 @@
+.plan ul {
+  margin-left: 15px;
+}
+
+.plan .price {
+  font-weight: bold;
+}

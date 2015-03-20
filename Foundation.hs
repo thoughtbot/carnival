@@ -8,6 +8,7 @@ import Yesod.Default.Util   (addStaticContentExternal)
 import Yesod.Core.Types     (Logger)
 import qualified Yesod.Core.Unsafe as Unsafe
 
+import Plan
 import Yesod.Auth.Dummy
 import Yesod.Auth.OAuth2.Github
 
@@ -162,6 +163,7 @@ buildUser (Creds csPlugin csIdent csExtra) =
          <*> lookup "email" csExtra
          <*> pure csPlugin
          <*> pure csIdent
+         <*> pure Personal
 
 replaceUser :: UserId -> Maybe User -> YesodDB App UserId
 replaceUser uid (Just u) = replace uid u >> return uid

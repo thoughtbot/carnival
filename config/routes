@@ -18,3 +18,4 @@
 /user UserR GET
 /unsubscribe/#Token UnsubscribeR GET
 /docs DocsR GET
+/plans PlansR GET

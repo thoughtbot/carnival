@@ -2,13 +2,14 @@ module Handler.Sites where
 
 import Import
 import Model.Site
+import Model.User
 import Helper.Auth
 
 import Yesod.Form.Bootstrap3
 
 getSitesR :: Handler Html
 getSitesR = do
-    userId <- requireAuthId
+    Entity userId user <- requireAuth
 
     (widget, enctype) <- generateFormPost $ siteForm Nothing
 
@@ -21,7 +22,7 @@ getSitesR = do
 
 postSitesR :: Handler Html
 postSitesR = do
-    userId <- requireAuthId
+    Entity userId user <- requireAuth
 
     ((result, widget), enctype) <- runFormPost $ siteForm Nothing
 

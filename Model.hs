@@ -3,6 +3,7 @@ module Model where
 import ClassyPrelude.Yesod
 import Database.Persist.Quasi
 
+import Plan
 import System.Random (newStdGen, randomRs)
 import Text.Markdown (Markdown(..))
 import Yesod.Text.Markdown ()

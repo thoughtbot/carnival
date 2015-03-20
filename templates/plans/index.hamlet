@@ -1,0 +1,13 @@
+$forall plan <- plans
+  <div .plan .col-md-4>
+    <div .panel.panel-default>
+      <div .panel-heading>
+        <h3 .panel-title>#{show plan}
+      <div .panel-body>
+        ^{planFeatures plan}
+
+<h2>Why Pay?
+
+<p>Carnival will never contain ads
+<p>Carnival will never track your behavior
+<p>Carnival will always be free for personal use
