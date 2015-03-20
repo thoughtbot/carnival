@@ -40,6 +40,7 @@ library
                      Helper.Auth
                      Helper.Request
                      Helper.Validation
+                     Plan
                      SendMail
                      Notification
                      Network.Mail.SendGrid
