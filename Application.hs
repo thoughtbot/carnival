@@ -44,6 +44,7 @@ import Handler.Feed
 import Handler.Unsubscribe
 import Handler.Sites
 import Handler.Docs
+import Handler.Plans
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the

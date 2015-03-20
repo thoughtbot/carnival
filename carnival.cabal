@@ -37,6 +37,7 @@ library
                      Handler.Unsubscribe
                      Handler.Sites
                      Handler.Docs
+                     Handler.Plans
                      Helper.Auth
                      Helper.Request
                      Helper.Validation
