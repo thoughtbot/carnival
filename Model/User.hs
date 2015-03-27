@@ -4,7 +4,7 @@ module Model.User
     , userGravatar
     , findUsers
     , findUsers'
-    , disableCreateSite
+    , reachedSiteQuota
     ) where
 
 import Import
@@ -32,5 +32,5 @@ findUsers userIds = selectList [UserId <-. userIds] []
 findUsers' :: [UserId] -> DB [User]
 findUsers' = fmap (map entityVal) . findUsers
 
-disableCreateSite :: Int -> User -> Bool
-disableCreateSite siteCount = (siteCount >=) . planSiteCount . userPlan
+reachedSiteQuota :: Int -> User -> Bool
+reachedSiteQuota siteCount = (siteCount >=) . planSiteCount . userPlan
