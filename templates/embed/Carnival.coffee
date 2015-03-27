@@ -56,6 +56,7 @@ class Carnival
     request = new XMLHttpRequest
     request.withCredentials = true
     request.open('GET', '@{UserR}', false)
+    request.setRequestHeader('Accept', 'application/json')
     request.send()
     if request.status is 200
       @user = JSON.parse(request.responseText).user
