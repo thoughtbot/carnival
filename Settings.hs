@@ -38,6 +38,11 @@ data OAuthKeys = OAuthKeys
     , oauthKeysClientSecret :: Text
     }
 
+data StripeKeys = StripeKeys
+    { stripeKeysSecretKey      :: Text
+    , stripeKeysPublishableKey :: Text
+    }
+
 -- | Runtime settings to configure this application. These settings can be
 -- loaded from various sources: defaults, environment variables, config files,
 -- theoretically even a database.

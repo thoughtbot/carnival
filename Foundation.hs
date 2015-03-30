@@ -23,6 +23,7 @@ data App = App
     , appHttpManager :: Manager
     , appLogger      :: Logger
     , appGithubOAuthKeys :: OAuthKeys
+    , appStripeKeys  :: StripeKeys
     }
 
 instance HasHttpManager App where

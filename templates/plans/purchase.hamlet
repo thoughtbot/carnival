@@ -1,0 +1,19 @@
+$with price <- planPrice plan
+  $if userPlan user == planId
+    <form>
+      <button .btn.btn-default disabled>Subscribed
+  $elseif price == 0
+    <form action=@{CancelR} method="POST">
+      <button .btn.btn-default>Subscribe
+  $else
+    <form action=@{PurchaseR planId} method="POST">
+      <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+        data-key="#{stripeKey}"
+        data-email="#{userEmail user}"
+        data-image=@{StaticR img_logo_png}
+        data-name="Carnival"
+        data-description="#{planDescription plan} Plan"
+        data-amount="#{show $ price * 100}"
+        data-allow-remember-me="false"
+        data-label="Subscribe"
+        data-panel-label="Subscribe">

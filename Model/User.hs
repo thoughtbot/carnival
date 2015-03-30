@@ -33,8 +33,9 @@ findUsers' = fmap (map entityVal) . findUsers
 
 authenticateUser :: Creds m -> DB (Maybe UserId)
 authenticateUser creds@Creds{..} = do
+    plan <- getBy $ UniquePlan freePlanId
     muser <- getBy $ UniqueUser credsPlugin credsIdent
-    muserId <- mapM upsertUser $ credsToUser creds
+    muserId <- mapM upsertUser $ credsToUser (entityKey <$> plan) creds
 
     return $ muserId <|> (entityKey <$> muser)
 
@@ -44,9 +45,11 @@ upsertUser user = entityKey <$> upsert user
     , UserEmail =. userEmail user
     ]
 
-credsToUser :: Creds m -> Maybe User
-credsToUser Creds{..} = User
+credsToUser :: Maybe PlanId -> Creds m -> Maybe User
+credsToUser mplanId Creds{..} = User
     <$> lookup "name" credsExtra
     <*> lookup "email" credsExtra
     <*> pure credsPlugin
     <*> pure credsIdent
+    <*> mplanId
+    <*> pure Nothing

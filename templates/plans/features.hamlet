@@ -1,0 +1,13 @@
+<ul>
+  <li>#{planSiteQuota plan} Site(s)
+  <li>#{planCommentQuota plan} Comments per month
+
+  $if planBranded plan
+    <li>"Powered by Carnival" branding
+
+  $with price <- planPrice plan
+    <li .price>
+      $if price == 0
+        Free
+      $else
+        \$#{show price} per month

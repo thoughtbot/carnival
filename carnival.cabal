@@ -37,9 +37,14 @@ library
                      Handler.Unsubscribe
                      Handler.Sites
                      Handler.Docs
+                     Handler.Purchase
+                     Handler.Plan
+                     Handler.Cancel
                      Helper.Request
                      Helper.Validation
                      SendMail
+                     Stripe
+                     Stripe.Instances
                      Notification
                      Language
                      Network.Mail.SendGrid
@@ -70,6 +75,7 @@ library
 
                 FlexibleInstances
                 RankNTypes
+                StandaloneDeriving
 
     build-depends: base                          >= 4          && < 5
                  , yesod                         >= 1.4.1      && < 1.5
@@ -117,6 +123,7 @@ library
                  , mime-mail
                  , mtl
                  , network
+                 , path-pieces
                  , random
                  , smtp-mail                     >= 0.1.4.5 && < 0.2
                  , stripe-haskell                >= 0.1.3   && < 0.2

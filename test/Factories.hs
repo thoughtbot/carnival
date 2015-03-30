@@ -1,5 +1,6 @@
 module Factories
     ( buildSite
+    , createFreePlan
     , createUser
     , createComment
     ) where
@@ -20,13 +21,28 @@ buildSite = Site
     , siteLanguage = "en-us"
     }
 
+createFreePlan :: DB (Entity Plan)
+createFreePlan = upsert Plan
+    { planName = freePlanId
+    , planDescription = "Personal"
+    , planPrice = 0
+    , planSiteQuota = 1
+    , planCommentQuota = 10
+    , planBranded = True
+    , planSort = 1
+    } []
+
 createUser :: Text -> DB (Entity User)
-createUser ident =
+createUser ident = do
+    Entity planId _ <- createFreePlan
+
     insertEntity User
         { userName = "John Smith (" ++ ident ++ ")"
         , userEmail = "john-" ++ ident ++ "@gmail.com"
         , userPlugin = "dummy"
         , userIdent = ident
+        , userPlan = planId
+        , userStripeId = Nothing
         }
 
 createComment :: UserId -> SiteId -> Text -> Text -> TL.Text -> DB (Entity Comment)

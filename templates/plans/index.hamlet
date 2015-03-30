@@ -1,0 +1,24 @@
+<h1>Carnival Plans
+
+$forall plan <- plans
+  <div .plan .col-md-4>
+    <div .panel.panel-default>
+      <div .panel-heading>
+        <h3 .panel-title>
+          #{planDescription $ entityVal plan}
+      <div .panel-body>
+        ^{featuresList $ entityVal plan}
+        ^{purchaseForm user plan}
+
+<div .plan .col-md-4>
+  <div .panel.panel-default>
+    <div .panel-heading>
+      <h3 .panel-title>Enterprise
+    <div .panel-body>
+      <ul>
+        <li>Unlimited Sites
+        <li>Unlimited Comments
+        <li>Custom authentication
+      <form>
+        <a .btn.btn-default href="mailto:support@carnivalapp.io">
+          Contact Us

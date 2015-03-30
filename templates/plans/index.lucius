@@ -1,0 +1,22 @@
+.plan {
+  .panel {
+    height: 250px;
+    position: relative;
+  }
+
+  ul {
+    margin-left: 15px;
+  }
+
+  .price {
+    font-weight: bold;
+  }
+
+  form {
+    bottom: 25px;
+    left: 0px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+  }
+}

@@ -7,6 +7,10 @@ missing_sites() {
   echo 'select count(*) from site;' | _psql -t --dbname "$app" | grep -Fq 0
 }
 
+missing_plans() {
+  echo 'select count(*) from plan;' | _psql -t --dbname "$app" | grep -Fq 0
+}
+
 app='carnival'
 user="$app"
 
@@ -35,4 +39,6 @@ _psql --dbname "${app}_test" </dev/null
 
 # Create site records if needed
 _psql --dbname "$app" < migrations/create-site.psql
+_psql --dbname "$app" < migrations/create-plan.psql
 missing_sites && _psql --dbname "$app" < migrations/insert-thoughtbot-sites.psql
+missing_plans && _psql --dbname "$app" < migrations/insert-plans.psql

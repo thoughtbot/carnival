@@ -44,6 +44,9 @@ import Handler.Feed
 import Handler.Unsubscribe
 import Handler.Sites
 import Handler.Docs
+import Handler.Purchase
+import Handler.Plan
+import Handler.Cancel
 
 -- This line actually creates our YesodDispatch instance. It is the second half
 -- of the call to mkYesodData which occurs in Foundation.hs. Please see the
@@ -70,6 +73,7 @@ makeFoundation appSettings = do
         (if appMutableStatic appSettings then staticDevel else static)
         (appStaticDir appSettings)
     appGithubOAuthKeys <- getOAuthKeys "GITHUB"
+    appStripeKeys <- getStripeKeys
 
     -- We need a log function to create a connection pool. We need a connection
     -- pool to create our foundation. And we need our foundation to get a
@@ -96,6 +100,11 @@ makeFoundation appSettings = do
     getOAuthKeys plugin = OAuthKeys
         <$> getEnvText (plugin ++ "_OAUTH_CLIENT_ID")
         <*> getEnvText (plugin ++ "_OAUTH_CLIENT_SECRET")
+
+    getStripeKeys :: IO StripeKeys
+    getStripeKeys = StripeKeys
+        <$> getEnvText "STRIPE_SECRET_KEY"
+        <*> getEnvText "STRIPE_PUBLISHABLE_KEY"
 
     getEnvText :: String -> IO Text
     getEnvText = fmap pack . getEnv

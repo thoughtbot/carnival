@@ -15,6 +15,8 @@ spec :: Spec
 spec = withApp $ do
     describe "authenticateUser" $ do
         it "creates a new user based on the given credentials" $ do
+            void $ runDB createFreePlan
+
             let creds = Creds
                     { credsPlugin = "github"
                     , credsIdent = "1"

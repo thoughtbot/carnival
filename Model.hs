@@ -6,17 +6,23 @@ import Database.Persist.Quasi
 import System.Random (newStdGen, randomRs)
 import Text.Markdown (Markdown(..))
 import Yesod.Text.Markdown ()
+import Stripe.Instances ()
 
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as TL
+import qualified Web.Stripe.Customer as S
 
 type Token = Text
+type USD = Int
 
 type Validated a = Either [Text] a
 type Validation a = a -> Validated a
 
 share [mkPersist sqlSettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
+
+freePlanId :: S.PlanId
+freePlanId = S.PlanId "personal"
 
 newToken :: IO Token
 newToken = do

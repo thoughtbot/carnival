@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS plan (
+  id                    SERIAL PRIMARY KEY UNIQUE,
+  name                  VARCHAR NOT NULL,
+  description           VARCHAR NOT NULL,
+  price                 INT8 NOT NULL,
+  site_quota            INT8 NOT NULL,
+  comment_quota         INT8 NOT NULL,
+  branded               BOOLEAN NOT NULL,
+  sort                  INT8 NOT NULL
+);

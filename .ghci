@@ -19,3 +19,4 @@
 
 :set -XFlexibleInstances
 :set -XRankNTypes
+:set -XStandaloneDeriving
