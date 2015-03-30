@@ -2,7 +2,6 @@ module Factories
     ( buildSite
     , createUser
     , createComment
-    , insertEntity
     ) where
 
 import Model
@@ -50,7 +49,3 @@ createComment uid siteId article thread body = do
         , commentBody = Markdown body
         , commentCreated = now
         }
-
-insertEntity :: (PersistEntity e, PersistEntityBackend e ~ SqlBackend)
-             => e -> DB (Entity e)
-insertEntity e = (`Entity` e) <$> insert e
