@@ -7,14 +7,8 @@ module Factories
 import Model
 import Settings
 
+import ClassyPrelude
 import Database.Persist
-import Database.Persist.Sql
-
-import Control.Applicative ((<$>))
-import Control.Monad.IO.Class (liftIO)
-import Data.Monoid ((<>))
-import Data.Text (Text)
-import Data.Time (getCurrentTime)
 import Text.Markdown (Markdown(..))
 
 import qualified Data.Text.Lazy as TL
@@ -29,8 +23,8 @@ buildSite = Site
 createUser :: Text -> DB (Entity User)
 createUser ident =
     insertEntity User
-        { userName = "John Smith (" <> ident <> ")"
-        , userEmail = "john-" <> ident <> "@gmail.com"
+        { userName = "John Smith (" ++ ident ++ ")"
+        , userEmail = "john-" ++ ident ++ "@gmail.com"
         , userPlugin = "dummy"
         , userIdent = ident
         }
