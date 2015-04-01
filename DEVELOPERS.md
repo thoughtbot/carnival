@@ -19,7 +19,7 @@ $ ./bin/setup
 ```
 
 How long this takes depends on a number of things. All build artifacts are
-cached between anyone who builds Carnival (including Travis and Heroku). This
+cached between anyone who builds Carnival (including CircleCI and Heroku). This
 means many builds can complete in under a minute. Unfortunately, the artifacts
 are specific to your platform. If you are the first person to build a given
 version of Carnival on your platform, it can take closer to 45 minutes.

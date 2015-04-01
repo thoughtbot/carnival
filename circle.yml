@@ -1,0 +1,14 @@
+machine:
+  environment:
+    GITHUB_OAUTH_CLIENT_ID: x
+    GITHUB_OAUTH_CLIENT_SECRET: x
+
+dependencies:
+  override:
+    - ./bin/halcyon-build
+
+test:
+  override:
+    - ./bin/setup-db
+    - /app/halcyon/halcyon paths > halcyon-env
+    - . halcyon-env && yesod test

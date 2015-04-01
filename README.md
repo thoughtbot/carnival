@@ -1,5 +1,7 @@
 # Carnival
 
+[![Circle CI](https://circleci.com/gh/thoughtbot/carnival.svg?style=svg)](https://circleci.com/gh/thoughtbot/carnival)
+
 An unobtrusive, developer-friendly way to add comments to any site.
 
 - [Developing Carnival](/DEVELOPERS.md)
