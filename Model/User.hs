@@ -13,9 +13,12 @@ module Model.User
 
 import Import.NoFoundation
 
+import Data.Aeson
 import Network.Gravatar
+import Yesod.Auth.GoogleEmail2
 
 import qualified Data.Text as T
+import qualified Data.ByteString.Lazy as BL
 
 data Profile = Profile
     { profileName :: Text
@@ -75,6 +78,7 @@ credsToUser eplanId Creds{..} = User
 extraToProfile :: Text -> [(Text, Text)] -> Either Text Profile
 extraToProfile "dummy" _ = Right dummyProfile
 extraToProfile "github" extra = githubProfile extra
+extraToProfile "googleemail2" extra = googleProfile extra
 extraToProfile plugin _ = Left $ "Invalid plugin: " ++ plugin
 
 dummyProfile :: Profile
@@ -85,6 +89,28 @@ githubProfile extra = Profile
     <$> lookupExtra "name" extra
     <*> lookupExtra "email" extra
 
+googleProfile :: [(Text, Text)] -> Either Text Profile
+googleProfile extra = Profile
+  <$> (handleName =<< decodeText =<< lookupExtra "name" extra)
+  <*> (handleEmails =<< decodeText =<< lookupExtra "emails" extra)
+
+  where
+    handleName :: Name -> Either Text Text
+    handleName Name{..} =
+        case (nameFormatted, nameGiven, nameFamily) of
+            (Just formatted, _, _) -> Right $ formatted
+            (_, Just given, Just family) -> Right $ given ++ " " ++ family
+            (_, Just given, _) -> Right given
+            (_, _, Just family) -> Right family
+            _ -> Left "user has no name"
+
+    handleEmails :: [Email] -> Either Text Text
+    handleEmails [] = Left "user has no emails"
+    handleEmails (email:_) = Right $ emailValue email
+
 lookupExtra :: Text -> [(Text, b)] -> Either Text b
 lookupExtra k extra =
     maybe (Left $ "missing key " ++ k) Right $ lookup k extra
+
+decodeText :: FromJSON a => Text -> Either Text a
+decodeText = first pack . eitherDecode . BL.fromStrict . encodeUtf8

@@ -21,6 +21,11 @@ get_env() {
 # https://github.com/settings/applications
 export GITHUB_OAUTH_CLIENT_ID=x
 export GITHUB_OAUTH_CLIENT_SECRET=x
+
+# Create a project, enable OAuth and Google+ API, and update these values
+# https://console.developers.google.com/project
+export GOOGLE_OAUTH_CLIENT_ID=x
+export GOOGLE_OAUTH_CLIENT_SECRET=x
 EOF
 }
 

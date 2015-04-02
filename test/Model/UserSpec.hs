@@ -82,6 +82,56 @@ spec = withApp $ do
                 runDB (authenticateUser' creds')
                     `shouldReturn` ServerError "github: missing key email"
 
+        context "from Google" $ do
+            let creds = Creds
+                    { credsPlugin = "googleemail2"
+                    , credsIdent = "1"
+                    , credsExtra =
+                        [ ("name", "{\"formatted\":\"Jim Smith\"}")
+                        , ("emails", "[{\"value\":\"jim@gmail.com\",\"type\":\"account\"}]")
+                        ]
+                    }
+
+            it "creates a user from the name/emails values" $
+                creds `shouldCreateWith` Profile "Jim Smith" "jim@gmail.com"
+
+            it "updates an existing user from the name/emails values" $
+                creds `shouldUpdateWith` Profile "Jim Smith" "jim@gmail.com"
+
+            it "errors if name is missing" $ do
+                let creds' = creds { credsExtra = [("email", "[{\"value\":\"\",\"type\":\"account\"")] }
+
+                runDB (authenticateUser' creds')
+                    `shouldReturn` ServerError "googleemail2: missing key name"
+
+            it "errors if name has no values" $ do
+                let creds' = creds
+                        { credsExtra =
+                            [ ("name", "{}")
+                            , ("email", "[{\"value\":\"\",\"type\":\"account\"")
+                            ]
+                        }
+
+                runDB (authenticateUser' creds')
+                    `shouldReturn` ServerError "googleemail2: user has no name"
+
+            it "errors if emails is missing" $ do
+                let creds' = creds { credsExtra = [("name", "{\"formatted\":\"\"}")] }
+
+                runDB (authenticateUser' creds')
+                    `shouldReturn` ServerError "googleemail2: missing key emails"
+
+            it "errors if emails is empty" $ do
+                let creds' = creds
+                        { credsExtra =
+                            [ ("name", "{\"formatted\":\"\"}")
+                            , ("emails", "[]")
+                            ]
+                        }
+
+                runDB (authenticateUser' creds')
+                    `shouldReturn` ServerError "googleemail2: user has no emails"
+
 shouldCreateWith :: Creds App -> Profile -> YesodExample App ()
 creds `shouldCreateWith` profile = do
     void $ runDB createFreePlan

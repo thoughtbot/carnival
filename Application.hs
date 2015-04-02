@@ -73,6 +73,7 @@ makeFoundation appSettings = do
         (if appMutableStatic appSettings then staticDevel else static)
         (appStaticDir appSettings)
     appGithubOAuthKeys <- getOAuthKeys "GITHUB"
+    appGoogleOAuthKeys <- getOAuthKeys "GOOGLE"
     appStripeKeys <- getStripeKeys
 
     -- We need a log function to create a connection pool. We need a connection

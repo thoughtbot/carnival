@@ -10,6 +10,7 @@ import qualified Yesod.Core.Unsafe as Unsafe
 
 import Model.User
 import Yesod.Auth.Dummy
+import Yesod.Auth.GoogleEmail2 hiding (Token)
 import Yesod.Auth.OAuth2.Github
 
 -- | The foundation datatype for your application. This can be a good place to
@@ -23,6 +24,7 @@ data App = App
     , appHttpManager :: Manager
     , appLogger      :: Logger
     , appGithubOAuthKeys :: OAuthKeys
+    , appGoogleOAuthKeys :: OAuthKeys
     , appStripeKeys  :: StripeKeys
     }
 
@@ -162,6 +164,9 @@ instance YesodAuth App where
         [ oauth2Github
             (oauthKeysClientId $ appGithubOAuthKeys m)
             (oauthKeysClientSecret $ appGithubOAuthKeys m)
+        , authGoogleEmail
+            (oauthKeysClientId $ appGoogleOAuthKeys m)
+            (oauthKeysClientSecret $ appGoogleOAuthKeys m)
         ]
 
     authHttpManager = getHttpManager
