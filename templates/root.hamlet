@@ -12,7 +12,7 @@
 
   $maybe Entity _ _ <- muser
   $nothing
-    <a .button.button--github href=@{AuthR $ PluginR "github" ["forward"]}>
+    <a .button.button--github href=@{AuthR $ oauth2Url "github"}>
       Sign up with GitHub
 
   <img .hero-image src=@{StaticR img_browser_svg}>

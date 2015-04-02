@@ -1,2 +1,2 @@
-<a .button.button--github href=@{AuthR $ PluginR "github" ["forward"]}>
+<a .button.button--github href=@{AuthR $ oauth2Url "github"}>
   Login with GitHub
