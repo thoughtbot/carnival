@@ -5,7 +5,6 @@ following tools:
 - PostgreSQL
 - CoffeeScript
 - Heroku Toolbelt (needed for setup and deployment)
-- jq (needed for deployment)
 - `brew install bash coreutils` (if on OS X)
 
 [halcyon]: https://halcyon.sh/

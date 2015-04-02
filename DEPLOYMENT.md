@@ -1,3 +1,12 @@
+Enable and install the [Heroku Pipelines][heroku-pipelines] plugin:
+
+[heroku-pipelines]: https://devcenter.heroku.com/articles/labs-pipelines
+
+```
+$ heroku labs:enable pipelines
+$ heroku plugins:install git://github.com/heroku/heroku-pipeline.git
+```
+
 Deploy to **staging**:
 
 ```

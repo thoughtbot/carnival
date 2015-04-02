@@ -10,7 +10,7 @@ set -e
 case "${1:-carnival-staging}" in
   carnival-staging) git push staging master ;;
   carnival-production)
-    ./bin/copy-slug carnival-{staging,production}
+    heroku pipeline:promote --app carnival-staging
     heroku restart --app carnival-production
     ;;
   *)
