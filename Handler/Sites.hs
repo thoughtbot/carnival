@@ -9,10 +9,11 @@ import Yesod.Form.Bootstrap3
 
 getSitesR :: Handler Html
 getSitesR = do
-    userId <- requireAuthId
+    Entity userId user <- requireAuth
 
     (widget, enctype) <- generateFormPost $ siteForm Nothing
 
+    plan <- runDB $ belongsToJust userPlan user
     sites <- runDB $ findSites userId
 
     defaultLayout $ do
@@ -22,16 +23,25 @@ getSitesR = do
 
 postSitesR :: Handler Html
 postSitesR = do
-    userId <- requireAuthId
+    Entity userId user <- requireAuth
 
     ((result, widget), enctype) <- runFormPost $ siteForm Nothing
+
+    plan <- runDB $ belongsToJust userPlan user
+    sites <- runDB $ findSites userId
+
+    when (sites `overSiteQuota` plan) $ do
+        setMessage =<< withUrlRenderer [hamlet|
+            You're over your site quota. Please 
+            <a href=@{PlansR}>upgrade your plan
+            |]
+
+        redirect SitesR
 
     onFormSuccess result $ \site -> do
         Entity siteId _ <- runDB $ createSite userId site
         setMessage "Site created!"
         redirect $ SiteR siteId
-
-    sites <- runDB $ findSites userId
 
     defaultLayout $ do
         setTitle "Carnival - Sites"

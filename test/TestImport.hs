@@ -2,6 +2,7 @@ module TestImport
     ( withApp
     , runDB
     , authenticateAs
+    , times
     , module X
     ) where
 
@@ -73,3 +74,6 @@ authenticateAs (Entity _ u) = do
         setMethod "POST"
         addPostParam "ident" $ userIdent u
         setUrl url
+
+times :: Monad m => Int -> (Int -> m a) -> m [a]
+times n = forM [1..n]

@@ -60,6 +60,33 @@ spec = withApp $ do
 
             bodyContains "test-site"
 
+        it "prevent creations of a site if over plan quota" $ do
+            user <- runDB $ createUser "1"
+
+            void $ runDB $ do
+                plan <- belongsToJust userPlan $ entityVal user
+                planSiteQuota plan `times` \i -> do
+                    let idx = pack $ show i
+                        site = buildSite
+                            { siteName = "existing-site-" ++ idx
+                            , siteBaseUrl = "http://example-" ++ idx ++ ".com"
+                            }
+
+                    createSite (entityKey user) site
+
+            authenticateAs user
+
+            postForm SitesR $ do
+                byLabel "Name" "test-site"
+                byLabel "Base URL" "http://example.com"
+                selectLanguage "en-us"
+
+            statusIs 303 -- redirect
+            get SitesR
+
+            htmlAnyContain "#message" "upgrade your plan"
+            htmlNoneContain "li" "test-site"
+
     describe "SiteR" $ do
         it "allows updating the site" $ do
             user <- runDB $ createUser "1"

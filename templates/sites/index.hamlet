@@ -15,4 +15,10 @@
 
   <form method=post action=@{SitesR} enctype=#{enctype}>
     ^{widget}
-    <button type="submit" .btn.btn-default>Create
+
+    $if overSiteQuota sites plan
+      <button type="submit" .btn.btn-default disabled>Create
+      <a href=@{PlansR}>Upgrade your plan
+      to add more Sites
+    $else
+      <button type="submit" .btn.btn-default>Create

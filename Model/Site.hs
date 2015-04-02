@@ -3,6 +3,7 @@ module Model.Site
     , findMemberSite
     , createSite
     , destroySite
+    , overSiteQuota
     ) where
 
 import Import
@@ -38,3 +39,6 @@ destroySite siteId = do
     deleteWhere [CommentSite ==. siteId]
     deleteWhere [MembershipSite ==. siteId]
     delete siteId
+
+overSiteQuota :: [a] -> Plan -> Bool
+overSiteQuota xs Plan{..} = length xs >= planSiteQuota
