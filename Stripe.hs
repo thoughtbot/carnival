@@ -22,11 +22,12 @@ runStripe f = do
         Right x -> return $ Just x
 
 subscribeToPlan :: S.TokenId
+                -> S.Email
                 -> S.PlanId
                 -> Maybe S.CustomerId
                 -> S.Stripe S.CustomerId
-subscribeToPlan token planId mstripeId = do
-    stripeId <- findOrCreateCustomer token mstripeId
+subscribeToPlan token email planId mstripeId = do
+    stripeId <- findOrCreateCustomer token email mstripeId
 
     void $ S.createSubscription stripeId planId []
 
@@ -41,6 +42,19 @@ cancelSubscription (Just stripeId) = do
     forM_ subs $ \sub ->
         void $ S.cancelSubscription stripeId (S.subscriptionId sub) False
 
-findOrCreateCustomer :: S.TokenId -> Maybe S.CustomerId -> S.Stripe S.CustomerId
-findOrCreateCustomer _ (Just stripeId) = return stripeId
-findOrCreateCustomer token _ = S.customerId <$> S.createCustomerByToken token
+findOrCreateCustomer :: S.TokenId -> S.Email -> Maybe S.CustomerId -> S.Stripe S.CustomerId
+findOrCreateCustomer _ _ (Just stripeId) = return stripeId
+findOrCreateCustomer token email _ = S.customerId <$> S.createCustomerBase
+    Nothing         -- AccountBalance
+    (Just token)    -- TokenId
+    Nothing         -- CardNumber
+    Nothing         -- ExpMonth
+    Nothing         -- ExpYear
+    Nothing         -- CVC
+    Nothing         -- CouponId
+    Nothing         -- Description
+    (Just email)    -- Email
+    Nothing         -- PlanId
+    Nothing         -- Quantity
+    Nothing         -- TrialPeriod
+    []              -- MetaData

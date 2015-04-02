@@ -11,8 +11,11 @@ postPurchaseR planId = do
     Entity userId user <- requireAuth
 
     token <- runInputPost $ ireq textField "stripeToken"
-    mstripeId <- runStripe $
-        subscribeToPlan (S.TokenId token) (planName plan) (userStripeId user)
+    mstripeId <- runStripe $ subscribeToPlan
+        (S.TokenId token)
+        (S.Email $ userEmail user)
+        (planName plan)
+        (userStripeId user)
 
     case mstripeId of
         Just stripeId -> do
