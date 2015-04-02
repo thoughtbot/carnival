@@ -37,8 +37,8 @@ createUser ident = do
     Entity planId _ <- createFreePlan
 
     insertEntity User
-        { userName = "John Smith (" ++ ident ++ ")"
-        , userEmail = "john-" ++ ident ++ "@gmail.com"
+        { userName = "Dummy Login"
+        , userEmail = "dummy@example.com"
         , userPlugin = "dummy"
         , userIdent = ident
         , userPlan = planId

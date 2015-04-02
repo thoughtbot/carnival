@@ -136,7 +136,7 @@ instance YesodAuth App where
     -- Override the above two destinations when a Referer: header is present
     redirectToReferer _ = True
 
-    getAuthId = runDB . authenticateUser
+    authenticate = runDB . authenticateUser
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins m = addAuthBackDoor m

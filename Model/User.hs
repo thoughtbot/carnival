@@ -13,6 +13,11 @@ import Network.Gravatar
 
 import qualified Data.Text as T
 
+data Profile = Profile
+    { profileName :: Text
+    , profileEmail :: Text
+    }
+
 instance ToJSON (Entity User) where
     toJSON (Entity uid u) = object
         [ "id" .= String (toPathPiece uid)
@@ -31,13 +36,19 @@ findUsers userIds = selectList [UserId <-. userIds] []
 findUsers' :: [UserId] -> DB [User]
 findUsers' = fmap (map entityVal) . findUsers
 
-authenticateUser :: Creds m -> DB (Maybe UserId)
+authenticateUser :: AuthId m ~ UserId => Creds m -> DB (AuthenticationResult m)
 authenticateUser creds@Creds{..} = do
-    plan <- getBy $ UniquePlan freePlanId
+    plan <- getEither "Free plan not found" $ UniquePlan freePlanId
     muser <- getBy $ UniqueUser credsPlugin credsIdent
-    muserId <- mapM upsertUser $ credsToUser (entityKey <$> plan) creds
+    euserId <- mapM upsertUser $ credsToUser (entityKey <$> plan) creds
 
-    return $ muserId <|> (entityKey <$> muser)
+    return $ case (muser, euserId) of
+        (Just user, _) -> Authenticated $ entityKey user
+        (_, Right userId) -> Authenticated userId
+        (_, Left err) -> ServerError $ credsPlugin ++ ": " ++ err
+
+  where
+    getEither msg = fmap (maybe (Left msg) Right) . getBy
 
 upsertUser :: User -> DB UserId
 upsertUser user = entityKey <$> upsert user
@@ -45,11 +56,31 @@ upsertUser user = entityKey <$> upsert user
     , UserEmail =. userEmail user
     ]
 
-credsToUser :: Maybe PlanId -> Creds m -> Maybe User
-credsToUser mplanId Creds{..} = User
-    <$> lookup "name" credsExtra
-    <*> lookup "email" credsExtra
+credsToUser :: Either Text PlanId -> Creds m -> Either Text User
+credsToUser eplanId Creds{..} = User
+    <$> (profileName <$> eprofile)
+    <*> (profileEmail <$> eprofile)
     <*> pure credsPlugin
     <*> pure credsIdent
-    <*> mplanId
+    <*> eplanId
     <*> pure Nothing
+
+  where
+    eprofile = extraToProfile credsPlugin credsExtra
+
+extraToProfile :: Text -> [(Text, Text)] -> Either Text Profile
+extraToProfile "dummy" _ = Right dummyProfile
+extraToProfile "github" extra = githubProfile extra
+extraToProfile plugin _ = Left $ "Invalid plugin: " ++ plugin
+
+dummyProfile :: Profile
+dummyProfile = Profile "Dummy Login" "dummy@example.com"
+
+githubProfile :: [(Text, Text)] -> Either Text Profile
+githubProfile extra = Profile
+    <$> lookupExtra "name" extra
+    <*> lookupExtra "email" extra
+
+lookupExtra :: Text -> [(Text, b)] -> Either Text b
+lookupExtra k extra =
+    maybe (Left $ "missing key " ++ k) Right $ lookup k extra
