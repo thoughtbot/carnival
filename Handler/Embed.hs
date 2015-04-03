@@ -1,6 +1,7 @@
 module Handler.Embed where
 
 import Import
+import Model.Site
 import Helper.Request
 
 import Text.Julius (rawJS)
@@ -9,6 +10,7 @@ import Yesod.Auth.OAuth2 (oauth2Url)
 getEmbedR :: SiteId -> Handler Html
 getEmbedR siteId = do
     root <- rawJS <$> getAppRoot
+    branded <- runDB $ siteBranded siteId
 
     allowCrossOrigin
     embedLayout $ do

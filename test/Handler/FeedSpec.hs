@@ -47,9 +47,3 @@ spec = withApp $
 
             let item = unsafeHead items
             item `shouldInclude` "<guid>url1/1</guid>"
-
-shouldHaveLength :: (MonadIO m, Show a) => [a] -> Int -> m ()
-x `shouldHaveLength` n = x `shouldSatisfy` (== n) . length
-
-shouldInclude :: (EqSequence a, MonadIO m, Show a) => a -> a -> m ()
-x `shouldInclude` y = x `shouldSatisfy` (y `isInfixOf`)

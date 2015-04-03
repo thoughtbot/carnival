@@ -4,9 +4,13 @@ module Model.Site
     , createSite
     , destroySite
     , overSiteQuota
+    , siteBranded
     ) where
 
 import Import
+import Database.Esqueleto hiding ((==.), delete, on)
+
+import qualified Database.Esqueleto as E
 
 findSites :: UserId -> DB [Entity Site]
 findSites userId = do
@@ -42,3 +46,17 @@ destroySite siteId = do
 
 overSiteQuota :: [a] -> Plan -> Bool
 overSiteQuota xs Plan{..} = length xs >= planSiteQuota
+
+siteBranded :: SiteId -> DB Bool
+siteBranded siteId = null <$> nonBrandedPlans
+
+  where
+    nonBrandedPlans = select $
+        from $ \(p `InnerJoin` u `InnerJoin` m) -> do
+            E.on (m ^. MembershipUser E.==. u ^. UserId)
+            E.on (p ^. PlanId E.==. u ^. UserPlan)
+            where_ $
+                (m ^. MembershipSite E.==. val siteId) &&.
+                (p ^. PlanBranded E.==. val False)
+
+            return p

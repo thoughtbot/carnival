@@ -14,7 +14,7 @@ Plan
     branded Bool
     sort Int
     UniquePlan name
-    deriving Show
+    deriving Eq Show
 
 User
     name Text

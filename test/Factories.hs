@@ -1,5 +1,7 @@
 module Factories
     ( buildSite
+    , buildPlan
+    , buildUser
     , createFreePlan
     , createUser
     , createComment
@@ -11,9 +13,11 @@ import Settings
 
 import ClassyPrelude
 import Database.Persist
+import Database.Persist.Sql
 import Text.Markdown (Markdown(..))
 
 import qualified Data.Text.Lazy as TL
+import qualified Web.Stripe.Plan as S
 
 buildSite :: Site
 buildSite = Site
@@ -22,28 +26,44 @@ buildSite = Site
     , siteLanguage = "en-us"
     }
 
+buildPlan :: Plan
+buildPlan = Plan
+    { planName = S.PlanId "plan"
+    , planDescription = "Plan"
+    , planPrice = 0
+    , planSiteQuota = 0
+    , planCommentQuota = 0
+    , planBranded = False
+    , planSort = 1
+    }
+
+buildUser :: User
+buildUser = User
+    { userName = profileName dummyProfile
+    , userEmail = profileEmail dummyProfile
+    , userPlugin = "dummy"
+    , userIdent = "1"
+    , userPlan = somePlanId
+    , userStripeId = Nothing
+    }
+
 createFreePlan :: DB (Entity Plan)
-createFreePlan = upsert Plan
+createFreePlan = upsert buildPlan
     { planName = freePlanId
     , planDescription = "Personal"
     , planPrice = 0
     , planSiteQuota = 1
     , planCommentQuota = 10
     , planBranded = True
-    , planSort = 1
     } []
 
 createUser :: Text -> DB (Entity User)
 createUser ident = do
     Entity planId _ <- createFreePlan
 
-    insertEntity User
-        { userName = profileName dummyProfile
-        , userEmail = profileEmail dummyProfile
-        , userPlugin = "dummy"
-        , userIdent = ident
+    insertEntity buildUser
+        { userIdent = ident
         , userPlan = planId
-        , userStripeId = Nothing
         }
 
 createComment :: UserId -> SiteId -> Text -> Text -> TL.Text -> DB (Entity Comment)
@@ -60,3 +80,6 @@ createComment uid siteId article thread body = do
         , commentBody = Markdown body
         , commentCreated = now
         }
+
+somePlanId :: PlanId
+somePlanId = toSqlKey 1

@@ -115,6 +115,7 @@ library
 
                  , blaze-html
                  , blaze-markup
+                 , esqueleto                     >= 2.1.2.2    && < 2.2
                  , gravatar
                  , heroku-persistent             >= 0.1.0      && < 0.2
                  , http-types
@@ -195,6 +196,7 @@ test-suite test
                  , mtl
                  , shakespeare
                  , shakespeare-text
+                 , stripe-haskell
                  , text
                  , time
                  , wai-extra
