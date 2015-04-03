@@ -4,6 +4,11 @@ class Thread
     @renderCommentForm()
     @active = false
 
+    # A bare interpolation doesn't seem to work. Doing it within a string does.
+    # Therefore we have to "cast" it back to a boolean. This is probably a bug
+    # in Text.Coffee
+    @branded = '%{branded}' == 'true'
+
   id: ->
     @currentBlock.id() + '-comments'
 
@@ -19,25 +24,32 @@ class Thread
     @setupElement()
     @insertCommentsIntoDom()
     @renderCommentForm()
+    @renderBranding()
     @article.container.insertBefore(@element, @article.container.lastChild)
     @element.style.top = @currentBlock.top() + 'px'
 
   comments: ->
     @currentBlock.comments
 
-  removeAllComments: ->
-    [].slice.call(@element.querySelectorAll('li.carnival-comment')).map((comment) =>
-      @element.removeChild(comment)
-    )
-
   insertCommentsIntoDom: ->
-    @removeAllComments()
+    @removeChildrenBySelector('li.carnival-comment')
     for comment in @comments()
       comment.insert(@element)
 
   renderCommentForm: ->
     @commentForm ?= new CommentForm(this)
     @element.appendChild(@commentForm.element)
+
+  renderBranding: ->
+    if @branded
+      @removeChildrenBySelector('li.carnival-branding')
+
+      el = document.createElement('li')
+      el.classList.add('carnival-comment')
+      el.classList.add('carnival-branding')
+      el.innerHTML = 'Comments powered by <a href=@{RootR}>Carnival</a>.'
+
+      @element.appendChild(el)
 
   add: (body) ->
     Carnival.post(
@@ -49,6 +61,7 @@ class Thread
         @currentBlock.indicator.setCount(@comments().length)
         comment.insert(@element)
         @renderCommentForm()
+        @renderBranding()
     )
 
   commentHash: (body) ->
@@ -59,3 +72,10 @@ class Thread
       thread: @currentBlock.id(),
       body: body
     }
+
+  removeChildrenBySelector: (selector) ->
+    children = @element.querySelectorAll(selector)
+
+    [].slice.call(children).map((comment) =>
+      @element.removeChild(comment)
+    )

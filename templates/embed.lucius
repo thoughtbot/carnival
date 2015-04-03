@@ -169,6 +169,11 @@
   }
 }
 
+.carnival-branding {
+  font-size: 67%;
+  padding-top: 5px;
+}
+
 .commenting {
   .carnival {
     display: block;
