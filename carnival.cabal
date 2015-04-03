@@ -166,7 +166,9 @@ test-suite test
                 ViewPatterns
                 TupleSections
 
+                FlexibleInstances
                 RankNTypes
+                StandaloneDeriving
 
     build-depends: base
                  , carnival

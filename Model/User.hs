@@ -5,6 +5,10 @@ module Model.User
     , findUsers
     , findUsers'
     , authenticateUser
+
+    -- Exported for tests
+    , Profile(..)
+    , dummyProfile
     ) where
 
 import Import.NoFoundation

@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Model.UserSpec
     ( main
     , spec
@@ -6,7 +7,16 @@ module Model.UserSpec
 import TestImport
 import Model.User
 import Yesod.Auth (AuthenticationResult(..), Creds(..))
+import Yesod.Auth.Message (AuthMessage(..))
 import qualified Database.Persist as DB
+
+-- Required to derive for AuthenticationResult
+deriving instance Eq AuthMessage
+deriving instance Show AuthMessage
+
+-- Required to use AuthenticationResult in assertions
+deriving instance Eq (AuthenticationResult App)
+deriving instance Show (AuthenticationResult App)
 
 main :: IO ()
 main = hspec spec
@@ -23,12 +33,16 @@ spec = withApp $ do
                     , credsExtra = []
                     }
 
-            Authenticated userId <- runDB $ authenticateUser' creds
+            result <- runDB $ authenticateUser' creds
 
-            Just user <- runDB $ DB.get userId
-            userPlugin user `shouldBe` credsPlugin creds
-            userIdent user `shouldBe` credsIdent creds
-            userPlan user `shouldBe` planId
+            case result of
+                Authenticated userId -> do
+                    Just user <- runDB $ DB.get userId
+                    userPlugin user `shouldBe` credsPlugin creds
+                    userIdent user `shouldBe` credsIdent creds
+                    userPlan user `shouldBe` planId
+
+                x -> expectationFailure $ "unexpected " ++ show x
 
         it "authenticates a known user by plugin/ident" $ do
             Entity userId user <- runDB $ createUser "1"
@@ -38,78 +52,69 @@ spec = withApp $ do
                     , credsExtra = []
                     }
 
-            Authenticated userId' <- runDB $ authenticateUser' creds
-
-            userId' `shouldBe` userId
+            runDB (authenticateUser' creds) `shouldReturn` Authenticated userId
 
         context "from GitHub" $ do
-            it "creates a user from the profile data" $ do
-                void $ runDB createFreePlan
-                let creds = Creds
-                        { credsPlugin = "github"
-                        , credsIdent = "1"
-                        , credsExtra =
-                            [ ("name", "foo")
-                            , ("email", "bar@gmail.com")
-                            ]
-                        }
+            let creds = Creds
+                    { credsPlugin = "github"
+                    , credsIdent = "1"
+                    , credsExtra =
+                        [ ("name", "foo")
+                        , ("email", "bar@gmail.com")
+                        ]
+                    }
 
-                Authenticated userId <- runDB $ authenticateUser' creds
+            it "creates a user from the name/email values" $
+                creds `shouldCreateWith` Profile "foo" "bar@gmail.com"
 
-                Just user <- runDB $ DB.get userId
-                userName user `shouldBe` "foo"
-                userEmail user `shouldBe` "bar@gmail.com"
-
-            it "updates an existing user's profile data" $ do
-                let creds = Creds
-                        { credsPlugin = "github"
-                        , credsIdent = "1"
-                        , credsExtra =
-                            [ ("name", "foo")
-                            , ("email", "bar@gmail.com")
-                            ]
-                        }
-                userId <- runDB $ do
-                    Entity planId _ <- createFreePlan
-
-                    insert User
-                        { userName = ""
-                        , userEmail = ""
-                        , userPlugin = credsPlugin creds
-                        , userIdent = credsIdent creds
-                        , userPlan = planId
-                        , userStripeId = Nothing
-                        }
-
-                Authenticated userId' <- runDB $ authenticateUser' creds
-
-                userId' `shouldBe` userId
-
-                Just user <- runDB $ DB.get userId
-                userName user `shouldBe` "foo"
-                userEmail user `shouldBe` "bar@gmail.com"
+            it "updates an existing user from the name/email values" $
+                creds `shouldUpdateWith` Profile "foo" "bar@gmail.com"
 
             it "errors if name is missing" $ do
-                let creds = Creds
-                        { credsPlugin = "github"
-                        , credsIdent = "1"
-                        , credsExtra = [("email", "foo@gmail.com")]
-                        }
+                let creds' = creds { credsExtra = [("email", "")] }
 
-                ServerError msg <- runDB $ authenticateUser' creds
-
-                msg `shouldBe` "github: missing key name"
+                runDB (authenticateUser' creds')
+                    `shouldReturn` ServerError "github: missing key name"
 
             it "errors if email is missing" $ do
-                let creds = Creds
-                        { credsPlugin = "github"
-                        , credsIdent = "1"
-                        , credsExtra = [("name", "foo")]
-                        }
+                let creds' = creds { credsExtra = [("name", "")] }
 
-                ServerError msg <- runDB $ authenticateUser' creds
+                runDB (authenticateUser' creds')
+                    `shouldReturn` ServerError "github: missing key email"
 
-                msg `shouldBe` "github: missing key email"
+shouldCreateWith :: Creds App -> Profile -> YesodExample App ()
+creds `shouldCreateWith` profile = do
+    void $ runDB createFreePlan
+
+    result <- runDB $ authenticateUser' creds
+
+    case result of
+        Authenticated userId -> do
+            Just user <- runDB $ DB.get userId
+            userName user `shouldBe` profileName profile
+            userEmail user `shouldBe` profileEmail profile
+
+        x -> expectationFailure $ "unexpected " ++ show x
+
+shouldUpdateWith :: Creds App -> Profile -> YesodExample App ()
+creds `shouldUpdateWith` profile = do
+    userId <- runDB $ do
+        Entity planId _ <- createFreePlan
+
+        insert User
+            { userName = ""
+            , userEmail = ""
+            , userPlugin = credsPlugin creds
+            , userIdent = credsIdent creds
+            , userPlan = planId
+            , userStripeId = Nothing
+            }
+
+    runDB (authenticateUser' creds) `shouldReturn` Authenticated userId
+
+    Just user <- runDB $ DB.get userId
+    userName user `shouldBe` profileName profile
+    userEmail user `shouldBe` profileEmail profile
 
 -- A synonym is required to fix m as App because we use the result as a concrete
 -- AuthId App (i.e. UserId) so it can't be the generic AuthId m

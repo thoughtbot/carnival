@@ -6,6 +6,7 @@ module Factories
     ) where
 
 import Model
+import Model.User
 import Settings
 
 import ClassyPrelude
@@ -37,8 +38,8 @@ createUser ident = do
     Entity planId _ <- createFreePlan
 
     insertEntity User
-        { userName = "Dummy Login"
-        , userEmail = "dummy@example.com"
+        { userName = profileName dummyProfile
+        , userEmail = profileEmail dummyProfile
         , userPlugin = "dummy"
         , userIdent = ident
         , userPlan = planId
