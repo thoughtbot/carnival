@@ -21,7 +21,7 @@ User
     email Text
     plugin Text
     ident Text
-    plan PlanId default=1
+    plan PlanId
     stripeId S.CustomerId Maybe
     UniqueUser plugin ident
     deriving Eq Show Typeable
@@ -34,13 +34,13 @@ Membership
 
 Comment
     user UserId
-    site SiteId default=1
+    site SiteId
     articleURL Text
-    articleTitle Text default=''
-    articleAuthor Text default=''
+    articleTitle Text
+    articleAuthor Text
     thread Text
     body Markdown
-    created UTCTime default=now()
+    created UTCTime
     deriving Eq Show
 
 Subscription
