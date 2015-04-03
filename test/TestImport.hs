@@ -20,6 +20,7 @@ import Test.Hspec            as X hiding
     , shouldMatchList
     , shouldReturn
     )
+import Test.Hspec.Extension as X
 import Test.Hspec.Expectations.Lifted as X
 import Yesod.Default.Config2 (ignoreEnv, loadAppSettings)
 import Yesod.Test.Extension  as X
