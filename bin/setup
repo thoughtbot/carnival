@@ -7,7 +7,9 @@ get_env() {
   for var in \
     HALCYON_AWS_ACCESS_KEY_ID \
     HALCYON_AWS_SECRET_ACCESS_KEY \
-    HALCYON_S3_BUCKET; do
+    HALCYON_S3_BUCKET \
+    STRIPE_SECRET_KEY \
+    STRIPE_PUBLISHABLE_KEY; do
 
     printf 'export %s=' "$var"
     heroku config:get "$var" --app carnival-staging || echo
