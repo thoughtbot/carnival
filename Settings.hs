@@ -83,6 +83,8 @@ data AppSettings = AppSettings
     -- ^ Parse database info from DATABASE_URL?
     , appAllowDummyAuth         :: Bool
     -- ^ Add the Dummy Auth plugin (for authenticating in tests)?
+    , appForceSSL               :: Bool
+    -- ^ Force all traffic to use SSL via sslOnlyMiddleware?
     }
 
 instance FromJSON AppSettings where
@@ -111,6 +113,7 @@ instance FromJSON AppSettings where
         appSendMail               <- o .:? "send-mail"        .!= (not defaultDev)
         appDatabaseUrl            <- o .:? "database-url"     .!= (not defaultDev)
         appAllowDummyAuth         <- o .:? "allow-dummy-auth" .!= defaultDev
+        appForceSSL               <- o .:? "force-ssl"        .!= (not defaultDev)
 
         return AppSettings {..}
 

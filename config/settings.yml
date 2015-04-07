@@ -20,6 +20,7 @@ ip-from-header: "_env:IP_FROM_HEADER:false"
 # send-mail: true
 # database-url: true
 # allow-dummy-auth: false
+# force-ssl: true
 
 database:
   user:     "_env:PGUSER:carnival"
