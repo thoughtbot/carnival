@@ -50,7 +50,7 @@ instance Yesod App where
 
     -- Store session data on the client in encrypted cookies,
     -- default session idle timeout is 120 minutes
-    makeSessionBackend _ =
+    makeSessionBackend _ = whenSSL sslOnlySessions $
         Just <$> envClientSessionBackend sessionTimeout "SESSION_KEY"
 
     defaultLayout widget = do
@@ -114,11 +114,10 @@ instance Yesod App where
     makeLogger = return . appLogger
 
     yesodMiddleware =
-        forceSSL (appForceSSL compileTimeAppSettings) . defaultYesodMiddleware
+        whenSSL (sslOnlyMiddleware sessionTimeout) . defaultYesodMiddleware
 
-forceSSL :: Bool -> Handler a -> Handler a
-forceSSL True = sslOnlyMiddleware sessionTimeout
-forceSSL False = id
+whenSSL :: (a -> a) -> (a -> a)
+whenSSL f = if (appForceSSL compileTimeAppSettings) then f else id
 
 sessionTimeout :: Int
 sessionTimeout = 120
