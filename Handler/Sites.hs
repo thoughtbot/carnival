@@ -18,7 +18,6 @@ getSitesR = do
 
     defaultLayout $ do
         setTitle "Carnival - Sites"
-        addStylesheet $ StaticR css_bootstrap_css
         $(widgetFile "sites/index")
 
 postSitesR :: Handler Html
@@ -55,7 +54,6 @@ getSiteR siteId = do
 
     defaultLayout $ do
         setTitle "Carnival - Site"
-        addStylesheet $ StaticR css_bootstrap_css
         $(widgetFile "sites/show")
 
 postSiteR :: SiteId -> Handler Html
@@ -71,7 +69,6 @@ postSiteR siteId = do
 
     defaultLayout $ do
         setTitle "Carnival - Site"
-        addStylesheet $ StaticR css_bootstrap_css
         $(widgetFile "sites/show")
 
 getDeleteSiteR :: SiteId -> Handler Html
@@ -80,7 +77,6 @@ getDeleteSiteR siteId = do
 
     defaultLayout $ do
         setTitle "Carnival - Delete site"
-        addStylesheet $ StaticR css_bootstrap_css
         $(widgetFile "sites/delete")
 
 postDeleteSiteR :: SiteId -> Handler ()

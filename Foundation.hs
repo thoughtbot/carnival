@@ -70,8 +70,12 @@ instance Yesod App where
         pc <- widgetToPageContent $ do
             addScript $ StaticR js_highlight_js
             addStylesheet $ StaticR css_normalize_css
-            addStylesheet $ StaticR css_screen_css
             addStylesheet $ StaticR css_highlight_css
+
+            when (maybe False includeBootstrap route) $
+                addStylesheet $ StaticR css_bootstrap_css
+
+            addStylesheet $ StaticR css_screen_css
             addStylesheetRemote $ "//fonts.googleapis.com/css?family=Lato:400,900"
             $(widgetFile "default-layout")
         withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
@@ -127,6 +131,10 @@ embedLayout :: Widget -> Handler Html
 embedLayout widget = do
     pc <- widgetToPageContent widget
     withUrlRenderer $(hamletFile "templates/embed-layout-wrapper.hamlet")
+
+includeBootstrap :: Route App -> Bool
+includeBootstrap RootR = False
+includeBootstrap _ = True
 
 -- How to run database actions.
 instance YesodPersist App where

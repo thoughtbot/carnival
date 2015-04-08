@@ -9,7 +9,6 @@ getPlansR = do
 
     defaultLayout $ do
         setTitle "Carnival - Plans"
-        addStylesheet $ StaticR css_bootstrap_css
         $(widgetFile "plans/index")
 
 featuresList :: Plan -> Widget
