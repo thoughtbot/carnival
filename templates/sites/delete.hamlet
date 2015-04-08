@@ -5,6 +5,6 @@
   This action <strong>cannot be undone</strong> and will delete
   <strong>all data</strong> associated with #{siteName site}.
 
-<form method=post action=@{DeleteSiteR siteId}>
+<form #site-delete method=post action=@{DeleteSiteR siteId}>
   <button .btn.btn-danger type="submit">Yes, do it!
   <a .btn.btn-default href=@{SiteR siteId}>No, go back!

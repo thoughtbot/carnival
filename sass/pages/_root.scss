@@ -1,15 +1,9 @@
-@linkcolor: #E74C3D;
-@linkbordercolor: #F7C4BF;
-@lightgray: #D7D7D7;
-@mediumgray: #615E5F;
-@darkgray: #221E1F;
-
 .hero {
   text-align: center;
 }
 
 .hero-disclaimer {
-  color: #{mediumgray};
+  color: $medium-gray;
   margin-bottom: 5em;
 }
 

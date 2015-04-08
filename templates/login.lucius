@@ -1,7 +1,0 @@
-.container {
-  text-align: center;
-}
-
-.button--github {
-  margin: 50px 0px;
-}

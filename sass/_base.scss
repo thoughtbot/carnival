@@ -1,11 +1,11 @@
-@linkcolor: #E74C3D;
-@linkbordercolor: #F7C4BF;
-@lightgray: #D7D7D7;
-@mediumgray: #615E5F;
-@darkgray: #221E1F;
+$link-color: #E74C3D;
+$link-border-color: #F7C4BF;
+$light-gray: #D7D7D7;
+$medium-gray: #615E5F;
+$dark-gray: #221E1F;
 
 body {
-  color: #{mediumgray};
+  color: $medium-gray;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -21,16 +21,16 @@ body {
 }
 
 a {
-  color: #{linkcolor};
+  color: $link-color;
   text-decoration: none;
 }
 
 a:hover {
-  border-bottom: 2px solid #{linkbordercolor};
+  border-bottom: 2px solid $link-border-color;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  color: #{darkgray};
+  color: $dark-gray;
 }
 
 ul {
@@ -39,7 +39,7 @@ ul {
 }
 
 .button {
-  background: #{linkcolor};
+  background: $link-color;
   border-radius: 1.125em;
   color: #fff;
   display: inline-block;
@@ -52,18 +52,18 @@ ul {
 }
 
 .button--github {
-  background: #{linkcolor} url(@{StaticR img_github_svg}) no-repeat 1em center;
+  background: $link-color url("/static/img/github.svg") no-repeat 1em center;
   padding-left: 2.75em;
 }
 
 .button--light {
   background-color: #fff;
-  border: 2px solid #{linkbordercolor};
-  color: #{linkcolor};
+  border: 2px solid $link-border-color;
+  color: $link-color;
 }
 
 .button--light:hover {
-  border-bottom: 2px solid #{linkbordercolor};
+  border-bottom: 2px solid $link-border-color;
 }
 
 .clearfix::before,
@@ -98,7 +98,7 @@ ul {
 }
 
 .nav-item.active a {
-  border-bottom: 2px solid #{linkbordercolor};
+  border-bottom: 2px solid $link-border-color;
   cursor: default;
   pointer-events: none;
 }
@@ -112,7 +112,7 @@ ul {
 }
 
 .nav-logo {
-  background: url(@{StaticR img_logo_png}) no-repeat left center / 4em;
+  background: url("/static/img/logo.png") no-repeat left center / 4em;
   display: block;
   height: 4em;
   line-height: 4em;
@@ -124,8 +124,8 @@ ul {
 }
 
 .footer {
-  background-color: #{lightgray};
-  color: #{mediumgray};
+  background-color: $light-gray;
+  color: $medium-gray;
   padding: 3em 0;
   position: relative;
   z-index: 1;
