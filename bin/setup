@@ -38,6 +38,8 @@ if [ ! -f ./.env ]; then
   get_env > ./.env
 fi
 
+command -v sass >/dev/null || gem install sass
+
 ./bin/setup-db
 ./bin/halcyon-build
 

@@ -70,6 +70,7 @@ instance Yesod App where
         pc <- widgetToPageContent $ do
             addScript $ StaticR js_highlight_js
             addStylesheet $ StaticR css_normalize_css
+            addStylesheet $ StaticR css_screen_css
             addStylesheet $ StaticR css_highlight_css
             addStylesheetRemote $ "//fonts.googleapis.com/css?family=Lato:400,900"
             $(widgetFile "default-layout")

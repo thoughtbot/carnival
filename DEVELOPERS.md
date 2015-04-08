@@ -53,6 +53,12 @@ Open up a REPL:
 $ cabal exec -- ghci Model.hs
 ```
 
+## Sass
+
+- In a separate terminal, run `sass --watch sass:static/css`
+- Edit files under `sass/`
+- Commit both the Sass files and the generated CSS files
+
 ## Maitre-d
 
 To use Carnival from a local instance of [maitre-d][]:
