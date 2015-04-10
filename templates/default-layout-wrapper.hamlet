@@ -18,10 +18,10 @@ $doctype 5
             <li .nav-item :isRoute SitesR:.active>
               <a href=@{SitesR}>Sites
             <li .nav-item.nav-item--button>
-              <a .button.button--light href=@{AuthR LogoutR}>Log out
+              <a .button.button--light href=@{AuthR LogoutR}>Sign out
           $nothing
             <li .nav-item.nav-item--button>
-              <a .button.button--light href=@{AuthR $ oauth2Url "github"}>Sign in
+              <a .button.button--light href=@{AuthR LoginR}>Sign in
 
     ^{pageBody pc}
 

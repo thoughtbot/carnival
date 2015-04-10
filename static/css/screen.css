@@ -42,6 +42,10 @@ ul {
   background: #E74C3D url("/static/img/github.svg") no-repeat 1em center;
   padding-left: 2.75em; }
 
+.button--google {
+  background: #E74C3D url("/static/img/google.svg") no-repeat 1em center/20px;
+  padding-left: 2.75em; }
+
 .button--light {
   background-color: #fff;
   border: 2px solid #F7C4BF;
@@ -112,27 +116,28 @@ ul {
 
 .hero {
   text-align: center; }
-
-.hero-disclaimer {
-  color: #615E5F;
-  margin-bottom: 5em; }
-
-.hero-headline {
-  font-size: 3em;
-  font-weight: normal;
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 15em; }
-
-.hero-image {
-  margin: 4em 0 -1em;
-  position: relative;
-  z-index: 0; }
+  .hero-cta:hover {
+    border-bottom: 0; }
+  .hero-cta-text {
+    padding-right: 1.5em; }
+  .hero-disclaimer {
+    color: #615E5F;
+    margin-bottom: 5em; }
+  .hero-headline {
+    font-size: 3em;
+    font-weight: normal;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 15em; }
+  .hero-image {
+    margin: 4em 0 -1em;
+    position: relative;
+    z-index: 0; }
 
 .login {
   text-align: center; }
-  .login .button--github {
-    margin: 50px 0px; }
+  .login-button {
+    margin: 3em 0; }
 
 .guide h1, .guide article {
   width: 70%;

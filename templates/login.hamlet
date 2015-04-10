@@ -1,6 +1,10 @@
 <div .login>
-  <a .button.button--github href=@{AuthR $ oauth2Url "github"}>
-    Login with GitHub
+  <h2>
+    Please sign in
+  <div .login-button>
+    <a .button.button--github href=@{AuthR $ oauth2Url "github"}>
+      Sign in with GitHub
 
-  <a .button.button--google href=@{AuthR $ forwardUrl}>
-    Login with Google
+  <div .login-button>
+    <a .button.button--google href=@{AuthR $ forwardUrl}>
+      Sign in with Google

@@ -74,7 +74,7 @@ class Carnival
     left = (screen.width/2)-(width/2)
     top = (screen.height/2)-(height/2)
     @loginWindow = window.open(
-      '@{AuthR $ oauth2Url "github"}',
+      '@{AuthR LoginR}',
       'carnivalLogin',
       'height='+height+',width='+width+',top='+top+',left='+left+',menubar=no'
     )

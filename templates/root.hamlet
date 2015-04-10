@@ -6,7 +6,9 @@
 
   $maybe Entity _ _ <- muser
   $nothing
-    <a .button.button--github href=@{AuthR $ oauth2Url "github"}>
-      Sign up with GitHub
-
+    <a .hero-cta href=@{AuthR LoginR}>
+      <span .hero-cta-text>
+        Sign in with Github or Google
+      <span .button>
+        Sign in
   <img .hero-image src=@{StaticR img_browser_svg}>
