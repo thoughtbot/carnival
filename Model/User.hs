@@ -15,6 +15,7 @@ import Import.NoFoundation
 import Data.Aeson
 import Network.Gravatar
 import Yesod.Auth.GoogleEmail2
+import Yesod.Auth.Message (AuthMessage(..))
 
 import qualified Data.Text as T
 import qualified Data.ByteString.Lazy as BL
@@ -56,7 +57,12 @@ authenticateUser creds@Creds{..} = do
     getEither msg = fmap (maybe (Left msg) Right) . getBy
 
     authNew (Left err) = return $ ServerError $ credsPlugin ++ ": " ++ err
-    authNew (Right user) = Authenticated <$> insert user
+    authNew (Right user) = do
+        n <- count [UserEmail ==. userEmail user]
+
+        if n == 0
+            then Authenticated <$> insert user
+            else return $ UserError InvalidEmailAddress
 
     authExisting euser userId = do
         mapM_ (replace userId) euser

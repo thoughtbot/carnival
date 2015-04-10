@@ -54,6 +54,19 @@ spec = withApp $ do
 
             runDB (authenticateUser' creds) `shouldReturn` Authenticated userId
 
+        it "ensures a unique email for new users" $ do
+            Entity _ user <- runDB $ createUser "1"
+            let creds = Creds
+                    { credsPlugin = userPlugin user
+                    -- Note: the dummy plugin always uses the same email. Just
+                    -- need to ensure we create a new user
+                    , credsIdent = "2"
+                    , credsExtra = []
+                    }
+
+            runDB (authenticateUser' creds)
+                `shouldReturn` UserError InvalidEmailAddress
+
         context "from GitHub" $ do
             let creds = Creds
                     { credsPlugin = "github"
