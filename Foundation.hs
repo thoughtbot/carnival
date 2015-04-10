@@ -11,6 +11,7 @@ import qualified Yesod.Core.Unsafe as Unsafe
 import Model.User
 import Yesod.Auth.Dummy
 import Yesod.Auth.GoogleEmail2 hiding (Token)
+import Yesod.Auth.Message (AuthMessage(..))
 import Yesod.Auth.OAuth2.Github
 
 -- | The foundation datatype for your application. This can be a good place to
@@ -157,7 +158,15 @@ instance YesodAuth App where
     -- Override the above two destinations when a Referer: header is present
     redirectToReferer _ = True
 
-    authenticate = runDB . authenticateUser
+    authenticate creds = do
+        result <- runDB $ authenticateUser creds
+
+        case result of
+            UserError InvalidEmailAddress -> do
+                setMessage "Email taken. Maybe you've logged in through a different service previously?"
+                redirect $ AuthR LoginR
+
+            _ -> return result
 
     -- You can add other plugins like BrowserID, email or OAuth here
     authPlugins m = addAuthBackDoor m
