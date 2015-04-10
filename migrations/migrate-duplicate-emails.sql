@@ -45,7 +45,8 @@ DELETE
       ON comment.user = "user".id
     LEFT OUTER JOIN subscription
       ON subscription.user = "user".id
-    WHERE membership.id IS NULL
+    WHERE "user".plugin = 'learn'
+      AND membership.id IS NULL
       AND comment.id IS NULL
       AND subscription.id IS NULL
   );
