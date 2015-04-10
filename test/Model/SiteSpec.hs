@@ -43,7 +43,9 @@ attachPlansToSite plans = do
     planIds <- forM plans insert
     userIds <- forM planIds $ \planId -> insert buildUser
         { userPlan = planId
-        , userIdent = pack $ show planId -- to make it unique
+        -- to make unique values
+        , userIdent = pack $ show planId
+        , userEmail = (pack $ show planId) ++ "@example.com"
         }
 
     void $ forM userIds $ \userId -> insert $ Membership siteId userId

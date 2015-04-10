@@ -24,6 +24,7 @@ User
     plan PlanId
     stripeId S.CustomerId Maybe
     UniqueUser plugin ident
+    UniqueEmail email
     deriving Eq Show Typeable
 
 Membership

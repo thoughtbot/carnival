@@ -8,7 +8,6 @@ module Factories
     ) where
 
 import Model
-import Model.User
 import Settings
 
 import ClassyPrelude
@@ -39,8 +38,8 @@ buildPlan = Plan
 
 buildUser :: User
 buildUser = User
-    { userName = profileName dummyProfile
-    , userEmail = profileEmail dummyProfile
+    { userName = "user"
+    , userEmail = "user@example.com"
     , userPlugin = "dummy"
     , userIdent = "1"
     , userPlan = somePlanId
@@ -62,7 +61,9 @@ createUser ident = do
     Entity planId _ <- createFreePlan
 
     insertEntity buildUser
-        { userIdent = ident
+        { userName = "user-" ++ ident
+        , userEmail = "user-" ++ ident ++ "@example.com"
+        , userIdent = ident
         , userPlan = planId
         }
 

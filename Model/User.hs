@@ -8,7 +8,6 @@ module Model.User
 
     -- Exported for tests
     , Profile(..)
-    , dummyProfile
     ) where
 
 import Import.NoFoundation
@@ -47,21 +46,21 @@ authenticateUser :: AuthId m ~ UserId => Creds m -> DB (AuthenticationResult m)
 authenticateUser creds@Creds{..} = do
     plan <- getEither "Free plan not found" $ UniquePlan freePlanId
     muser <- getBy $ UniqueUser credsPlugin credsIdent
-    euserId <- mapM upsertUser $ credsToUser (entityKey <$> plan) creds
 
-    return $ case (muser, euserId) of
-        (Just user, _) -> Authenticated $ entityKey user
-        (_, Right userId) -> Authenticated userId
-        (_, Left err) -> ServerError $ credsPlugin ++ ": " ++ err
+    let euser = credsToUser (entityKey <$> plan) creds
+        muserId = entityKey <$> muser
+
+    maybe (authNew euser) (authExisting euser) $ muserId
 
   where
     getEither msg = fmap (maybe (Left msg) Right) . getBy
 
-upsertUser :: User -> DB UserId
-upsertUser user = entityKey <$> upsert user
-    [ UserName =. userName user
-    , UserEmail =. userEmail user
-    ]
+    authNew (Left err) = return $ ServerError $ credsPlugin ++ ": " ++ err
+    authNew (Right user) = Authenticated <$> insert user
+
+    authExisting euser userId = do
+        mapM_ (replace userId) euser
+        return $ Authenticated userId
 
 credsToUser :: Either Text PlanId -> Creds m -> Either Text User
 credsToUser eplanId Creds{..} = User
@@ -76,13 +75,10 @@ credsToUser eplanId Creds{..} = User
     eprofile = extraToProfile credsPlugin credsExtra
 
 extraToProfile :: Text -> [(Text, Text)] -> Either Text Profile
-extraToProfile "dummy" _ = Right dummyProfile
+extraToProfile "dummy" extra = githubProfile extra
 extraToProfile "github" extra = githubProfile extra
 extraToProfile "googleemail2" extra = googleProfile extra
 extraToProfile plugin _ = Left $ "Invalid plugin: " ++ plugin
-
-dummyProfile :: Profile
-dummyProfile = Profile "Dummy Login" "dummy@example.com"
 
 githubProfile :: [(Text, Text)] -> Either Text Profile
 githubProfile extra = Profile

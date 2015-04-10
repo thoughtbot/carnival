@@ -30,7 +30,7 @@ spec = withApp $ do
             let creds = Creds
                     { credsPlugin = "dummy"
                     , credsIdent = "1"
-                    , credsExtra = []
+                    , credsExtra = [("name", ""), ("email", "")]
                     }
 
             result <- runDB $ authenticateUser' creds
