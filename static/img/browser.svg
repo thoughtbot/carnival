@@ -1,11 +1,63 @@
-<svg width="967" height="451" viewBox="0 0 967 451" xmlns="http://www.w3.org/2000/svg">
-  <g transform="translate(-237 -616) translate(237 616)" fill="none">
-    <rect stroke="#fff" fill="#F9F9F9" width="967" height="451" rx="6"/>
-    <g transform="translate(22 14.611)" fill="#E6E6E6">
-      <ellipse cx="6" cy="5.844" rx="6" ry="5.844"/>
-      <ellipse cx="26" cy="5.844" rx="6" ry="5.844"/>
-      <ellipse cx="46" cy="5.844" rx="6" ry="5.844"/>
+<svg width="802" height="451" viewBox="0 0 802 451" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <rect id="a" width="12" height="12" rx="2"/>
+    </defs>
+    <g fill="none">
+        <g transform="translate(.5 0)">
+            <rect stroke="#fff" fill="#F9F9F9" width="800.883" height="451" rx="6"/>
+            <g transform="translate(22 14.611)" fill="#E6E6E6">
+                <ellipse cx="6" cy="5.844" rx="6" ry="5.844"/>
+                <ellipse cx="26" cy="5.844" rx="6" ry="5.844"/>
+                <ellipse cx="46" cy="5.844" rx="6" ry="5.844"/>
+            </g>
+            <path d="M1.242 38.5H800.47" stroke="#F0F0F0" stroke-linecap="square"/>
+        </g>
+        <g transform="translate(116.5 94)" fill="#D5D5D5">
+            <rect opacity=".7" width="425" height="48" rx="4"/>
+            <g id="Group" transform="translate(0 70)" opacity=".5">
+                <rect width="425" height="16" rx="4"/>
+                <rect y="24" width="425" height="16" rx="4"/>
+                <rect y="48" width="425" height="16" rx="4"/>
+                <rect y="72" width="425" height="16" rx="4"/>
+                <rect y="120" width="425" height="16" rx="4"/>
+                <rect y="144" width="425" height="16" rx="4"/>
+                <rect y="168" width="425" height="16" rx="4"/>
+                <rect y="192" width="425" height="16" rx="4"/>
+            </g>
+        </g>
+        <g>
+            <g>
+                <path d="M571.5 166.01c0-1.11.902-2.01 2.01-2.01h7.98c1.11 0 2.01.902 2.01 2.01v7.98c0 1.11-.888 2.01-2 2.01h-2l-5 2.5V176h-1c-1.104 0-2-.902-2-2.01v-7.98z" id="Rectangle-47" fill="#E0DFDF"/>
+                <text id="+" font-family="Lato" font-size="8" font-weight="686" fill="#fff" transform="translate(571.5 164)">
+                    <tspan x="4" y="9">
+                        +
+                    </tspan>
+                </text>
+            </g>
+            <g>
+                <path d="M571.5 286.01c0-1.11.902-2.01 2.01-2.01h7.98c1.11 0 2.01.902 2.01 2.01v7.98c0 1.11-.888 2.01-2 2.01h-2l-5 2.5V296h-1c-1.104 0-2-.902-2-2.01v-7.98z" fill="#E0DFDF"/>
+                <text font-family="Lato" font-size="8" font-weight="686" fill="#fff" transform="translate(571.5 284)">
+                    <tspan x="4" y="9">
+                        +
+                    </tspan>
+                </text>
+            </g>
+            <g>
+                <g transform="translate(589.5 164)">
+                    <mask id="b">
+                        <use xlink:href="#a"/>
+                    </mask>
+                    <use fill="#E0DFDF" xlink:href="#a"/>
+                    <path d="M3.473 6.54c-.595 0-.595-1.297 0-1.297 0-.217-1.08-2.594.72-2.27.36-1.297 4.325-1.297 4.685 0 .25.9-.36 2.11-.36 2.27.595 0 .595 1.298 0 1.298 0 1.622-1.08 1.946-1.08 1.946v1.622c1.784.602 3.552 1.102 4.457 1.67.74-.676-2.57 2.218-5.9 2.222-3.305.004-6.63-2.885-5.89-2.214.957-.597 2.847-1.133 4.45-1.678V8.486S3.472 8.162 3.472 6.54z" fill="#868686" mask="url(#b)"/>
+                </g>
+                <g fill="#E0DFDF" transform="translate(589.5 164)">
+                    <rect x="15" width="57" height="12" rx="2"/>
+                    <rect opacity=".388" y="19" width="97" height="10" rx="2"/>
+                    <rect opacity=".388" y="32" width="97" height="10" rx="2"/>
+                    <rect opacity=".708" y="53" width="46" height="18" rx="2"/>
+                    <path d="M91.233 4.526l1.12 1.12L93.4 4.6l.627.627-1.047 1.047L94.106 7.4l-.713.712-1.125-1.126-1.04 1.04-.63-.627 1.042-1.042-1.12-1.12.713-.712z"/>
+                </g>
+            </g>
+        </g>
     </g>
-    <path d="M1.5 40.424h965.002" stroke="#F0F0F0" stroke-linecap="square"/>
-  </g>
 </svg>

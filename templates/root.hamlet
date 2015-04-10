@@ -11,4 +11,5 @@
         Sign in with Github or Google
       <span .button>
         Sign in
-  <img .hero-image src=@{StaticR img_browser_svg}>
+  <div>
+    <img .hero-image src=@{StaticR img_browser_svg}>
