@@ -44,6 +44,10 @@ findUsers' = fmap (map entityVal) . findUsers
 
 authenticateUser :: AuthId m ~ UserId => Creds m -> DB (AuthenticationResult m)
 authenticateUser creds@Creds{..} = do
+    mapM_ updateByEmail
+        $ fmap profileEmail
+        $ extraToProfile credsPlugin credsExtra
+
     plan <- getEither "Free plan not found" $ UniquePlan freePlanId
     muser <- getBy $ UniqueUser credsPlugin credsIdent
 
@@ -53,6 +57,15 @@ authenticateUser creds@Creds{..} = do
     maybe (authNew euser) (authExisting euser) $ muserId
 
   where
+    updateByEmail email = updateWhere
+        [ UserPlugin !=. credsPlugin
+        , UserIdent !=. credsIdent
+        , UserEmail ==. email
+        ]
+        [ UserPlugin =. credsPlugin
+        , UserIdent =. credsIdent
+        ]
+
     getEither msg = fmap (maybe (Left msg) Right) . getBy
 
     authNew (Left err) = return $ ServerError $ credsPlugin ++ ": " ++ err

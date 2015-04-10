@@ -54,6 +54,30 @@ spec = withApp $ do
 
             runDB (authenticateUser' creds) `shouldReturn` Authenticated userId
 
+        it "updates existing users by email" $ do
+            userId <- runDB $ do
+                plan <- createFreePlan
+
+                insert $ buildUser
+                    { userPlugin = "learn"
+                    , userIdent = "1"
+                    , userEmail = "learn@example.com"
+                    , userPlan = entityKey plan
+                    }
+
+            void $ runDB $ authenticateUser' Creds
+                { credsPlugin = "github"
+                , credsIdent = "2"
+                , credsExtra =
+                    [ ("name", "")
+                    , ("email", "learn@example.com")
+                    ]
+                }
+
+            Just user <- runDB $ DB.get userId
+            userPlugin user `shouldBe` "github"
+            userIdent user `shouldBe` "2"
+
         context "from GitHub" $ do
             let creds = Creds
                     { credsPlugin = "github"
