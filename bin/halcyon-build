@@ -27,6 +27,11 @@ EOF
   exit 1
 fi
 
+if [ -d /var/tmp/halcyon-cache ]; then
+  echo 'Clearing the halcyon cache...'
+  rm -rf /var/tmp/halcyon-cache
+fi
+
 if [ ! -w /app ]; then
   sudo mkdir -p /app
   sudo chown $USER /app
