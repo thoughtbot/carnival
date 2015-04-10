@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-_psql() { PGPASSWORD="$user" psql --username "$user" "$@"; }
+_psql() { PGPASSWORD="$user" psql --no-psqlrc --username "$user" "$@"; }
 
 missing_sites() {
   echo 'select count(*) from site;' | _psql -t --dbname "$app" | grep -Fq 0
