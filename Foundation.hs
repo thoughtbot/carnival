@@ -171,9 +171,13 @@ instance YesodAuth App where
 
     authHttpManager = getHttpManager
 
-    loginHandler = lift $ defaultLayout $ do
-        setTitle "Carnival - Login"
-        $(widgetFile "login")
+    loginHandler = lift $ do
+        murl <- runInputGet $ iopt textField "dest"
+        mapM_ setUltDest murl
+
+        defaultLayout $ do
+            setTitle "Carnival - Login"
+            $(widgetFile "login")
 
 addAuthBackDoor :: App -> [AuthPlugin App] -> [AuthPlugin App]
 addAuthBackDoor app =
