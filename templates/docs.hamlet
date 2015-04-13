@@ -76,6 +76,19 @@
             <code>:scope
           will refer to your Article element.
       <tr>
+        <td><code>shift_article</code>
+        <td><code>true</code>
+        <td>
+          Automatically shift your Article element to make room for the comments
+          UI.
+      <tr>
+        <td><code>force_relative</code>
+        <td><code>true</code>
+        <td>
+          Force your Article element to be 
+          <code>position: relative
+          .
+      <tr>
         <td><code>onNewComment</code>
         <td><code>function(comment) { };</code>
         <td>A callback invoked whenever comments are inserted in the DOM.
@@ -91,6 +104,8 @@
         \    article_author: "",
         \    article_selector: "article",
         \    block_selector: ":scope > p, :scope > pre",
+        \    shift_article: true,
+        \    force_relative: true,
         \    onNewComment: function(comment) { };
         \  });
         \});
@@ -106,7 +121,9 @@
       . To support the positioning of this element, Carnival must ensure that
       your Article element is 
       <code>position: relative
-      .
+      . This can be disabled with the 
+      <code>force_relative
+      option.
 
     <p>
 
@@ -124,8 +141,9 @@
       <code>150
       pixels to the left. It does this by taking the element's current 
       <code>style.left
-      value and setting a new one 150 pixels less. (Soon, you will be able to
-      disable this shift if you want to handle the positioning yourself.)
+      value and setting a new one 150 pixels less. This can be disabled with the 
+      <code>shift_article
+      option.
 
     <h2>Comments Feed
 
