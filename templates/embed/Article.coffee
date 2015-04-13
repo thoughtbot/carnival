@@ -7,7 +7,9 @@ class Article
     @thread = new Thread(this)
     @fetchComments()
     @bindEvents()
-    @element.style.position = 'relative'
+
+    if CarnivalOptions.force_relative
+      @element.style.position = 'relative'
 
   createBlocks: ->
     @blocks = [].slice.call(@element.querySelectorAll(CarnivalOptions.block_selector)).map (blockElement, index) =>
@@ -24,13 +26,17 @@ class Article
     @element.addEventListener 'commenting', (event) =>
       unless @element.classList.contains('commenting')
         Carnival.addClass(@element, 'commenting')
-        @shiftArticle()
+
+        if CarnivalOptions.shift_article
+          @shiftArticle()
 
       @thread.displayForBlock(event.detail)
     @element.addEventListener 'doneCommenting', =>
       if @element.querySelectorAll('.commenting').length is 0
         Carnival.removeClass(@element, 'commenting')
-        @restoreArticle()
+
+        if CarnivalOptions.shift_article
+          @restoreArticle()
 
   fetchComments: ->
     Carnival.get('@{CommentsR siteId}?article=' + @id, (data) =>

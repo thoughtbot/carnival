@@ -22,6 +22,8 @@ window.Carnival =
       article_author: ''
       article_selector: 'article'
       block_selector: ':scope > p, :scope > pre'
+      force_relative: true
+      shift_article: true
       onNewComment: (comment) ->
 
     for property of defaults
