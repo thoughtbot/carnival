@@ -114,6 +114,10 @@ ul {
 .footer-source {
   float: right; }
 
+/* revert text-align: center when carnival is within .hero on the homepage */
+.carnival {
+  text-align: left; }
+
 .hero {
   text-align: center; }
   .hero-cta:hover {

@@ -13,3 +13,12 @@
         Sign in
   <div>
     <img .hero-image src=@{StaticR img_browser_svg}>
+
+  <script src=@{InitR siteId}>
+  <script>
+    \document.addEventListener("DOMContentLoaded", function() {
+    \  Carnival.init({
+    \    article_selector: ".hero",
+    \    block_selector: ":scope h1, :scope div"
+    \  });
+    \});

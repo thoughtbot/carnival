@@ -5,6 +5,7 @@ module Model.Site
     , destroySite
     , overSiteQuota
     , siteBranded
+    , upsertDemoSite
     ) where
 
 import Import
@@ -60,3 +61,13 @@ siteBranded siteId = null <$> nonBrandedPlans
                 (p ^. PlanBranded E.==. val False)
 
             return p
+
+upsertDemoSite :: Text -> DB SiteId
+upsertDemoSite root = entityKey <$> upsert (demoSite root) []
+
+demoSite :: Text -> Site
+demoSite root = Site
+    { siteName = "carnival-demo"
+    , siteBaseUrl = root
+    , siteLanguage = "en-us"
+    }
