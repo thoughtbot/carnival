@@ -34,7 +34,7 @@ class CommentForm
       event.stopPropagation()
       @hideCommentForm()
     @element.querySelector('textarea').addEventListener 'keydown', (event) =>
-      if event.keyCode == 13 and event.metaKey
+      if event.keyCode == 13 and (event.metaKey or event.ctrlKey)
         @saveComment()
     document.addEventListener 'hasLoggedIn', =>
       @showCommentForm()
