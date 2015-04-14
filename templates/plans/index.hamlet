@@ -8,7 +8,7 @@ $forall plan <- plans
           #{planDescription $ entityVal plan}
       <div .panel-body>
         ^{featuresList $ entityVal plan}
-        ^{purchaseForm user plan}
+        ^{purchaseForm muser plan}
 
 <div .plan .col-md-4>
   <div .panel.panel-default>
