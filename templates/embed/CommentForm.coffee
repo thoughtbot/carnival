@@ -7,7 +7,16 @@ class CommentForm
     @element = document.createElement('li')
     @element.id = 'comment-form'
     @element.className = 'carnival-comment-form'
-    @element.innerHTML = "<a class='carnival-create'><span>+</span> Leave a comment</a><form><a class='carnival-cancel'>✖</a><div class='carnival-author'><img src=''><span></span></div><textarea placeholder='Type here&hellip;' class='carnival-body'></textarea><input type='submit' value='Comment'></form>"
+    @element.innerHTML = """
+      <a class='carnival-create'><span>+</span> Leave a comment</a>
+      <form>
+        <a class='carnival-cancel'>✖</a>
+        <div class='carnival-author'><img src=''><span></span></div>
+        <div class='carnival-validation-error'></div>
+        <textarea placeholder='Type here&hellip;' class='carnival-body'></textarea>
+        <input type='submit' value='Comment'>
+      </form>
+    """
 
   body: ->
     @element.querySelector('.carnival-body').value
@@ -54,6 +63,11 @@ class CommentForm
     @element.querySelector('a').style.display = 'block'
 
   saveComment: ->
+    error = @element.querySelector('.carnival-validation-error')
+    error.innerHTML = ''
+
     if @hasBody()
       @thread.add(@body())
       @element.querySelector('.carnival-body').value = ''
+    else
+      error.innerHTML = 'comments cannot be empty'

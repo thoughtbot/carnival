@@ -192,6 +192,12 @@
   }
 }
 
+.carnival-validation-error {
+  color: #FF0000;
+  font-size: 12px;
+  padding-top: 10px;
+}
+
 @media only screen
 and (max-width: 640px) {
   .carnival {
