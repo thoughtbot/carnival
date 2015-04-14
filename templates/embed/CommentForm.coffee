@@ -40,7 +40,7 @@ class CommentForm
       @showCommentForm()
 
   hasBody: ->
-    @body().replace(/\s/g, '').length > 4
+    @body().replace(/\s/g, '').length > 0
 
   showCommentForm: ->
     @element.querySelector('a').style.display = 'none'
