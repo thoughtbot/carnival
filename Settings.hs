@@ -77,6 +77,8 @@ data AppSettings = AppSettings
     -- ^ Copyright text to appear in the footer of the page
     , appAnalytics              :: Maybe Text
     -- ^ Segment Analytics code
+    , appIntercomSecret         :: Maybe Text
+    -- ^ Intercom secure secret
     , appSendMail               :: Bool
     -- ^ Actually send e-mail (via SendGrid)?
     , appDatabaseUrl            :: Bool
@@ -110,6 +112,7 @@ instance FromJSON AppSettings where
 
         appCopyright              <- o .: "copyright"
         appAnalytics              <- o .:? "analytics"
+        appIntercomSecret         <- o .:? "intercom-secret"
         appSendMail               <- o .:? "send-mail"        .!= (not defaultDev)
         appDatabaseUrl            <- o .:? "database-url"     .!= (not defaultDev)
         appAllowDummyAuth         <- o .:? "allow-dummy-auth" .!= defaultDev

@@ -59,8 +59,6 @@ mkYesodDispatch "App" resourcesApp
 -- migrations handled by Yesod.
 makeFoundation :: AppSettings -> IO App
 makeFoundation appSettings = do
-    loadEnv
-
     dbconf <- if appDatabaseUrl appSettings
         then postgresConf $ pgPoolSize $ appDatabaseConf appSettings
         else return $ appDatabaseConf appSettings
@@ -154,7 +152,7 @@ getApplicationDev = do
     return (wsettings, app)
 
 getAppSettings :: IO AppSettings
-getAppSettings = loadAppSettings [configSettingsYml] [] useEnv
+getAppSettings = withEnv $ loadAppSettings [configSettingsYml] [] useEnv
 
 -- | main function for use by yesod devel
 develMain :: IO ()
@@ -164,7 +162,7 @@ develMain = develMainHelper getApplicationDev
 appMain :: IO ()
 appMain = do
     -- Get the settings from all relevant sources
-    settings <- loadAppSettingsArgs
+    settings <- withEnv $ loadAppSettingsArgs
         -- fall back to compile-time values, set to [] to require values at runtime
         [configSettingsYmlValue]
 
@@ -180,6 +178,8 @@ appMain = do
     -- Run the application with Warp
     runSettings (warpSettings foundation) app
 
+withEnv :: IO AppSettings -> IO AppSettings
+withEnv = (loadEnv >>)
 
 --------------------------------------------------------------
 -- Functions for DevelMain.hs (a way to run the app from GHCi)

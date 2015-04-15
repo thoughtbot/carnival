@@ -113,6 +113,7 @@ library
                  , vector
                  , time
 
+                 , SHA                           >= 1.6.4      && < 1.7
                  , blaze-html
                  , blaze-markup
                  , esqueleto                     >= 2.1.2.2    && < 2.2

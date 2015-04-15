@@ -2,6 +2,7 @@
 module Model.User
     ( User(..)
     , userGravatar
+    , intercomHash
     , findUsers
     , findUsers'
     , authenticateUser
@@ -13,6 +14,7 @@ module Model.User
 import Import.NoFoundation
 
 import Data.Aeson
+import Data.Digest.Pure.SHA (hmacSha256)
 import Network.Gravatar
 import Yesod.Auth.GoogleEmail2
 
@@ -34,6 +36,13 @@ instance ToJSON (Entity User) where
 
 userGravatar :: User -> Text
 userGravatar = T.pack . gravatar def . userEmail
+
+intercomHash :: UserId -> Text -> Text
+intercomHash userId secret = pack $ show $ hmacSha256 secret' userId'
+
+  where
+    secret' = textToLbs secret
+    userId' = textToLbs $ toPathPiece userId
 
 findUsers :: [UserId] -> DB [Entity User]
 findUsers userIds = selectList [UserId <-. userIds] []
@@ -122,4 +131,7 @@ lookupExtra k extra =
     maybe (Left $ "missing key " ++ k) Right $ lookup k extra
 
 decodeText :: FromJSON a => Text -> Either Text a
-decodeText = first pack . eitherDecode . BL.fromStrict . encodeUtf8
+decodeText = first pack . eitherDecode . textToLbs
+
+textToLbs :: Text -> BL.ByteString
+textToLbs = fromStrict . encodeUtf8

@@ -32,3 +32,4 @@ database:
 
 copyright: "thoughtbot, inc. 2015"
 analytics: "nMWJWvFASCtQm0dr3nIZLDszgHvm7vhx"
+intercom-secret: "_env:INTERCOM_SECRET"

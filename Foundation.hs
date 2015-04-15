@@ -134,6 +134,9 @@ embedLayout widget = do
     pc <- widgetToPageContent widget
     withUrlRenderer $(hamletFile "templates/embed-layout-wrapper.hamlet")
 
+analytics :: App -> Maybe (Entity User) -> a -> Html
+analytics app muser = $(hamletFile "templates/analytics.hamlet")
+
 includeBootstrap :: Route App -> Bool
 includeBootstrap RootR = False
 includeBootstrap _ = True
