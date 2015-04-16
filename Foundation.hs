@@ -175,6 +175,7 @@ instance YesodAuth App where
     authHttpManager = getHttpManager
 
     loginHandler = lift $ do
+        app <- getYesod
         murl <- runInputGet $ iopt textField "dest"
         mapM_ setUltDest murl
 

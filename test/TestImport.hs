@@ -1,6 +1,9 @@
 module TestImport
     ( withApp
+    , runApp
     , runDB
+    , runDBWithApp
+    , wipeDB
     , authenticateAs
     , times
     , module X
@@ -38,14 +41,18 @@ runDBWithApp app query = runSqlPersistMPool query (appConnPool app)
 
 
 withApp :: SpecWith App -> Spec
-withApp = before $ do
+withApp = before $ runApp $ \app -> do
+    wipeDB app
+    return app
+
+runApp :: (App -> IO a) -> IO a
+runApp f = do
     settings <- loadAppSettings
         ["config/test-settings.yml", "config/settings.yml"]
         []
         ignoreEnv
-    foundation <- withEnv $ makeFoundation settings
-    wipeDB foundation
-    return foundation
+
+    f =<< withEnv (makeFoundation settings)
 
 -- This function will truncate all of the tables in your database.
 -- 'withApp' calls it before each test, creating a clean environment for each

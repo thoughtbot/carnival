@@ -202,6 +202,7 @@ test-suite test
                  , case-insensitive
                  , containers
                  , hspec-expectations-lifted
+                 , hspec-webdriver
                  , http-types
                  , markdown
                  , mime-mail
@@ -212,4 +213,5 @@ test-suite test
                  , text
                  , time
                  , wai-extra
+                 , webdriver
                  , yesod-auth

@@ -1,0 +1,17 @@
+#!/bin/sh
+cabal configure -fdev
+cabal build
+
+java -jar tmp/selenium-server-standalone-*.jar &
+java_pid=$!
+
+dist/build/carnival/carnival config/test-settings.yml &
+carnival_pid=$!
+
+cabal test --ghc-option -DINTEGRATION
+status=$?
+
+kill $java_pid
+kill $carnival_pid
+
+exit $status

@@ -14,5 +14,7 @@ dependencies:
 test:
   override:
     - ./bin/setup-db
+    - ./bin/setup-selenium
     - /app/halcyon/halcyon paths > halcyon-env
     - . halcyon-env && yesod test
+    - . halcyon-env && bin/integration

@@ -46,6 +46,7 @@ fi
 command -v sass >/dev/null || gem install sass
 
 ./bin/setup-db
+./bin/setup-selenium
 ./bin/halcyon-build
 
 echo 'Setup complete'
