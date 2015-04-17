@@ -1,24 +1,15 @@
 INSERT INTO site
-  (name, base_url, rss_author, rss_title, rss_description, rss_language) VALUES
+  (name, base_url, language) VALUES
   (
     'robots-development',
     'http://localhost:4000',
-    'thoughtbot',
-    'Carnival Comments',
-    'Recent comments on Carnival',
     'en-us'
   ), (
     'robots-staging',
     'https://robots-staging.thoughtbot.com',
-    'thoughtbot',
-    'Carnival Comments',
-    'Recent comments on Carnival',
     'en-us'
   ), (
     'robots-production',
     'https://robots.thoughtbot.com',
-    'thoughtbot',
-    'Carnival Comments',
-    'Recent comments on Carnival',
     'en-us'
   );
