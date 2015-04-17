@@ -46,27 +46,32 @@ class Carnival
     Carnival.user.gravatar_url
 
   @isLoggedIn: ->
-    @getUser()
     if @user?
       return true
     else
       return false
 
-  @getUser: ->
-    request = new XMLHttpRequest
-    request.withCredentials = true
-    request.open('GET', '@{UserR}', false)
-    request.setRequestHeader('Accept', 'application/json')
-    request.send()
-    if request.status is 200
-      @user = JSON.parse(request.responseText).user
+  @getUser: (callback) ->
+    if @user?
+      callback() if callback
+    else
+      request = new XMLHttpRequest
+      request.withCredentials = true
+      request.open('GET', '@{UserR}')
+      request.setRequestHeader('Accept', 'application/json')
+      request.onload = () =>
+        if request.status is 200
+          @user = JSON.parse(request.responseText).user
+          callback() if callback
+
+      request.send()
 
   @hasLoggedIn: (event) =>
     if event.origin != '%{root}'
       return
     @loginWindow.close()
-    @getUser()
-    document.dispatchEvent(new CustomEvent("hasLoggedIn", bubbles: true))
+    @getUser () ->
+      document.dispatchEvent(new CustomEvent("hasLoggedIn", bubbles: true))
 
   @login: ->
     width = 600

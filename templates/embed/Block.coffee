@@ -73,6 +73,7 @@ class Block
     @indicator.setCount(@comments.length)
 
   activate: =>
+    Carnival.getUser()
     Carnival.addClass(@element, 'commenting')
     @element.dispatchEvent(new CustomEvent("commenting", bubbles: true, detail: this))
 
