@@ -6,7 +6,7 @@ module TestImport
     , module X
     ) where
 
-import Application           (makeFoundation)
+import Application           (makeFoundation, withEnv)
 import ClassyPrelude         as X
 import Database.Persist      as X hiding (get)
 import Database.Persist.Sql  (SqlPersistM, SqlBackend, runSqlPersistMPool, rawExecute, rawSql, unSingle, connEscapeName)
@@ -43,7 +43,7 @@ withApp = before $ do
         ["config/test-settings.yml", "config/settings.yml"]
         []
         ignoreEnv
-    foundation <- makeFoundation settings
+    foundation <- withEnv $ makeFoundation settings
     wipeDB foundation
     return foundation
 

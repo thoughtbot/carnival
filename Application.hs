@@ -4,6 +4,7 @@ module Application
     , appMain
     , develMain
     , makeFoundation
+    , withEnv
     -- * for DevelMain
     , getApplicationRepl
     , shutdownApp
@@ -178,7 +179,7 @@ appMain = do
     -- Run the application with Warp
     runSettings (warpSettings foundation) app
 
-withEnv :: IO AppSettings -> IO AppSettings
+withEnv :: IO a -> IO a
 withEnv = (loadEnv >>)
 
 --------------------------------------------------------------
