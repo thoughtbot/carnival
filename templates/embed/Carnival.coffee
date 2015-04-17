@@ -20,14 +20,22 @@ class Carnival
       elem.className = newClass.replace(/^\s+|\s+$/g, '')
 
   @get: (url, callback) ->
-    request = @openRequest('GET', url)
+    request = new XMLHttpRequest
+    request.beforeSend = (xhr) ->
+      xhr.withCredentials = true
+    request.open('GET', url, true)
+    request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
       if request.status >= 200 and request.status < 400
         callback(JSON.parse(request.responseText))
     request.send()
 
   @post: (url, data, callback) ->
-    request = @openRequest('POST', url)
+    request = new XMLHttpRequest()
+    request.beforeSend = (xhr) ->
+      xhr.withCredentials = true
+    request.open('POST', url, true)
+    request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
       if request.status >= 200 and request.status < 400
         callback(JSON.parse(@responseText))
@@ -47,7 +55,11 @@ class Carnival
       return false
 
   @getUser: ->
-    request = @openRequest('GET', '@{UserR}', false)
+    request = new XMLHttpRequest
+    request.beforeSend = (xhr) ->
+      xhr.withCredentials = true
+    request.open('GET', '@{UserR}', false)
+    request.setRequestHeader('Accept', 'application/json')
     request.send()
     if request.status is 200
       @user = JSON.parse(request.responseText).user
@@ -70,13 +82,3 @@ class Carnival
       'height='+height+',width='+width+',top='+top+',left='+left+',menubar=no'
     )
     window.addEventListener 'message', @hasLoggedIn
-
-  @openRequest: (method, url, async = true) ->
-    request = new XMLHttpRequest()
-    request.beforeSend = (xhr) ->
-      xhr.withCredentials = true
-    request.open(method, url, async)
-    request.setRequestHeader('Accept', 'application/json')
-    request.setRequestHeader('Content-Type', 'application/json')
-
-    request
