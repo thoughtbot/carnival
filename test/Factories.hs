@@ -32,7 +32,7 @@ buildPlan = Plan
     , planPrice = 0
     , planSiteQuota = 0
     , planCommentQuota = 0
-    , planBranded = False
+    , planCommercial = True
     , planSort = 1
     }
 
@@ -53,7 +53,7 @@ createFreePlan = upsert buildPlan
     , planPrice = 0
     , planSiteQuota = 1
     , planCommentQuota = 10
-    , planBranded = True
+    , planCommercial = False
     } []
 
 createUser :: Text -> DB (Entity User)

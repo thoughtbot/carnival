@@ -1,8 +1,9 @@
 <ul>
-  <li>#{planSiteQuota plan} Site(s)
-  <li>#{planCommentQuota plan} Comments per month
-
-  $if planBranded plan
+  $if planCommercial plan
+    <li>#{planSiteQuota plan} commercial Site
+    <li>No branding
+  $else
+    <li>#{planSiteQuota plan} non-commercial Site
     <li>"Powered by Carnival" branding
 
   $with price <- planPrice plan

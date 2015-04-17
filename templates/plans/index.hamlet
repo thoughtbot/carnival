@@ -16,7 +16,7 @@ $forall plan <- plans
       <h3 .panel-title>Enterprise
     <div .panel-body>
       <ul>
-        <li>Unlimited Sites
+        <li>Unlimited commercial Sites
         <li>Unlimited Comments
         <li>Custom authentication
       <form>

@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS plan (
   price                 INT8 NOT NULL,
   site_quota            INT8 NOT NULL,
   comment_quota         INT8 NOT NULL,
-  branded               BOOLEAN NOT NULL,
+  commercial            BOOLEAN NOT NULL,
   sort                  INT8 NOT NULL
 );

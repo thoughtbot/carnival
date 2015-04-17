@@ -49,16 +49,16 @@ overSiteQuota :: [a] -> Plan -> Bool
 overSiteQuota xs Plan{..} = length xs >= planSiteQuota
 
 siteBranded :: SiteId -> DB Bool
-siteBranded siteId = null <$> nonBrandedPlans
+siteBranded siteId = null <$> commercialPlans
 
   where
-    nonBrandedPlans = select $
+    commercialPlans = select $
         from $ \(p `InnerJoin` u `InnerJoin` m) -> do
             E.on (m ^. MembershipUser E.==. u ^. UserId)
             E.on (p ^. PlanId E.==. u ^. UserPlan)
             where_ $
                 (m ^. MembershipSite E.==. val siteId) &&.
-                (p ^. PlanBranded E.==. val False)
+                (p ^. PlanCommercial E.==. val True)
 
             return p
 

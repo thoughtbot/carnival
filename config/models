@@ -11,7 +11,7 @@ Plan
     price USD
     siteQuota Int
     commentQuota Int
-    branded Bool
+    commercial Bool
     sort Int
     UniquePlan name
     deriving Eq Show

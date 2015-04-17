@@ -1,4 +1,4 @@
 INSERT INTO plan
-  (name, description, price, site_quota, comment_quota, branded, sort) VALUES
-  ('personal',   'Personal',   0,    1,    10,   true,  1 ),
-  ('business',   'Business',   49,   5,    100,  false, 5 );
+  (name, description, price, site_quota, comment_quota, commercial, sort) VALUES
+  ('personal',   'Personal',   0,    1,    10,   false,  1 ),
+  ('business',   'Business',   49,   5,    100,  true, 5 );

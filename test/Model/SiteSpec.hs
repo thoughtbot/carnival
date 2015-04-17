@@ -19,20 +19,20 @@ spec = withApp $ do
 
             runDB (siteBranded siteId) `shouldReturn` True
 
-        it "returns True if all users are on a branded plan" $ do
+        it "returns True if all users are on a non-commercial plan" $ do
             siteId <- runDB $ attachPlansToSite
-                [ buildPlan { planName = S.PlanId "a", planBranded = True }
-                , buildPlan { planName = S.PlanId "b", planBranded = True }
-                , buildPlan { planName = S.PlanId "c", planBranded = True }
+                [ buildPlan { planName = S.PlanId "a", planCommercial = False }
+                , buildPlan { planName = S.PlanId "b", planCommercial = False }
+                , buildPlan { planName = S.PlanId "c", planCommercial = False }
                 ]
 
             runDB (siteBranded siteId) `shouldReturn` True
 
-        it "returns False if any users are on an non-branded plan" $ do
+        it "returns False if any users are on an commercial plan" $ do
             siteId <- runDB $ attachPlansToSite
-                [ buildPlan { planName = S.PlanId "a", planBranded = True }
-                , buildPlan { planName = S.PlanId "b", planBranded = False }
-                , buildPlan { planName = S.PlanId "c", planBranded = True }
+                [ buildPlan { planName = S.PlanId "a", planCommercial = False }
+                , buildPlan { planName = S.PlanId "b", planCommercial = True }
+                , buildPlan { planName = S.PlanId "c", planCommercial = False }
                 ]
 
             runDB (siteBranded siteId) `shouldReturn` False
