@@ -21,8 +21,7 @@ class Carnival
 
   @get: (url, callback) ->
     request = new XMLHttpRequest
-    request.beforeSend = (xhr) ->
-      xhr.withCredentials = true
+    request.withCredentials = true
     request.open('GET', url, true)
     request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
@@ -32,8 +31,7 @@ class Carnival
 
   @post: (url, data, callback) ->
     request = new XMLHttpRequest()
-    request.beforeSend = (xhr) ->
-      xhr.withCredentials = true
+    request.withCredentials = true
     request.open('POST', url, true)
     request.setRequestHeader('Content-Type', 'application/json')
     request.onload = () ->
@@ -56,8 +54,7 @@ class Carnival
 
   @getUser: ->
     request = new XMLHttpRequest
-    request.beforeSend = (xhr) ->
-      xhr.withCredentials = true
+    request.withCredentials = true
     request.open('GET', '@{UserR}', false)
     request.setRequestHeader('Accept', 'application/json')
     request.send()
