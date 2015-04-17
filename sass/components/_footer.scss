@@ -1,0 +1,15 @@
+.footer {
+  background-color: $light-gray;
+  color: $medium-gray;
+  padding: 3em 0;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-copy {
+  float: left;
+}
+
+.footer-source {
+  float: right;
+}

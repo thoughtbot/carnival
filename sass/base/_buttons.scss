@@ -1,0 +1,67 @@
+#{$all-button-inputs},
+button {
+  @include appearance(none);
+  -webkit-font-smoothing: antialiased;
+  background-color: $action-color;
+  border-radius: $base-border-radius;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: $base-font-family;
+  font-size: $base-font-size;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.75em 1em;
+  text-decoration: none;
+  user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+
+  &:hover,
+  &:focus {
+    background-color: darken($action-color, 15%);
+    color: #fff;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.button {
+  background: $link-color;
+  border-radius: 1.125em;
+  color: #fff;
+  display: inline-block;
+  line-height: 1;
+  padding: 8px 1.5em 9px;
+}
+
+.button:hover {
+  border-bottom: 0;
+}
+
+.button--github {
+  background: $link-color url("/static/img/github.svg") no-repeat 1em center;
+  padding-left: 2.75em;
+}
+
+.button--google {
+  background:
+    $link-color
+    url("/static/img/google.svg") no-repeat 1em center / 20px;
+  padding-left: 2.75em;
+}
+
+.button--light {
+  background-color: #fff;
+  border: 2px solid $link-border-color;
+  color: $link-color;
+}
+
+.button--light:hover {
+  border-bottom: 2px solid $link-border-color;
+}
+

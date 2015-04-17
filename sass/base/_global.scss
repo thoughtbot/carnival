@@ -1,0 +1,16 @@
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: table;
+}
+
+.clearfix::after {
+  clear: both;
+}
+
+.container {
+  @include flex(1);
+  margin: 0 auto;
+  max-width: 68.75em;
+  width: 90%;
+}

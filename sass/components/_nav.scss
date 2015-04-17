@@ -1,0 +1,37 @@
+.nav {
+  padding: 3em 0;
+}
+
+.nav-item {
+  float: left;
+  line-height: 4em;
+  list-style: none;
+  margin: 0 4em 0 0;
+}
+
+.nav-item.active a {
+  border-bottom: 2px solid $link-border-color;
+  cursor: default;
+  pointer-events: none;
+}
+
+.nav-item:last-child {
+  margin-right: 0;
+}
+
+.nav-item--button {
+  float: right;
+}
+
+.nav-logo {
+  background: url("/static/img/logo.png") no-repeat left center / 4em;
+  display: block;
+  height: 4em;
+  line-height: 4em;
+  padding: 0 0 0 6em;
+}
+
+.nav-logo:hover {
+  border: 0;
+}
+
