@@ -1,0 +1,106 @@
+.plans {
+  @include align-items(center);
+  @include clearfix;
+  @include display(flex);
+  padding-bottom: 4em;
+}
+
+.plan {
+  @include flex(1);
+  background: #fff;
+  border-radius: $base-border-radius;
+  float: left;
+  position: relative;
+  text-align: center;
+
+  &:first-child,
+  &:last-child {
+    .plan-form {
+      border: $base-border;
+    }
+  }
+
+  &:nth-child(2) {
+    @include flex(1.1);
+    margin: 0 -1em;
+    z-index: 1;
+
+    .plan-feature-list {
+      padding: 3em 0;
+    }
+
+    .plan-form {
+      background-color: $link-color;
+
+      a {
+        color: #fff;
+      }
+    }
+  }
+
+  &-feature-list,
+  &-price,
+  &-title {
+    border-left: $base-border;
+    border-right: $base-border;
+  }
+
+  &-feature {
+    color: $light-gray;
+    font-size: 1.25em;
+    padding: 0.25em 0;
+
+    &-list {
+      padding: 2em 0;
+    }
+  }
+
+  &-form {
+    border-radius: 0 0 $base-border-radius $base-border-radius;
+    padding: 1em 0;
+  }
+
+  &-price {
+    border-bottom: $base-border;
+    color: $light-gray;
+    font-size: 1.5em;
+    font-weight: $light-font-weight;
+    margin-bottom: 0;
+    padding-bottom: 1.5em;
+
+    &--with-button {
+      padding-bottom: 1.1667em;
+    }
+
+    .button {
+      font-size: 0.5833em;
+    }
+  }
+
+  &-title {
+    border-top: $base-border;
+    border-radius: $base-border-radius;
+    color: $medium-gray;
+    font-size: 2em;
+    font-weight: $light-font-weight;
+    margin-bottom: 0;
+    padding: 1.25em 0 0.25em;
+  }
+}
+
+.plan .stripe-button-el {
+  background: none;
+  box-shadow: none;
+
+  span {
+    background: none;
+    box-shadow: none;
+    font-family: $base-font-family;
+    font-size: 16px;
+    font-weight: $normal-font-weight;
+    height: auto;
+    line-height: 19px;
+    min-height: 0 !important;
+    text-shadow: none;
+  }
+}

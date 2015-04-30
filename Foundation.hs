@@ -78,7 +78,7 @@ instance Yesod App where
                 addStylesheet $ StaticR css_bootstrap_css
 
             addStylesheet $ StaticR css_screen_css
-            addStylesheetRemote $ "//fonts.googleapis.com/css?family=Lato:400,900"
+            addStylesheetRemote $ "//fonts.googleapis.com/css?family=Lato:300,400,900"
             $(widgetFile "default-layout")
         withUrlRenderer $(hamletFile "templates/default-layout-wrapper.hamlet")
 

@@ -19,7 +19,8 @@ $base-z-index: 0;
 $blue: #477dca;
 $dark-gray: #221e1f;
 $medium-gray: #615e5f;
-$light-gray: #d7d7d7;
+$light-gray: #777786;
+$lighter-gray: #d7d7d7;
 
 $link-color: #E74C3D;
 $link-border-color: #F7C4BF;
@@ -29,8 +30,12 @@ $base-background-color: #fff;
 $base-font-color: $medium-gray;
 $action-color: $link-color;
 
+// Font Weights
+$light-font-weight: 300;
+$normal-font-weight: 400;
+
 // Border
-$base-border-color: $light-gray;
+$base-border-color: $lighter-gray;
 $base-border: 1px solid $base-border-color;
 
 // Forms

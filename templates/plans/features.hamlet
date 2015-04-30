@@ -1,14 +1,15 @@
-<ul>
-  $if planCommercial plan
-    <li>#{planSiteQuota plan} commercial Site
-    <li>No branding
-  $else
-    <li>#{planSiteQuota plan} non-commercial Site
-    <li>"Powered by Carnival" branding
+$with price <- planPrice plan
+  <h3 .plan-price>
+    $if price == 0
+      Free
+    $else
+      \$#{show price} per month
 
-  $with price <- planPrice plan
-    <li .price>
-      $if price == 0
-        Free
-      $else
-        \$#{show price} per month
+<ul .plan-feature-list>
+  $if planCommercial plan
+    <li .plan-feature>#{planSiteQuota plan} commercial site
+    <li .plan-feature>Use your own branding
+  $else
+    <li .plan-feature>#{planSiteQuota plan} non-commercial site
+    <li .plan-feature>"Powered by Carnival" branding
+

@@ -32,11 +32,19 @@ button {
 
 .button {
   background: $link-color;
-  border-radius: 1.125em;
+  border-radius: 18px;
   color: #fff;
   display: inline-block;
+  font-size: $base-font-size;
+  font-weight: $normal-font-weight;
   line-height: 1;
   padding: 8px 1.5em 9px;
+
+  &:disabled {
+    background: transparent;
+    color: $light-gray;
+    padding: 0;
+  }
 }
 
 .button:hover {

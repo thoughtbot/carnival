@@ -1,24 +1,22 @@
-<h1>Carnival Plans
+<div .hero>
+  <h1 .hero-headline>Carnival Plans
 
-$forall plan <- plans
-  <div .plan .col-md-4>
-    <div .panel.panel-default>
-      <div .panel-heading>
-        <h3 .panel-title>
-          #{planDescription $ entityVal plan}
-      <div .panel-body>
-        ^{featuresList $ entityVal plan}
-        ^{purchaseForm muser plan}
+<div .plans>
+  $forall plan <- plans
+    <div .plan>
+      <h2 .plan-title>
+        #{planDescription $ entityVal plan}
+      ^{featuresList $ entityVal plan}
+      ^{purchaseForm muser plan}
 
-<div .plan .col-md-4>
-  <div .panel.panel-default>
-    <div .panel-heading>
-      <h3 .panel-title>Enterprise
-    <div .panel-body>
-      <ul>
-        <li>Unlimited commercial Sites
-        <li>Unlimited Comments
-        <li>Custom authentication
+  <div .plan>
+    <h2 .plan-title>Enterprise
+    <h3 .plan-price>
+      Pricing varies
+    <ul .plan-feature-list>
+      <li .plan-feature>Unlimited commercial sites
+      <li .plan-feature>Custom authentication
+    <div .plan-form>
       <form>
-        <a .btn.btn-default href="mailto:support@carnivalapp.io">
-          Contact Us
+        <a href="mailto:support@carnivalapp.io">
+          Contact us
