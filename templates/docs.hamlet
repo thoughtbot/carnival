@@ -91,7 +91,7 @@
         \    article_author: "",
         \    article_selector: "article",
         \    block_selector: ":scope > p, :scope > pre",
-        \    onNewComment: function(comment) { };
+        \    onNewComment: function(comment) { }
         \  });
         \});
 
