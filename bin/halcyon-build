@@ -40,6 +40,6 @@ fi
 export HALCYON_INTERNAL_TOLERATE_GHC_USER_DB=1
 
 /app/halcyon/halcyon build \
-  --no-clean-private-storage --cabal-version=1.22.0.0 "$@"
+  --no-clean-private-storage --cabal-version=1.22.0.0 "$@" --purge-cache
 
 ln -sf /app/sandbox/cabal.sandbox.config cabal.sandbox.config
