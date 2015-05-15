@@ -40,6 +40,7 @@ library
                      Handler.Purchase
                      Handler.Plan
                      Handler.Cancel
+                     Handler.DeleteStaleComments
                      Helper.Request
                      Helper.Validation
                      SendMail
@@ -49,6 +50,7 @@ library
                      Language
                      Network.Mail.SendGrid
                      Network.Mail.RecipientOverride
+                     Tasks
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT
@@ -112,6 +114,7 @@ library
                  , containers
                  , vector
                  , time
+                 , optparse-applicative
 
                  , SHA                           >= 1.6.4      && < 1.7
                  , blaze-html
@@ -141,6 +144,13 @@ executable         carnival
         Buildable: False
 
     main-is:           main.hs
+    hs-source-dirs:    app
+    build-depends:     base, carnival
+
+    ghc-options:       -threaded -O2 -rtsopts -with-rtsopts=-N
+
+executable         carnival-task
+    main-is:           TaskMain.hs
     hs-source-dirs:    app
     build-depends:     base, carnival
 

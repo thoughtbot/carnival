@@ -3,6 +3,7 @@ module Application
     ( getApplicationDev
     , appMain
     , develMain
+    , taskMain
     , makeFoundation
     , withEnv
     -- * for DevelMain
@@ -28,6 +29,7 @@ import Network.Wai.Middleware.RequestLogger (Destination (Logger),
                                              mkRequestLogger, outputFormat)
 import System.Log.FastLogger                (defaultBufSize, newStdoutLoggerSet,
                                              toLogStr)
+import Tasks                                (parseTask)
 
 import LoadEnv
 import System.Environment (getEnv)
@@ -178,6 +180,9 @@ appMain = do
 
     -- Run the application with Warp
     runSettings (warpSettings foundation) app
+
+taskMain :: IO ()
+taskMain = parseTask >>= handler
 
 withEnv :: IO a -> IO a
 withEnv = (loadEnv >>)
