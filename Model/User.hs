@@ -15,6 +15,7 @@ import Import.NoFoundation
 
 import Data.Aeson
 import Data.Digest.Pure.SHA (hmacSha256)
+import Data.Text.Instances ()
 import Network.Gravatar
 import Yesod.Auth.GoogleEmail2
 
@@ -104,7 +105,7 @@ extraToProfile plugin _ = Left $ "Invalid plugin: " ++ plugin
 
 githubProfile :: [(Text, Text)] -> Either Text Profile
 githubProfile extra = Profile
-    <$> lookupExtra "name" extra
+    <$> (lookupExtra "name" extra <|> lookupExtra "login" extra)
     <*> lookupExtra "email" extra
 
 googleProfile :: [(Text, Text)] -> Either Text Profile

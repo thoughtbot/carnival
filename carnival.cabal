@@ -51,6 +51,7 @@ library
                      Network.Mail.SendGrid
                      Network.Mail.RecipientOverride
                      Tasks
+                     Data.Text.Instances
 
     if flag(dev) || flag(library-only)
         cpp-options:   -DDEVELOPMENT

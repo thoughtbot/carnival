@@ -84,6 +84,7 @@ spec = withApp $ do
                     , credsIdent = "1"
                     , credsExtra =
                         [ ("name", "foo")
+                        , ("login", "bar")
                         , ("email", "bar@gmail.com")
                         ]
                     }
@@ -91,14 +92,24 @@ spec = withApp $ do
             it "creates a user from the name/email values" $
                 creds `shouldCreateWith` Profile "foo" "bar@gmail.com"
 
+            it "creates from login if name is missing" $ do
+                let creds' = creds { credsExtra = [("login", "bar"), ("email", "")] }
+
+                creds' `shouldCreateWith` Profile "bar" ""
+
             it "updates an existing user from the name/email values" $
                 creds `shouldUpdateWith` Profile "foo" "bar@gmail.com"
 
-            it "errors if name is missing" $ do
+            it "updates from login if name is missing" $ do
+                let creds' = creds { credsExtra = [("login", "bar"), ("email", "")] }
+
+                creds' `shouldUpdateWith` Profile "bar" ""
+
+            it "errors if name and login is missing" $ do
                 let creds' = creds { credsExtra = [("email", "")] }
 
                 runDB (authenticateUser' creds')
-                    `shouldReturn` ServerError "github: missing key name"
+                    `shouldReturn` ServerError "github: missing key login"
 
             it "errors if email is missing" $ do
                 let creds' = creds { credsExtra = [("name", "")] }
