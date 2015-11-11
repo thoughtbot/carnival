@@ -15,3 +15,5 @@ cabal.sandbox.config
 .env
 !migrations/*.sql
 .sass-cache/
+.stack-work
+tmp
