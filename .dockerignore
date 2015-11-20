@@ -1,0 +1,9 @@
+.git
+.stack-work
+Dockerfile
+dist
+docker-compose.yml
+sass
+static/tmp
+tmp
+yesod-devel

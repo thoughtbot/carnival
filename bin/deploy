@@ -4,26 +4,12 @@
 #
 #   APP defaults to carnival-staging
 #
-#   Set BUILD=1 to perform a Halcyon build
-#
 ###
 set -e
 
 case "${1:-carnival-staging}" in
   carnival-staging)
-    git push --force staging master
-
-    if [ -n "$BUILD" ]; then
-      heroku run --size=PX build
-
-      git checkout -b deploy
-      git commit --allow-empty -m "Trigger deployment"
-      git push --force staging deploy:master
-      git checkout master
-      git branch -D deploy
-
-      heroku ps:scale web=1
-    fi
+    heroku docker:release --app carnival-staging
     ;;
   carnival-production)
     heroku pipeline:promote --app carnival-staging

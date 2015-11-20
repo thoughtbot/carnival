@@ -1,3 +1,5 @@
+allow-dummy-auth: true
+database-url: false
 should-log-all: false
 database:
   database: carnival_test

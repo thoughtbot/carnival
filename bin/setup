@@ -5,9 +5,6 @@ get_env() {
   local var
 
   for var in \
-    HALCYON_AWS_ACCESS_KEY_ID \
-    HALCYON_AWS_SECRET_ACCESS_KEY \
-    HALCYON_S3_BUCKET \
     STRIPE_SECRET_KEY \
     STRIPE_PUBLISHABLE_KEY; do
 
@@ -47,6 +44,6 @@ command -v sass >/dev/null || gem install sass
 
 ./bin/setup-db
 ./bin/setup-selenium
-./bin/halcyon-build
+./bin/stack-build
 
 echo 'Setup complete'

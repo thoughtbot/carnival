@@ -1,16 +1,26 @@
-Enable and install the [Heroku Pipelines][heroku-pipelines] plugin:
+## Staging
 
-[heroku-pipelines]: https://devcenter.heroku.com/articles/labs-pipelines
+Install [Docker].
+
+Install the [Heroku Docker][heroku-docker] plugin:
 
 ```
-$ heroku labs:enable pipelines
-$ heroku plugins:install git://github.com/heroku/heroku-pipeline.git
+$ heroku plugins:install heroku-docker
 ```
 
 Deploy to **staging**:
 
 ```
 $ ./bin/deploy
+```
+
+## Production
+
+Enable and install the [Heroku Pipelines][heroku-pipelines] plugin:
+
+```
+$ heroku labs:enable pipelines
+$ heroku plugins:install git://github.com/heroku/heroku-pipeline.git
 ```
 
 Deploy to **production**:
@@ -38,3 +48,7 @@ The process is as follows:
 - Deploy to staging with `bin/migrate-deploy carnival-staging foo.sql`
 - Deploy to production with `bin/migrate-deploy carnival-production foo.sql`
 - Multiple migration files can be passed, they will be run in the order given
+
+[Docker]: https://docs.docker.com/engine/installation/
+[heroku-docker]: https://devcenter.heroku.com/articles/docker
+[heroku-pipelines]: https://devcenter.heroku.com/articles/labs-pipelines

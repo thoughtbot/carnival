@@ -1,13 +1,14 @@
-Carnival is built locally, on CI, and deployed using [halcyon][]. Therefore,
-there is **no pre-requisite of a Haskell environment**, though you will need the
-following tools:
+Carnival is built using [Stack].
 
+You will need the following tools to develop locally:
+
+- Stack
 - PostgreSQL
 - CoffeeScript
 - Heroku Toolbelt (needed for setup and deployment)
 - `brew install bash coreutils` (if on OS X)
 
-[halcyon]: https://halcyon.sh/
+[Stack]: http://docs.haskellstack.org/en/stable/
 
 ## Getting started
 
@@ -17,40 +18,27 @@ Carnival can be set up with one command:
 $ ./bin/setup
 ```
 
-How long this takes depends on a number of things. All build artifacts are
-cached between anyone who builds Carnival (including CircleCI and Heroku). This
-means many builds can complete in under a minute. Unfortunately, the artifacts
-are specific to your platform. If you are the first person to build a given
-version of Carnival on your platform, it can take closer to 45 minutes.
+The first time you run this command, it may take a long time. Subsequent builds
+will benefit from Stack's intelligent caching and reuse.
 
 ## Developing
-
-Before doing anything:
-
-```
-$ eval "$(/app/halcyon/halcyon paths)"
-```
-
-This sets the needed environment variables to use halcyon-built dependencies. If
-you prefer to set these persistently from your shell profile file, that works
-too.
 
 Run a development instance:
 
 ```
-$ yesod devel
+$ stack exec yesod devel
 ```
 
 Run the tests:
 
 ```
-$ yesod test
+$ stack test
 ```
 
 Open up a REPL:
 
 ```
-$ cabal exec -- ghci Model.hs
+$ stack exec -- ghci Model.hs
 ```
 
 ## Sass

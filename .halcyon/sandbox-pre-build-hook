@@ -1,6 +1,0 @@
-#!/bin/sh
-coffee=/app/sandbox/usr/bin/coffee
-
-if [ -f "$coffee" ]; then
-  sed -i 's|^#!/usr/bin/nodejs|#!/usr/bin/env nodejs|' "$coffee"
-fi

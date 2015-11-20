@@ -1,4 +1,10 @@
 machine:
+  pre:
+    # https://github.com/commercialhaskell/stack/issues/1658
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.6 20
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.6 20
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 10
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 10
   environment:
     GITHUB_OAUTH_CLIENT_ID: x
     GITHUB_OAUTH_CLIENT_SECRET: x
@@ -8,13 +14,19 @@ machine:
     STRIPE_PUBLISHABLE_KEY: x
 
 dependencies:
+  cache_directories:
+    - "~/.stack"
+  pre:
+    - wget https://github.com/commercialhaskell/stack/releases/download/v0.1.6.0/stack-0.1.6.0-linux-x86_64.tar.gz -O /tmp/stack.tar.gz
+    - tar xvzOf /tmp/stack.tar.gz stack-0.1.6.0-linux-x86_64/stack > /tmp/stack
+    - chmod +x /tmp/stack && sudo mv /tmp/stack /usr/bin/stack
   override:
-    - ./bin/halcyon-build
+    - stack setup
+    - stack build
 
 test:
   override:
     - ./bin/setup-db
     - ./bin/setup-selenium
-    - /app/halcyon/halcyon paths > halcyon-env
-    - . halcyon-env && yesod test
-    - . halcyon-env && bin/integration
+    - stack test
+    - bin/integration
