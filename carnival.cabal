@@ -151,6 +151,9 @@ executable         carnival
     ghc-options:       -threaded -O2 -rtsopts -with-rtsopts=-N
 
 executable         carnival-task
+    if flag(library-only)
+        Buildable: False
+
     main-is:           TaskMain.hs
     hs-source-dirs:    app
     build-depends:     base, carnival
