@@ -57,7 +57,7 @@ library
         cpp-options:   -DDEVELOPMENT
         ghc-options:   -Wall -fwarn-tabs -O0
     else
-        ghc-options:   -Wall -fwarn-tabs -O2
+        ghc-options:   -Wall -Werror -fwarn-tabs -O2
 
     extensions: TemplateHaskell
                 QuasiQuotes
@@ -164,7 +164,7 @@ test-suite test
     type:              exitcode-stdio-1.0
     main-is:           Spec.hs
     hs-source-dirs:    test
-    ghc-options:       -Wall
+    ghc-options:       -Wall -Werror
 
     extensions: TemplateHaskell
                 QuasiQuotes

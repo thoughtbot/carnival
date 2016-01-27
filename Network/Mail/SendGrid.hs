@@ -5,7 +5,6 @@ module Network.Mail.SendGrid
 
 import Prelude -- TODO: Remove when extracted
 
-import Control.Applicative ((<$>), (<*>))
 import Network.Mail.Mime (Mail(..))
 import Network.Mail.SMTP (Password, UserName, sendMailWithLogin')
 import Network.Socket (HostName, PortNumber(..))

@@ -2,7 +2,6 @@ module Network.Mail.RecipientOverride (overrideRecipients) where
 
 import Prelude -- Remove when extracted
 
-import Control.Applicative ((<$>))
 import Network.Mail.Mime (Address(..), Mail(..))
 import System.Environment (getEnvironment)
 
