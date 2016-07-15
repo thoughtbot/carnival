@@ -11,7 +11,7 @@ module TestImport
 
 import Application           (makeFoundation, withEnv)
 import ClassyPrelude         as X
-import Database.Persist      as X hiding (get)
+import Database.Persist      as X hiding (get, delete, deleteBy)
 import Database.Persist.Sql  (SqlPersistM, SqlBackend, runSqlPersistMPool, rawExecute, rawSql, unSingle, connEscapeName)
 import Foundation            as X
 import Model                 as X
@@ -25,7 +25,7 @@ import Test.Hspec            as X hiding
     )
 import Test.Hspec.Extension as X
 import Test.Hspec.Expectations.Lifted as X
-import Yesod.Default.Config2 (ignoreEnv, loadAppSettings)
+import Yesod.Default.Config2 (ignoreEnv, loadYamlSettings)
 import Yesod.Test.Extension  as X
 
 import Settings as X
@@ -47,7 +47,7 @@ withApp = before $ runApp $ \app -> do
 
 runApp :: (App -> IO a) -> IO a
 runApp f = do
-    settings <- loadAppSettings
+    settings <- loadYamlSettings
         ["config/test-settings.yml", "config/settings.yml"]
         []
         ignoreEnv

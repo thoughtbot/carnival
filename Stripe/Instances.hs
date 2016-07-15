@@ -11,10 +11,6 @@ deriving instance PersistFieldSql S.PlanId
 
 instance PersistField S.CustomerId where
     toPersistValue (S.CustomerId cid) = toPersistValue cid
-    toPersistValue (S.ExpandedCustomer S.Customer{..}) =
-        toPersistValue customerId
-    toPersistValue (S.ExpandedCustomer S.DeletedCustomer{..}) =
-        toPersistValue deletedCustomerId
 
     fromPersistValue (PersistText txt) = Right $ S.CustomerId txt
     fromPersistValue x = Left $ "Not a PersistText " ++ pack (show x)

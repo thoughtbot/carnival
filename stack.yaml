@@ -1,4 +1,4 @@
-resolver: lts-5.0
+resolver: lts-6.7
 
 packages:
 - '.'
@@ -9,6 +9,5 @@ extra-deps:
 - hspec-expectations-lifted-0.5.0
 - load-env-0.1.1
 - shakespeare-text-1.1.0
-- stripe-haskell-0.1.4.3
 - yesod-newsfeed-1.4.0.1
 - yesod-test-1.4.3.1
