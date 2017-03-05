@@ -1,3 +1,12 @@
+@keyframes carnival-open {
+  0% { left: 0; }
+}
+
+@keyframes carnival-close {
+  0% { left: -150px; }
+  100% { left: 0; }
+}
+
 .carnival {
   display: none;
   position: absolute;
@@ -174,7 +183,12 @@
   padding-top: 5px;
 }
 
+.carnival-is-commenting {
+  animation: carnival-open 0.2s ease-in-out none;
+}
+
 .commenting {
+
   .carnival {
     display: block;
   }
@@ -190,6 +204,10 @@
   .carnival-comments {
     display: block;
   }
+}
+
+.comments-hidden {
+  animation: carnival-close 0.2s ease-in-out none;
 }
 
 .carnival-validation-error {

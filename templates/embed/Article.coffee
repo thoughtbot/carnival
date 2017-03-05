@@ -24,12 +24,14 @@ class Article
     @element.addEventListener 'commenting', (event) =>
       unless @element.classList.contains('commenting')
         Carnival.addClass(@element, 'commenting')
+        Carnival.addClass(@element, 'carnival-is-commenting')
         @shiftArticle()
 
       @thread.displayForBlock(event.detail)
     @element.addEventListener 'doneCommenting', =>
       if @element.querySelectorAll('.commenting').length is 0
         Carnival.removeClass(@element, 'commenting')
+        Carnival.removeClass(@element, 'carnival-is-commenting')
         @restoreArticle()
 
   fetchComments: ->
